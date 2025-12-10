@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Clash - Programming Language Comparator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent1: #fd79a8;
+            --accent2: #00cec9;
+            --dark: #2d3436;
+            --light: #dfe6e9;
+            --python: #3776ab;
+            --javascript: #f7df1e;
+            --java: #ed8b00;
+            --cpp: #00599c;
+            --rust: #dea584;
+            --go: #00add8;
+            --swift: #fa7343;
+            --csharp: #178600;
+            --php: #777bb4;
+            --ruby: #cc342d;
+            --kotlin: #7f52ff;
+            --typescript: #3178c6;
+            --scala: #dc322f;
+            --r: #276dc3;
+            --matlab: #e16737;
+            --perl: #0298c3;
+            --haskell: #5e5086;
+            --lua: #000080;
+            --dart: #00b4ab;
+            --elixir: #6e4a7e;
+            --clojure: #5881d8;
+            --erlang: #a90533;
+            --cobol: #00599c;
+            --fortran: #734f96;
+            --assembly: #6e4c13;
+            --sql: #e38c00;
+            --html: #e34f26;
+            --css: #1572b6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: var(--light);
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--accent1), var(--accent2), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(162, 155, 254, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--light);
+            background: rgba(45, 52, 54, 0.6);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-top: 10px;
+            border: 1px solid var(--secondary);
+        }
+
+        .selection-area {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .language-selector {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .language-selector:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .selector-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent2);
+            font-weight: 600;
+        }
+
+        .language-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .language-options::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .language-options::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .language-options::-webkit-scrollbar-thumb {
+            background: var(--accent1);
+            border-radius: 10px;
+        }
+
+        .language-option {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .language-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .language-option.selected {
+            border-color: var(--accent1);
+            background: rgba(253, 121, 168, 0.1);
+            box-shadow: 0 0 15px rgba(253, 121, 168, 0.3);
+        }
+
+        .language-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .language-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .clash-button {
+            display: block;
+            margin: 30px auto;
+            background: linear-gradient(45deg, var(--accent1), var(--primary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .clash-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.6);
+        }
+
+        .clash-button:active {
+            transform: translateY(1px);
+        }
+
+        .comparison-area {
+            display: none;
+            margin-top: 40px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .language-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 48%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .language-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .language-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .language-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-right: 20px;
+            color: white;
+        }
+
+        .language-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .language-year {
+            font-size: 1rem;
+            color: var(--secondary);
+            margin-top: 5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .comparison-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent2);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pros-cons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .pros, .cons {
+            flex: 1;
+        }
+
+        .pros-list, .cons-list {
+            list-style-type: none;
+        }
+
+        .pros-list li, .cons-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pros-list li:before {
+            content: "✓";
+            color: var(--accent2);
+            font-weight: bold;
+        }
+
+        .cons-list li:before {
+            content: "✗";
+            color: var(--accent1);
+            font-weight: bold;
+        }
+
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .use-case {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .use-case:hover {
+            transform: scale(1.05);
+        }
+
+        .use-case i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--accent2);
+        }
+
+        .battle-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            flex-direction: column;
+        }
+
+        .battle-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px var(--accent1);
+        }
+
+        .vs-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--accent1), var(--accent2));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 0 30px rgba(253, 121, 168, 0.7);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            color: var(--secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .language-colors {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .comparison-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .language-card {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .comparison-header {
+                flex-direction: column;
+            }
+            
+            .language-options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .selection-area {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .language-selector {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pros-cons {
+                flex-direction: column;
+            }
+            
+            .use-cases {
+                grid-template-columns: 1fr;
+            }
+            
+            .battle-text {
+                font-size: 2.5rem;
+            }
+            
+            .vs-circle {
+                width: 100px;
+                height: 100px;
+                font-size: 1.8rem;
+            }
+            
+            .language-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CODE CLASH</h1>
+            <p class="subtitle">The ultimate programming language comparison tool. Select two languages and watch them battle it out in a dynamic, informative showdown!</p>
+            <div class="tagline">Now with 25+ programming languages!</div>
+        </header>
+
+        <div class="selection-area">
+            <div class="language-selector">
+                <div class="selector-title">Language 1</div>
+                <div class="language-options" id="language1-options">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="language-selector">
+                <div class="selector-title">Language 2</div>
+                <div class="language-options" id="language2-options">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <button class="clash-button" id="clashBtn">
+            <i class="fas fa-bolt"></i> START CLASH
+        </button>
+
+        <div class="comparison-area" id="comparisonArea">
+            <div class="comparison-header">
+                <div class="language-card" id="language1-card">
+                    <!-- Language 1 details will be populated by JavaScript -->
+                </div>
+                <div class="language-card" id="language2-card">
+                    <!-- Language 2 details will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="comparison-details">
+                <div class="detail-card">
+                    <h3 class="detail-title"><i class="fas fa-thumbs-up"></i> Pros & Cons</h3>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul class="pros-list" id="pros-list1">
+                                <!-- Pros will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul class="cons-list" id="cons-list1">
+                                <!-- Cons will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3 class="detail-title"><i class="fas fa-thumbs-up"></i> Pros & Cons</h3>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Advantages</h4>
+                            <ul class="pros-list" id="pros-list2">
+                                <!-- Pros will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Disadvantages</h4>
+                            <ul class="cons-list" id="cons-list2">
+                                <!-- Cons will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3 class="detail-title"><i class="fas fa-laptop-code"></i> Popular Use Cases</h3>
+                    <div class="use-cases" id="use-cases1">
+                        
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3 class="detail-title"><i class="fas fa-laptop-code"></i> Popular Use Cases</h3>
+                    <div class="use-cases" id="use-cases2">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="battle-animation" id="battleAnimation">
+            <div class="battle-text">CODE CLASH</div>
+            <div class="vs-circle">VS</div>
+        </div>
+
+        <footer>
+            <p>Code Clash &copy; 2023 - The Programming Language Comparator</p>
+            <p>Compare, learn, and choose the right tool for your next project!</p>
+            <div class="language-colors">
+                <div class="color-dot" style="background-color: var(--python)"></div>
+                <div class="color-dot" style="background-color: var(--javascript)"></div>
+                <div class="color-dot" style="background-color: var(--java)"></div>
+                <div class="color-dot" style="background-color: var(--cpp)"></div>
+                <div class="color-dot" style="background-color: var(--rust)"></div>
+                <div class="color-dot" style="background-color: var(--go)"></div>
+                <div class="color-dot" style="background-color: var(--swift)"></div>
+                <div class="color-dot" style="background-color: var(--csharp)"></div>
+                <div class="color-dot" style="background-color: var(--php)"></div>
+                <div class="color-dot" style="background-color: var(--ruby)"></div>
+                <div class="color-dot" style="background-color: var(--kotlin)"></div>
+                <div class="color-dot" style="background-color: var(--typescript)"></div>
+                <div class="color-dot" style="background-color: var(--scala)"></div>
+                <div class="color-dot" style="background-color: var(--r)"></div>
+                <div class="color-dot" style="background-color: var(--matlab)"></div>
+                <div class="color-dot" style="background-color: var(--perl)"></div>
+                <div class="color-dot" style="background-color: var(--haskell)"></div>
+                <div class="color-dot" style="background-color: var(--lua)"></div>
+                <div class="color-dot" style="background-color: var(--dart)"></div>
+                <div class="color-dot" style="background-color: var(--elixir)"></div>
+                <div class="color-dot" style="background-color: var(--clojure)"></div>
+                <div class="color-dot" style="background-color: var(--erlang)"></div>
+                <div class="color-dot" style="background-color: var(--cobol)"></div>
+                <div class="color-dot" style="background-color: var(--fortran)"></div>
+                <div class="color-dot" style="background-color: var(--assembly)"></div>
+                <div class="color-dot" style="background-color: var(--sql)"></div>
+                <div class="color-dot" style="background-color: var(--html)"></div>
+                <div class="color-dot" style="background-color: var(--css)"></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Programming languages data - expanded with many more languages
+        const languages = {
+            python: {
+                name: "Python",
+                year: "1991",
+                color: "var(--python)",
+                icon: "fab fa-python",
+                difficulty: 2,
+                performance: 7,
+                popularity: 9,
+                community: 9,
+                pros: [
+                    "Easy to learn and read",
+                    "Extensive libraries and frameworks",
+                    "Great for data science and AI",
+                    "Strong community support",
+                    "Versatile applications"
+                ],
+                cons: [
+                    "Slower than compiled languages",
+                    "Not ideal for mobile development",
+                    "Global Interpreter Lock (GIL) limitation",
+                    "High memory consumption"
+                ],
+                useCases: [
+                    { icon: "fas fa-brain", text: "AI & Machine Learning" },
+                    { icon: "fas fa-chart-line", text: "Data Analysis" },
+                    { icon: "fas fa-globe", text: "Web Development" },
+                    { icon: "fas fa-robot", text: "Automation Scripts" }
+                ]
+            },
+            javascript: {
+                name: "JavaScript",
+                year: "1995",
+                color: "var(--javascript)",
+                icon: "fab fa-js-square",
+                difficulty: 5,
+                performance: 7,
+                popularity: 10,
+                community: 10,
+                pros: [
+                    "Runs in all web browsers",
+                    "Versatile (frontend & backend)",
+                    "Massive ecosystem (npm)",
+                    "Asynchronous programming",
+                    "Continuous evolution"
+                ],
+                cons: [
+                    "Browser compatibility issues",
+                    "Weak typing can cause bugs",
+                    "Security vulnerabilities",
+                    "Callback hell without proper patterns"
+                ],
+                useCases: [
+                    { icon: "fas fa-window-maximize", text: "Web Frontend" },
+                    { icon: "fas fa-server", text: "Server Backend" },
+                    { icon: "fas fa-mobile-alt", text: "Mobile Apps" },
+                    { icon: "fas fa-gamepad", text: "Game Development" }
+                ]
+            },
+            java: {
+                name: "Java",
+                year: "1995",
+                color: "var(--java)",
+                icon: "fab fa-java",
+                difficulty: 6,
+                performance: 8,
+                popularity: 8,
+                community: 9,
+                pros: [
+                    "Platform independence (JVM)",
+                    "Strong memory management",
+                    "Excellent for large enterprises",
+                    "Mature and stable",
+                    "Strong security features"
+                ],
+                cons: [
+                    "Verbose syntax",
+                    "Higher memory consumption",
+                    "Slower than native languages",
+                    "Less suitable for simple web apps"
+                ],
+                useCases: [
+                    { icon: "fas fa-building", text: "Enterprise Systems" },
+                    { icon: "fas fa-android", text: "Android Apps" },
+                    { icon: "fas fa-cloud", text: "Big Data Processing" },
+                    { icon: "fas fa-university", text: "Banking Systems" }
+                ]
+            },
+            cpp: {
+                name: "C++",
+                year: "1985",
+                color: "var(--cpp)",
+                icon: "fas fa-cogs",
+                difficulty: 9,
+                performance: 10,
+                popularity: 7,
+                community: 8,
+                pros: [
+                    "High performance and efficiency",
+                    "Close to hardware control",
+                    "Used in system programming",
+                    "Strong typing and templates",
+                    "Large standard library"
+                ],
+                cons: [
+                    "Complex and difficult to learn",
+                    "Manual memory management",
+                    "Prone to memory leaks",
+                    "Long compilation times",
+                    "Less safe than modern languages"
+                ],
+                useCases: [
+                    { icon: "fas fa-gamepad", text: "Game Engines" },
+                    { icon: "fas fa-desktop", text: "Operating Systems" },
+                    { icon: "fas fa-microchip", text: "Embedded Systems" },
+                    { icon: "fas fa-rocket", text: "High-Frequency Trading" }
+                ]
+            },
+            rust: {
+                name: "Rust",
+                year: "2010",
+                color: "var(--rust)",
+                icon: "fas fa-memory",
+                difficulty: 8,
+                performance: 9,
+                popularity: 5,
+                community: 6,
+                pros: [
+                    "Memory safety without garbage collection",
+                    "Zero-cost abstractions",
+                    "Fearless concurrency",
+                    "Modern tooling (Cargo)",
+                    "Growing adoption in systems programming"
+                ],
+                cons: [
+                    "Steep learning curve",
+                    "Long compilation times",
+                    "Younger ecosystem",
+                    "Limited number of experienced developers"
+                ],
+                useCases: [
+                    { icon: "fas fa-shield-alt", text: "Systems Programming" },
+                    { icon: "fas fa-lock", text: "Security-Critical Software" },
+                    { icon: "fas fa-network-wired", text: "Web Assembly" },
+                    { icon: "fas fa-code-branch", text: "Blockchain Development" }
+                ]
+            },
+            go: {
+                name: "Go",
+                year: "2009",
+                color: "var(--go)",
+                icon: "fas fa-code",
+                difficulty: 4,
+                performance: 8,
+                popularity: 6,
+                community: 7,
+                pros: [
+                    "Simple and readable syntax",
+                    "Excellent concurrency support",
+                    "Fast compilation times",
+                    "Strong standard library",
+                    "Great for microservices"
+                ],
+                cons: [
+                    "Lack of generics (until recently)",
+                    "Less expressive than other languages",
+                    "Younger ecosystem",
+                    "Limited GUI library support"
+                ],
+                useCases: [
+                    { icon: "fas fa-server", text: "Cloud Services" },
+                    { icon: "fas fa-code", text: "CLI Tools" },
+                    { icon: "fas fa-stream", text: "Concurrent Systems" },
+                    { icon: "fas fa-network-wired", text: "Network Services" }
+                ]
+            },
+            swift: {
+                name: "Swift",
+                year: "2014",
+                color: "var(--swift)",
+                icon: "fas fa-apple-alt",
+                difficulty: 4,
+                performance: 8,
+                popularity: 6,
+                community: 7,
+                pros: [
+                    "Modern and safe by design",
+                    "Fast performance",
+                    "Great for Apple ecosystem",
+                    "Open source with growing community",
+                    "Interactive playgrounds"
+                ],
+                cons: [
+                    "Primarily for Apple platforms",
+                    "Young language with changes",
+                    "Smaller community than established languages",
+                    "Limited cross-platform support"
+                ],
+                useCases: [
+                    { icon: "fas fa-mobile-alt", text: "iOS Apps" },
+                    { icon: "fas fa-desktop", text: "macOS Apps" },
+                    { icon: "fas fa-watch", text: "watchOS Apps" },
+                    { icon: "fas fa-server", text: "Server-Side Swift" }
+                ]
+            },
+            csharp: {
+                name: "C#",
+                year: "2000",
+                color: "var(--csharp)",
+                icon: "fas fa-window-maximize",
+                difficulty: 5,
+                performance: 8,
+                popularity: 7,
+                community: 8,
+                pros: [
+                    "Versatile language for multiple platforms",
+                    "Strong typing with type inference",
+                    "Great for game development (Unity)",
+                    "Excellent tooling (Visual Studio)",
+                    "Strong Microsoft backing"
+                ],
+                cons: [
+                    "Primarily Windows-focused historically",
+                    "Less popular outside enterprise",
+                    "Steeper learning curve than some languages",
+                    "Memory consumption can be high"
+                ],
+                useCases: [
+                    { icon: "fas fa-gamepad", text: "Game Development" },
+                    { icon: "fas fa-window-restore", text: "Windows Apps" },
+                    { icon: "fas fa-globe", text: "Web Applications" },
+                    { icon: "fas fa-building", text: "Enterprise Software" }
+                ]
+            },
+            php: {
+                name: "PHP",
+                year: "1995",
+                color: "var(--php)",
+                icon: "fab fa-php",
+                difficulty: 3,
+                performance: 6,
+                popularity: 7,
+                community: 8,
+                pros: [
+                    "Specifically designed for web development",
+                    "Huge ecosystem (WordPress, Laravel)",
+                    "Easy deployment and hosting",
+                    "Large community and resources",
+                    "Continuous improvements in recent versions"
+                ],
+                cons: [
+                    "Inconsistent standard library",
+                    "Security concerns if not used properly",
+                    "Performance limitations for CPU-intensive tasks",
+                    "Mixed reputation due to legacy code"
+                ],
+                useCases: [
+                    { icon: "fas fa-globe", text: "Web Development" },
+                    { icon: "fas fa-blog", text: "Content Management" },
+                    { icon: "fas fa-store", text: "E-commerce Sites" },
+                    { icon: "fas fa-server", text: "Server-Side Scripting" }
+                ]
+            },
+            ruby: {
+                name: "Ruby",
+                year: "1995",
+                color: "var(--ruby)",
+                icon: "fas fa-gem",
+                difficulty: 4,
+                performance: 6,
+                popularity: 5,
+                community: 6,
+                pros: [
+                    "Elegant and readable syntax",
+                    "Strong focus on developer happiness",
+                    "Great web framework (Ruby on Rails)",
+                    "Strong conventions over configuration",
+                    "Active and friendly community"
+                ],
+                cons: [
+                    "Performance limitations",
+                    "Memory consumption can be high",
+                    "Less popular for non-web applications",
+                    "Slower runtime compared to compiled languages"
+                ],
+                useCases: [
+                    { icon: "fas fa-globe", text: "Web Applications" },
+                    { icon: "fas fa-tools", text: "Prototyping" },
+                    { icon: "fas fa-server", text: "DevOps Scripting" },
+                    { icon: "fas fa-code", text: "Startup MVPs" }
+                ]
+            },
+            kotlin: {
+                name: "Kotlin",
+                year: "2011",
+                color: "var(--kotlin)",
+                icon: "fas fa-code",
+                difficulty: 4,
+                performance: 8,
+                popularity: 6,
+                community: 7,
+                pros: [
+                    "Fully interoperable with Java",
+                    "More concise than Java",
+                    "Official Android development language",
+                    "Null safety built into type system",
+                    "Modern language features"
+                ],
+                cons: [
+                    "Younger ecosystem than Java",
+                    "Compilation speed can be slower",
+                    "Limited use outside Android/JVM",
+                    "Smaller job market than established languages"
+                ],
+                useCases: [
+                    { icon: "fas fa-mobile-alt", text: "Android Development" },
+                    { icon: "fas fa-server", text: "Backend Services" },
+                    { icon: "fas fa-window-maximize", text: "Web Frontend" },
+                    { icon: "fas fa-code", text: "Multiplatform Apps" }
+                ]
+            },
+            typescript: {
+                name: "TypeScript",
+                year: "2012",
+                color: "var(--typescript)",
+                icon: "fas fa-code",
+                difficulty: 6,
+                performance: 7,
+                popularity: 8,
+                community: 8,
+                pros: [
+                    "Adds static typing to JavaScript",
+                    "Great for large-scale applications",
+                    "Excellent tooling and IDE support",
+                    "Gradual adoption possible",
+                    "Backed by Microsoft"
+                ],
+                cons: [
+                    "Additional compilation step required",
+                    "Can be verbose compared to JavaScript",
+                    "Learning curve for complex types",
+                    "Not all JavaScript libraries have type definitions"
+                ],
+                useCases: [
+                    { icon: "fas fa-window-maximize", text: "Large Web Apps" },
+                    { icon: "fas fa-server", text: "Node.js Backends" },
+                    { icon: "fas fa-mobile-alt", text: "Mobile Frameworks" },
+                    { icon: "fas fa-code", text: "Enterprise Applications" }
+                ]
+            },
+            scala: {
+                name: "Scala",
+                year: "2004",
+                color: "var(--scala)",
+                icon: "fas fa-code",
+                difficulty: 8,
+                performance: 8,
+                popularity: 5,
+                community: 6,
+                pros: [
+                    "Combines OOP and functional programming",
+                    "Runs on JVM with Java interoperability",
+                    "Concise and expressive syntax",
+                    "Strong type system with type inference",
+                    "Great for concurrent programming"
+                ],
+                cons: [
+                    "Steep learning curve",
+                    "Complex type system can be intimidating",
+                    "Slower compilation than Java",
+                    "Smaller community than mainstream languages"
+                ],
+                useCases: [
+                    { icon: "fas fa-server", text: "Big Data Systems" },
+                    { icon: "fas fa-chart-line", text: "Data Engineering" },
+                    { icon: "fas fa-network-wired", text: "Distributed Systems" },
+                    { icon: "fas fa-code", text: "High-Performance Apps" }
+                ]
+            },
+            r: {
+                name: "R",
+                year: "1993",
+                color: "var(--r)",
+                icon: "fas fa-chart-bar",
+                difficulty: 6,
+                performance: 6,
+                popularity: 6,
+                community: 7,
+                pros: [
+                    "Excellent for statistical analysis",
+                    "Vast collection of packages for data science",
+                    "Strong visualization capabilities",
+                    "Great for academic research",
+                    "Active community in statistics"
+                ],
+                cons: [
+                    "Steep learning curve for programming concepts",
+                    "Memory intensive with large datasets",
+                    "Slower than compiled languages",
+                    "Less suitable for general-purpose programming"
+                ],
+                useCases: [
+                    { icon: "fas fa-chart-line", text: "Statistical Analysis" },
+                    { icon: "fas fa-dna", text: "Bioinformatics" },
+                    { icon: "fas fa-chart-bar", text: "Data Visualization" },
+                    { icon: "fas fa-flask", text: "Academic Research" }
+                ]
+            },
+            matlab: {
+                name: "MATLAB",
+                year: "1984",
+                color: "var(--matlab)",
+                icon: "fas fa-calculator",
+                difficulty: 5,
+                performance: 7,
+                popularity: 5,
+                community: 6,
+                pros: [
+                    "Excellent for numerical computing",
+                    "Powerful toolboxes for various domains",
+                    "Great visualization capabilities",
+                    "Interactive development environment",
+                    "Strong in engineering and academia"
+                ],
+                cons: [
+                    "Proprietary and expensive",
+                    "Not a general-purpose language",
+                    "Performance limitations for some tasks",
+                    "Less suitable for software development"
+                ],
+                useCases: [
+                    { icon: "fas fa-calculator", text: "Numerical Computing" },
+                    { icon: "fas fa-wave-square", text: "Signal Processing" },
+                    { icon: "fas fa-robot", text: "Control Systems" },
+                    { icon: "fas fa-chart-line", text: "Data Analysis" }
+                ]
+            },
+            perl: {
+                name: "Perl",
+                year: "1987",
+                color: "var(--perl)",
+                icon: "fas fa-code",
+                difficulty: 6,
+                performance: 7,
+                popularity: 4,
+                community: 5,
+                pros: [
+                    "Excellent for text processing",
+                    "Powerful regular expressions",
+                    "Large collection of CPAN modules",
+                    "Strong in system administration",
+                    "Mature and stable language"
+                ],
+                cons: [
+                    "Complex syntax can be hard to read",
+                    "Declining popularity",
+                    "Less modern than newer languages",
+                    "Smaller community and fewer new resources"
+                ],
+                useCases: [
+                    { icon: "fas fa-file-alt", text: "Text Processing" },
+                    { icon: "fas fa-server", text: "System Administration" },
+                    { icon: "fas fa-network-wired", text: "Network Programming" },
+                    { icon: "fas fa-code", text: "Legacy System Maintenance" }
+                ]
+            },
+            haskell: {
+                name: "Haskell",
+                year: "1990",
+                color: "var(--haskell)",
+                icon: "fas fa-infinity",
+                difficulty: 9,
+                performance: 8,
+                popularity: 4,
+                community: 5,
+                pros: [
+                    "Pure functional programming language",
+                    "Strong static type system",
+                    "Excellent for mathematical computations",
+                    "Powerful abstraction capabilities",
+                    "High-level concurrency support"
+                ],
+                cons: [
+                    "Very steep learning curve",
+                    "Limited practical tutorials and resources",
+                    "Smaller job market",
+                    "Less suitable for rapid prototyping"
+                ],
+                useCases: [
+                    { icon: "fas fa-calculator", text: "Mathematical Computing" },
+                    { icon: "fas fa-university", text: "Academic Research" },
+                    { icon: "fas fa-server", text: "High-Assurance Systems" },
+                    { icon: "fas fa-code", text: "Compiler Development" }
+                ]
+            },
+            lua: {
+                name: "Lua",
+                year: "1993",
+                color: "var(--lua)",
+                icon: "fas fa-moon",
+                difficulty: 4,
+                performance: 8,
+                popularity: 5,
+                community: 6,
+                pros: [
+                    "Lightweight and fast",
+                    "Easy to embed in applications",
+                    "Simple and clean syntax",
+                    "Great for game scripting",
+                    "Small memory footprint"
+                ],
+                cons: [
+                    "Limited standard library",
+                    "Smaller community",
+                    "Less suitable for large applications",
+                    "Fewer job opportunities"
+                ],
+                useCases: [
+                    { icon: "fas fa-gamepad", text: "Game Scripting" },
+                    { icon: "fas fa-plug", text: "Embedded Scripting" },
+                    { icon: "fas fa-server", text: "Configuration Languages" },
+                    { icon: "fas fa-code", text: "Extension Languages" }
+                ]
+            },
+            dart: {
+                name: "Dart",
+                year: "2011",
+                color: "var(--dart)",
+                icon: "fas fa-bullseye",
+                difficulty: 5,
+                performance: 8,
+                popularity: 5,
+                community: 6,
+                pros: [
+                    "Fast on both source code and JavaScript",
+                    "Great for building cross-platform apps",
+                    "Strong typing with type inference",
+                    "Hot reload for fast development",
+                    "Backed by Google"
+                ],
+                cons: [
+                    "Smaller community than established languages",
+                    "Limited use outside Flutter",
+                    "Young ecosystem",
+                    "Fewer learning resources"
+                ],
+                useCases: [
+                    { icon: "fas fa-mobile-alt", text: "Cross-Platform Apps" },
+                    { icon: "fas fa-window-maximize", text: "Web Applications" },
+                    { icon: "fas fa-server", text: "Backend Services" },
+                    { icon: "fas fa-code", text: "Flutter Development" }
+                ]
+            },
+            elixir: {
+                name: "Elixir",
+                year: "2011",
+                color: "var(--elixir)",
+                icon: "fas fa-magic",
+                difficulty: 7,
+                performance: 8,
+                popularity: 4,
+                community: 5,
+                pros: [
+                    "Excellent concurrency model",
+                    "Fault-tolerant and scalable",
+                    "Functional programming with immutable data",
+                    "Great for distributed systems",
+                    "Productive and enjoyable syntax"
+                ],
+                cons: [
+                    "Steep learning curve for beginners",
+                    "Smaller community and ecosystem",
+                    "Limited job opportunities",
+                    "Less suitable for CPU-intensive tasks"
+                ],
+                useCases: [
+                    { icon: "fas fa-server", text: "Web Servers" },
+                    { icon: "fas fa-network-wired", text: "Distributed Systems" },
+                    { icon: "fas fa-comments", text: "Real-time Applications" },
+                    { icon: "fas fa-code", text: "Concurrent Systems" }
+                ]
+            },
+            clojure: {
+                name: "Clojure",
+                year: "2007",
+                color: "var(--clojure)",
+                icon: "fas fa-code",
+                difficulty: 8,
+                performance: 7,
+                popularity: 4,
+                community: 5,
+                pros: [
+                    "Modern Lisp dialect on JVM",
+                    "Excellent for concurrent programming",
+                    "Immutable data structures by default",
+                    "Great REPL and interactive development",
+                    "Powerful macro system"
+                ],
+                cons: [
+                    "Steep learning curve (Lisp syntax)",
+                    "Small community and ecosystem",
+                    "Parentheses-heavy syntax can be intimidating",
+                    "Limited job market"
+                ],
+                useCases: [
+                    { icon: "fas fa-server", text: "Concurrent Systems" },
+                    { icon: "fas fa-chart-line", text: "Data Processing" },
+                    { icon: "fas fa-network-wired", text: "Distributed Apps" },
+                    { icon: "fas fa-code", text: "Functional Programming" }
+                ]
+            },
+            erlang: {
+                name: "Erlang",
+                year: "1986",
+                color: "var(--erlang)",
+                icon: "fas fa-server",
+                difficulty: 7,
+                performance: 8,
+                popularity: 4,
+                community: 5,
+                pros: [
+                    "Excellent for concurrent and distributed systems",
+                    "Built-in fault tolerance",
+                    "Hot code swapping capability",
+                    "Proven in telecommunications",
+                    "Great for high-availability systems"
+                ],
+                cons: [
+                    "Steep learning curve",
+                    "Strange syntax for newcomers",
+                    "Small community",
+                    "Limited use outside specific domains"
+                ],
+                useCases: [
+                    { icon: "fas fa-phone", text: "Telecom Systems" },
+                    { icon: "fas fa-server", text: "High-Availability Systems" },
+                    { icon: "fas fa-network-wired", text: "Distributed Systems" },
+                    { icon: "fas fa-comments", text: "Messaging Systems" }
+                ]
+            },
+            cobol: {
+                name: "COBOL",
+                year: "1959",
+                color: "var(--cobol)",
+                icon: "fas fa-building",
+                difficulty: 5,
+                performance: 7,
+                popularity: 3,
+                community: 4,
+                pros: [
+                    "Excellent for business applications",
+                    "Proven and stable for decades",
+                    "Strong in financial systems",
+                    "Self-documenting code",
+                    "Critical for legacy system maintenance"
+                ],
+                cons: [
+                    "Verbose and outdated syntax",
+                    "Declining popularity",
+                    "Limited modern features",
+                    "Few new developers learning it"
+                ],
+                useCases: [
+                    { icon: "fas fa-university", text: "Banking Systems" },
+                    { icon: "fas fa-file-invoice-dollar", text: "Financial Applications" },
+                    { icon: "fas fa-building", text: "Enterprise Systems" },
+                    { icon: "fas fa-history", text: "Legacy System Maintenance" }
+                ]
+            },
+            fortran: {
+                name: "Fortran",
+                year: "1957",
+                color: "var(--fortran)",
+                icon: "fas fa-calculator",
+                difficulty: 6,
+                performance: 9,
+                popularity: 3,
+                community: 4,
+                pros: [
+                    "Excellent for scientific computing",
+                    "High performance for numerical tasks",
+                    "Proven and optimized compilers",
+                    "Strong in academic and research fields",
+                    "Modern versions with new features"
+                ],
+                cons: [
+                    "Outdated syntax in older versions",
+                    "Small community",
+                    "Limited use outside scientific computing",
+                    "Few new developers learning it"
+                ],
+                useCases: [
+                    { icon: "fas fa-atom", text: "Scientific Computing" },
+                    { icon: "fas fa-wind", text: "Weather Modeling" },
+                    { icon: "fas fa-calculator", text: "Numerical Analysis" },
+                    { icon: "fas fa-flask", text: "Research Simulations" }
+                ]
+            },
+            assembly: {
+                name: "Assembly",
+                year: "1949",
+                color: "var(--assembly)",
+                icon: "fas fa-microchip",
+                difficulty: 10,
+                performance: 10,
+                popularity: 3,
+                community: 4,
+                pros: [
+                    "Maximum performance and control",
+                    "Direct hardware access",
+                    "Minimal memory footprint",
+                    "Essential for low-level programming",
+                    "No compiler overhead"
+                ],
+                cons: [
+                    "Extremely difficult to learn and use",
+                    "Platform-specific (not portable)",
+                    "Very verbose and time-consuming",
+                    "Prone to subtle bugs",
+                    "Limited practical use cases today"
+                ],
+                useCases: [
+                    { icon: "fas fa-microchip", text: "Operating Systems" },
+                    { icon: "fas fa-gamepad", text: "Game Engine Optimization" },
+                    { icon: "fas fa-robot", text: "Embedded Systems" },
+                    { icon: "fas fa-tachometer-alt", text: "Performance-Critical Code" }
+                ]
+            },
+            sql: {
+                name: "SQL",
+                year: "1974",
+                color: "var(--sql)",
+                icon: "fas fa-database",
+                difficulty: 4,
+                performance: 8,
+                popularity: 9,
+                community: 9,
+                pros: [
+                    "Standard language for database queries",
+                    "Declarative - specify what not how",
+                    "Powerful for data manipulation",
+                    "Universal across database systems",
+                    "Essential for data-related roles"
+                ],
+                cons: [
+                    "Not a general-purpose language",
+                    "Different dialects between databases",
+                    "Can be complex for advanced queries",
+                    "Performance depends on database design"
+                ],
+                useCases: [
+                    { icon: "fas fa-database", text: "Database Queries" },
+                    { icon: "fas fa-chart-bar", text: "Data Analysis" },
+                    { icon: "fas fa-server", text: "Backend Development" },
+                    { icon: "fas fa-file-invoice", text: "Business Reporting" }
+                ]
+            },
+            html: {
+                name: "HTML",
+                year: "1993",
+                color: "var(--html)",
+                icon: "fab fa-html5",
+                difficulty: 2,
+                performance: 8,
+                popularity: 10,
+                community: 10,
+                pros: [
+                    "Foundation of the web",
+                    "Easy to learn basics",
+                    "Universal across browsers",
+                    "Continuous evolution with new standards",
+                    "Essential for web development"
+                ],
+                cons: [
+                    "Not a programming language (markup)",
+                    "Limited without CSS and JavaScript",
+                    "Browser compatibility issues",
+                    "Can become complex in large applications"
+                ],
+                useCases: [
+                    { icon: "fas fa-globe", text: "Web Pages" },
+                    { icon: "fas fa-window-maximize", text: "Web Applications" },
+                    { icon: "fas fa-envelope", text: "Email Templates" },
+                    { icon: "fas fa-mobile-alt", text: "Mobile Web Apps" }
+                ]
+            },
+            css: {
+                name: "CSS",
+                year: "1996",
+                color: "var(--css)",
+                icon: "fab fa-css3-alt",
+                difficulty: 5,
+                performance: 8,
+                popularity: 10,
+                community: 10,
+                pros: [
+                    "Essential for web styling",
+                    "Powerful layout capabilities",
+                    "Continuous evolution with new features",
+                    "Great for responsive design",
+                    "Large community and resources"
+                ],
+                cons: [
+                    "Not a programming language (styling)",
+                    "Browser compatibility challenges",
+                    "Can become complex in large projects",
+                    "Global scope can cause conflicts"
+                ],
+                useCases: [
+                    { icon: "fas fa-paint-brush", text: "Web Styling" },
+                    { icon: "fas fa-mobile-alt", text: "Responsive Design" },
+                    { icon: "fas fa-window-maximize", text: "User Interfaces" },
+                    { icon: "fas fa-tv", text: "Web Animations" }
+                ]
+            }
+        };
+
+        
+        const language1Options = document.getElementById('language1-options');
+        const language2Options = document.getElementById('language2-options');
+        const clashBtn = document.getElementById('clashBtn');
+        const comparisonArea = document.getElementById('comparisonArea');
+        const battleAnimation = document.getElementById('battleAnimation');
+        const language1Card = document.getElementById('language1-card');
+        const language2Card = document.getElementById('language2-card');
+        const prosList1 = document.getElementById('pros-list1');
+        const consList1 = document.getElementById('cons-list1');
+        const prosList2 = document.getElementById('pros-list2');
+        const consList2 = document.getElementById('cons-list2');
+        const useCases1 = document.getElementById('use-cases1');
+        const useCases2 = document.getElementById('use-cases2');
+
+        // Selected languages
+        let selectedLanguage1 = null;
+        let selectedLanguage2 = null;
+
+        // Initialize language options
+        function initializeLanguageOptions() {
+            for (const [key, language] of Object.entries(languages)) {
+                // Create option for first selector
+                const option1 = document.createElement('div');
+                option1.className = 'language-option';
+                option1.dataset.lang = key;
+                option1.innerHTML = `
+                    <div class="language-icon" style="color: ${language.color}">
+                        <i class="${language.icon}"></i>
+                    </div>
+                    <div class="language-name">${language.name}</div>
+                `;
+                option1.addEventListener('click', () => selectLanguage(1, key));
+                language1Options.appendChild(option1);
+
+                // Create option for second selector
+                const option2 = document.createElement('div');
+                option2.className = 'language-option';
+                option2.dataset.lang = key;
+                option2.innerHTML = `
+                    <div class="language-icon" style="color: ${language.color}">
+                        <i class="${language.icon}"></i>
+                    </div>
+                    <div class="language-name">${language.name}</div>
+                `;
+                option2.addEventListener('click', () => selectLanguage(2, key));
+                language2Options.appendChild(option2);
+            }
+        }
+
+        // Select language function
+        function selectLanguage(selectorNum, langKey) {
+            if (selectorNum === 1) {
+                selectedLanguage1 = langKey;
+                // Update UI for selector 1
+                document.querySelectorAll('#language1-options .language-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.querySelector(`#language1-options .language-option[data-lang="${langKey}"]`).classList.add('selected');
+            } else {
+                selectedLanguage2 = langKey;
+                // Update UI for selector 2
+                document.querySelectorAll('#language2-options .language-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.querySelector(`#language2-options .language-option[data-lang="${langKey}"]`).classList.add('selected');
+            }
+
+            // Enable clash button if both languages are selected
+            if (selectedLanguage1 && selectedLanguage2) {
+                clashBtn.disabled = false;
+            }
+        }
+
+        // Start clash function
+        function startClash() {
+            if (!selectedLanguage1 || !selectedLanguage2) return;
+
+            // Show battle animation
+            battleAnimation.style.display = 'flex';
+
+            // After animation, show comparison
+            setTimeout(() => {
+                battleAnimation.style.display = 'none';
+                comparisonArea.style.display = 'block';
+                setTimeout(() => {
+                    comparisonArea.style.opacity = '1';
+                }, 100);
+
+                // Populate comparison data
+                populateComparisonData();
+            }, 3000);
+        }
+
+        // Populate comparison data
+        function populateComparisonData() {
+            const lang1 = languages[selectedLanguage1];
+            const lang2 = languages[selectedLanguage2];
+
+            // Populate language 1 card
+            language1Card.innerHTML = `
+                <div class="language-header">
+                    <div class="language-logo" style="background: ${lang1.color}">
+                        <i class="${lang1.icon}"></i>
+                    </div>
+                    <div>
+                        <div class="language-title">${lang1.name}</div>
+                        <div class="language-year">First appeared in ${lang1.year}</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Difficulty</div>
+                        <div class="stat-value">${lang1.difficulty}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang1.difficulty * 10}%; background: ${lang1.color}"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Performance</div>
+                        <div class="stat-value">${lang1.performance}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang1.performance * 10}%; background: ${lang1.color}"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Popularity</div>
+                        <div class="stat-value">${lang1.popularity}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang1.popularity * 10}%; background: ${lang1.color}"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Community</div>
+                        <div class="stat-value">${lang1.community}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang1.community * 10}%; background: ${lang1.color}"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Populate language 2 card
+            language2Card.innerHTML = `
+                <div class="language-header">
+                    <div class="language-logo" style="background: ${lang2.color}">
+                        <i class="${lang2.icon}"></i>
+                    </div>
+                    <div>
+                        <div class="language-title">${lang2.name}</div>
+                        <div class="language-year">First appeared in ${lang2.year}</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Difficulty</div>
+                        <div class="stat-value">${lang2.difficulty}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang2.difficulty * 10}%; background: ${lang2.color}"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Performance</div>
+                        <div class="stat-value">${lang2.performance}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang2.performance * 10}%; background: ${lang2.color}"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Popularity</div>
+                        <div class="stat-value">${lang2.popularity}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang2.popularity * 10}%; background: ${lang2.color}"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Community</div>
+                        <div class="stat-value">${lang2.community}/10</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${lang2.community * 10}%; background: ${lang2.color}"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Populate pros and cons
+            prosList1.innerHTML = lang1.pros.map(pro => `<li>${pro}</li>`).join('');
+            consList1.innerHTML = lang1.cons.map(con => `<li>${con}</li>`).join('');
+            prosList2.innerHTML = lang2.pros.map(pro => `<li>${pro}</li>`).join('');
+            consList2.innerHTML = lang2.cons.map(con => `<li>${con}</li>`).join('');
+
+            // Populate use cases
+            useCases1.innerHTML = lang1.useCases.map(useCase => `
+                <div class="use-case">
+                    <i class="${useCase.icon}"></i>
+                    <div>${useCase.text}</div>
+                </div>
+            `).join('');
+
+            useCases2.innerHTML = lang2.useCases.map(useCase => `
+                <div class="use-case">
+                    <i class="${useCase.icon}"></i>
+                    <div>${useCase.text}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the app
+        function init() {
+            initializeLanguageOptions();
+            clashBtn.addEventListener('click', startClash);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
