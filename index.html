@@ -4,183 +4,1009 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MEHDI GHINE — Portfolio</title>
-  <meta name="description" content="Modern responsive portfolio — HTML CSS JS" />
-  <link rel="stylesheet" href="style.css" />
-</head>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #0f0f1a;
+      --surface: #13131f;
+      --border: #1e1e30;
+      --accent: #6c63ff;
+      --accent2: #00d4ff;
+      --accent3: #ff6b6b;
+      --text: #e8e8f0;
+      --text-muted: #7070a0;
+      --green: #00ff88;
+      --yellow: #ffd700;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'JetBrains Mono',monospace;
+      overflow-x:hidden;
+      cursor:none;
+    }
+
+    /* CURSOR */
+    #cursor{
+      position:fixed;width:12px;height:12px;background:var(--accent);
+      border-radius:50%;pointer-events:none;z-index:9999;
+      transform:translate(-50%,-50%);
+      transition:width .2s,height .2s,background .2s;
+      mix-blend-mode:difference;
+    }
+    #cursor-ring{
+      position:fixed;width:36px;height:36px;border:1.5px solid var(--accent);
+      border-radius:50%;pointer-events:none;z-index:9998;
+      transform:translate(-50%,-50%);
+      transition:width .25s,height .25s;
+      mix-blend-mode:difference;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px;}
+
+    /* NAV */
+    .site-header{
+      position:fixed;top:0;left:0;right:0;z-index:1000;
+      padding:1.2rem 0;
+      background:rgba(10,10,15,0.85);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      transition:all .3s;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 2rem;}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;}
+    .logo{
+      font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;
+      text-decoration:none;color:var(--text);letter-spacing:-.02em;
+    }
+    .logo span{color:var(--accent);}
+    .nav-list{display:flex;gap:2rem;list-style:none;}
+    .nav-link{
+      text-decoration:none;color:var(--text-muted);font-size:.78rem;
+      letter-spacing:.1em;text-transform:uppercase;
+      transition:color .2s;position:relative;
+    }
+    .nav-link::after{
+      content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+      background:var(--accent);transition:width .3s;
+    }
+    .nav-link:hover,.nav-link.active{color:var(--accent);}
+    .nav-link:hover::after,.nav-link.active::after{width:100%;}
+    .nav-actions{display:flex;gap:1rem;align-items:center;}
+
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.6rem 1.4rem;border-radius:6px;
+      background:var(--accent);color:#fff;
+      font-family:'JetBrains Mono',monospace;font-size:.78rem;
+      text-decoration:none;border:none;cursor:none;
+      transition:all .25s;letter-spacing:.05em;font-weight:700;
+      position:relative;overflow:hidden;
+    }
+    .btn::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+      opacity:0;transition:opacity .2s;
+    }
+    .btn:hover::before{opacity:1;}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(108,99,255,.4);}
+    .btn.alt{background:transparent;border:1px solid var(--border);color:var(--text);}
+    .btn.alt:hover{border-color:var(--accent);color:var(--accent);}
+    .btn.secondary{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);}
+    .btn.small{padding:.4rem .9rem;font-size:.72rem;}
+
+    /* HERO */
+    .hero{
+      min-height:100vh;display:flex;align-items:center;
+      padding:6rem 0 4rem;
+      position:relative;overflow:hidden;
+    }
+    .hero-bg{
+      position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 80% 80% at 70% 50%, rgba(108,99,255,.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(0,212,255,.08) 0%, transparent 60%);
+    }
+    .hero-grid-bg{
+      position:absolute;inset:0;pointer-events:none;
+      background-image:
+        linear-gradient(rgba(108,99,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,.04) 1px, transparent 1px);
+      background-size:60px 60px;
+    }
+    .hero-grid{
+      display:grid;grid-template-columns:1fr 1fr;
+      gap:4rem;align-items:center;position:relative;z-index:1;
+    }
+    .hero-text{display:flex;flex-direction:column;gap:1.5rem;}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.5rem;
+      font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;
+      color:var(--accent);border:1px solid rgba(108,99,255,.3);
+      padding:.35rem .8rem;border-radius:4px;
+      background:rgba(108,99,255,.08);width:fit-content;
+      opacity:0;animation:fadeUp .6s .2s forwards;
+    }
+    .hero-eyebrow::before{content:'▶';font-size:.55rem;}
+    #animated-text{
+      font-family:'Syne',sans-serif;font-weight:800;
+      font-size:clamp(2.2rem,4.5vw,4rem);line-height:1.05;
+      letter-spacing:-.03em;min-height:2.2em;
+      opacity:0;animation:fadeUp .6s .4s forwards;
+    }
+    .cursor-blink{
+      display:inline-block;width:3px;height:.85em;
+      background:var(--accent);animation:blink .8s step-end infinite;
+      vertical-align:text-bottom;margin-left:2px;
+    }
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Name hover binary */
+    .name-hover-wrap{position:relative;display:inline-block;cursor:none;}
+    .binary-overlay{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      font-family:'JetBrains Mono',monospace;font-size:.38em;
+      color:var(--accent2);letter-spacing:.04em;line-height:1.6;
+      opacity:0;transition:opacity .3s;pointer-events:none;
+      white-space:nowrap;text-shadow:0 0 8px var(--accent2);
+      background:rgba(10,10,15,.7);border-radius:4px;
+    }
+    .name-hover-wrap:hover .binary-overlay{opacity:1;}
+    .name-hover-wrap:hover .name-text{opacity:.1;}
+    .name-text{transition:opacity .3s;display:inline;}
+
+    .lead{
+      font-size:.82rem;line-height:1.85;color:var(--text-muted);
+      max-width:480px;
+      opacity:0;animation:fadeUp .6s .6s forwards;
+    }
+    .hero-ctas{
+      display:flex;gap:1rem;flex-wrap:wrap;
+      opacity:0;animation:fadeUp .6s .8s forwards;
+    }
+    .skills-pills{
+      display:flex;gap:.5rem;flex-wrap:wrap;
+      opacity:0;animation:fadeUp .6s 1s forwards;
+    }
+    .skill-pill{
+      padding:.25rem .7rem;border-radius:3px;
+      background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);
+      font-size:.68rem;color:var(--accent);letter-spacing:.08em;
+      transition:all .2s;
+    }
+    .skill-pill:hover{background:rgba(108,99,255,.25);transform:translateY(-2px);}
+
+    /* 3D KEYBOARD */
+    .hero-image{
+      display:flex;justify-content:center;align-items:center;
+      perspective:1200px;
+      opacity:0;animation:fadeUp .8s .5s forwards;
+    }
+    .keyboard-scene{
+      transform-style:preserve-3d;
+      animation:floatKbd 5s ease-in-out infinite;
+      transition:transform .1s ease-out;
+    }
+    @keyframes floatKbd{
+      0%,100%{transform:rotateX(22deg) rotateY(-10deg) translateY(0);}
+      50%{transform:rotateX(18deg) rotateY(-6deg) translateY(-14px);}
+    }
+    .keyboard-body{
+      background:linear-gradient(145deg,#1a1a2e,#12121c);
+      border-radius:16px;padding:16px 18px 22px;
+      box-shadow:
+        0 60px 80px rgba(0,0,0,.7),
+        0 0 0 1px rgba(108,99,255,.2),
+        inset 0 1px 0 rgba(255,255,255,.05);
+      transform-style:preserve-3d;
+    }
+    .kbd-row{display:flex;gap:4px;margin-bottom:4px;justify-content:center;}
+    .key{
+      width:40px;height:38px;border-radius:6px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      cursor:none;
+      background:linear-gradient(145deg,#1e1e32,#16162a);
+      border:1px solid rgba(108,99,255,.18);
+      box-shadow:0 4px 0 rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+      transition:all .15s ease;
+      position:relative;
+      transform-style:preserve-3d;
+    }
+    .key:hover{
+      transform:translateY(-7px) translateZ(10px);
+      box-shadow:0 11px 0 rgba(0,0,0,.5),0 0 18px rgba(108,99,255,.5),inset 0 1px 0 rgba(255,255,255,.12);
+      background:linear-gradient(145deg,#2a2a48,#1e1e38);
+      border-color:var(--accent);
+      z-index:50;
+    }
+    .key-label{font-size:.5rem;font-weight:700;color:var(--text-muted);letter-spacing:.04em;line-height:1;}
+    .key-icon{font-size:.85rem;line-height:1;}
+    .key-wide{width:58px;}
+    .key-space{width:170px;}
+    .key-accent{border-color:rgba(0,212,255,.3);background:linear-gradient(145deg,#1a2030,#12182a);}
+    .key-accent .key-label{color:var(--accent2);}
+
+    /* KEY TOOLTIP */
+    .key-tooltip{
+      position:absolute;bottom:calc(100% + 10px);left:50%;
+      transform:translateX(-50%) translateY(8px);
+      background:#1a1a2e;border:1px solid var(--accent);border-radius:8px;
+      padding:.55rem .85rem;width:155px;
+      font-size:.65rem;line-height:1.55;color:var(--text);
+      pointer-events:none;opacity:0;
+      transition:opacity .2s,transform .2s;z-index:200;white-space:normal;text-align:center;
+      box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 10px rgba(108,99,255,.2);
+    }
+    .key-tooltip::after{
+      content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+      border:5px solid transparent;border-top-color:var(--accent);
+    }
+    .key:hover .key-tooltip{opacity:1;transform:translateX(-50%) translateY(0);}
+    .key-tooltip strong{color:var(--accent);display:block;margin-bottom:.2rem;font-size:.72rem;}
+
+    /* FLOATING PARTICLES */
+    .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+    .particle{
+      position:absolute;width:2px;height:2px;background:var(--accent);
+      border-radius:50%;opacity:0;
+      animation:particleFloat linear infinite;
+    }
+    @keyframes particleFloat{
+      0%{transform:translateY(100vh) translateX(0);opacity:0;}
+      10%{opacity:.5;}
+      90%{opacity:.2;}
+      100%{transform:translateY(-100px) translateX(var(--drift));opacity:0;}
+    }
+
+    /* SECTIONS */
+    .section{padding:6rem 0;position:relative;}
+    .section-title{
+      font-family:'Syne',sans-serif;font-weight:800;
+      font-size:clamp(1.8rem,3vw,2.8rem);letter-spacing:-.03em;
+      margin-bottom:3rem;
+    }
+    .section-title::before{
+      content:attr(data-num);
+      font-size:.68rem;color:var(--accent);letter-spacing:.15em;
+      display:block;margin-bottom:.4rem;text-transform:uppercase;
+      font-family:'JetBrains Mono',monospace;
+    }
+
+    /* ABOUT */
+    .about{background:var(--bg2);}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+    .about-card{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:12px;padding:2rem;
+    }
+    .about-card h3{
+      font-family:'Syne',sans-serif;font-size:1.2rem;margin-bottom:.9rem;
+      color:var(--accent);
+    }
+    .about-card p{color:var(--text-muted);font-size:.8rem;line-height:1.8;margin-bottom:1rem;}
+    .about-card ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+    .about-card li{font-size:.78rem;color:var(--text-muted);}
+    .about-card li::before{content:'→ ';color:var(--accent);}
+
+    /* CARTOON */
+    .about-stats-wrap{display:flex;flex-direction:column;gap:2rem;}
+    .cartoon-wrap{
+      display:flex;justify-content:center;
+      opacity:0;transform:translateY(40px);
+      transition:opacity .8s,transform .8s;
+    }
+    .cartoon-wrap.visible{opacity:1;transform:translateY(0);}
+    .cartoon-svg{width:160px;height:auto;}
+    @keyframes walkLegs{0%,100%{transform:rotate(18deg);}50%{transform:rotate(-18deg);}}
+    @keyframes walkArms{0%,100%{transform:rotate(-22deg);}50%{transform:rotate(22deg);}}
+    @keyframes bobBody{0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);}}
+    .char-body{animation:bobBody .55s ease-in-out infinite;}
+    .char-leg-l{transform-origin:50% 0;animation:walkLegs .55s ease-in-out infinite;}
+    .char-leg-r{transform-origin:50% 0;animation:walkLegs .55s ease-in-out infinite reverse;}
+    .char-arm-l{transform-origin:100% 0;animation:walkArms .55s ease-in-out infinite;}
+    .char-arm-r{transform-origin:0% 0;animation:walkArms .55s ease-in-out infinite reverse;}
+
+    /* STATS */
+    .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .stat{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:10px;padding:1.5rem 1rem;text-align:center;
+      opacity:0;transform:translateY(30px);
+      transition:opacity .6s,transform .6s;
+    }
+    .stat.visible{opacity:1;transform:translateY(0);}
+    .stat-num{
+      font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;
+      color:var(--accent);display:block;
+    }
+    .stat-label{font-size:.7rem;color:var(--text-muted);margin-top:.3rem;letter-spacing:.04em;}
+
+    /* PROJECTS — circular scroll */
+    .projects{overflow:hidden;padding-bottom:2rem;}
+    .projects-track-wrap{
+      position:relative;overflow:hidden;
+      padding:3rem 0 4rem;
+    }
+    .projects-track{
+      display:flex;gap:1.5rem;
+      width:max-content;
+      animation:scrollTrack 35s linear infinite;
+      will-change:transform;
+    }
+    .projects-track:hover{animation-play-state:paused;}
+    @keyframes scrollTrack{
+      0%{transform:translateX(0);}
+      100%{transform:translateX(-50%);}
+    }
+    .projects-track-wrap::before,
+    .projects-track-wrap::after{
+      content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none;
+    }
+    .projects-track-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent);}
+    .projects-track-wrap::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent);}
+    .project{
+      width:330px;flex-shrink:0;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:14px;overflow:hidden;
+      transition:transform .3s,box-shadow .3s,border-color .3s;
+      cursor:none;
+    }
+    .project:hover{
+      transform:translateY(-8px) scale(1.02);
+      box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px var(--accent);
+      border-color:var(--accent);
+    }
+    .project img{
+      width:100%;height:170px;object-fit:cover;
+      border-bottom:1px solid var(--border);
+      filter:brightness(.85) saturate(.9);transition:filter .3s;
+      background:var(--surface);
+    }
+    .project:hover img{filter:brightness(1) saturate(1.1);}
+    .project-body{padding:1.4rem;}
+    .project-body h3{
+      font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;
+      margin-bottom:.5rem;color:var(--text);
+    }
+    .project-body p{font-size:.73rem;line-height:1.7;color:var(--text-muted);margin-bottom:1rem;}
+    .project-links{display:flex;gap:.5rem;}
+    .project-tag{
+      display:inline-block;padding:.18rem .55rem;border-radius:3px;
+      background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);
+      font-size:.62rem;color:var(--accent);margin-bottom:.7rem;
+      letter-spacing:.07em;
+    }
+
+    /* CONTACT */
+    .contact{background:var(--bg2);}
+    .contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:4rem;align-items:start;}
+    .contact-info h2{margin-bottom:1rem;}
+    .contact-info>p{font-size:.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.5rem;}
+    .contact-list{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem;}
+    .contact-list li{font-size:.78rem;color:var(--text-muted);}
+    .contact-list a{color:var(--accent);text-decoration:none;transition:color .2s;}
+    .contact-list a:hover{color:var(--accent2);}
+
+    /* SOCIAL ITEMS */
+    .social-links{display:flex;flex-direction:column;gap:.7rem;}
+    .social-item{
+      display:flex;align-items:center;gap:1rem;
+      padding:.75rem 1rem;border-radius:8px;
+      background:var(--surface);border:1px solid var(--border);
+      text-decoration:none;color:var(--text);
+      font-size:.78rem;transition:all .25s;position:relative;cursor:none;
+    }
+    .social-item:hover{border-color:var(--accent);transform:translateX(6px);background:#1a1a2e;}
+    .social-icon{font-size:1.1rem;width:26px;text-align:center;flex-shrink:0;}
+    .social-name{font-weight:700;font-size:.73rem;letter-spacing:.04em;}
+    .social-handle{font-size:.67rem;color:var(--text-muted);}
+    .social-arrow{margin-left:auto;color:var(--accent);font-size:.85rem;opacity:0;transform:translateX(-6px);transition:all .2s;}
+    .social-item:hover .social-arrow{opacity:1;transform:translateX(0);}
+
+    /* FOLDER POPUP */
+    .folder-popup-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.55);
+      z-index:1999;opacity:0;pointer-events:none;transition:opacity .3s;
+      backdrop-filter:blur(5px);
+    }
+    .folder-popup-overlay.open{opacity:1;pointer-events:all;}
+    .folder-popup{
+      position:fixed;top:50%;left:50%;
+      transform:translate(-50%,-50%) scale(.5) rotateY(-90deg);
+      background:var(--surface);border:1px solid var(--accent);
+      border-radius:16px;padding:2rem;z-index:2000;
+      width:310px;
+      transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+      opacity:0;pointer-events:none;
+      box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 40px rgba(108,99,255,.15);
+    }
+    .folder-popup.open{
+      transform:translate(-50%,-50%) scale(1) rotateY(0);
+      opacity:1;pointer-events:all;
+    }
+    .popup-header{
+      display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;
+      font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;
+    }
+    .popup-icon{font-size:1.8rem;}
+    .popup-close{
+      margin-left:auto;background:none;border:none;color:var(--text-muted);
+      font-size:1.1rem;cursor:none;transition:color .2s;
+    }
+    .popup-close:hover{color:var(--accent3);}
+    .popup-preview{
+      background:var(--bg);border-radius:8px;padding:1rem;
+      margin-bottom:1rem;border:1px solid var(--border);
+      text-align:center;
+    }
+    .popup-avatar{
+      width:55px;height:55px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.3rem;margin:0 auto .5rem;
+    }
+    .pp-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);}
+    .pp-sub{font-size:.68rem;color:var(--text-muted);margin-top:.2rem;}
+    .popup-link{
+      display:flex;align-items:center;justify-content:center;gap:.5rem;
+      width:100%;padding:.65rem;border-radius:8px;
+      background:var(--accent);color:#fff;font-size:.78rem;font-weight:700;
+      text-decoration:none;font-family:'JetBrains Mono',monospace;
+      transition:all .2s;border:none;cursor:none;
+    }
+    .popup-link:hover{background:var(--accent2);color:#000;}
+
+    /* CONTACT FORM */
+    .contact-form{display:flex;flex-direction:column;gap:1.1rem;}
+    .contact-form label{display:flex;flex-direction:column;gap:.35rem;}
+    .contact-form span{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);}
+    .contact-form input,.contact-form textarea{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:8px;padding:.75rem 1rem;
+      color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.8rem;
+      transition:border-color .2s,box-shadow .2s;resize:vertical;
+    }
+    .contact-form input:focus,.contact-form textarea:focus{
+      outline:none;border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(108,99,255,.15);
+    }
+    .form-actions{display:flex;gap:1rem;}
+    .form-status{font-size:.75rem;color:var(--green);min-height:1.1rem;}
+
+    /* FOOTER */
+    .site-footer{
+      border-top:1px solid var(--border);padding:2rem 0;
+      background:var(--bg);
+    }
+    .footer-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:1rem;
+    }
+    .footer-inner p{font-size:.73rem;color:var(--text-muted);}
+
+    /* SCROLL REVEAL */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* PROGRESS BAR */
+    .progress-bar{
+      position:fixed;top:0;left:0;height:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      z-index:10000;width:0;transition:width .08s;
+    }
+
+    /* NOISE */
+    .noise{
+      position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.022;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* MOBILE */
+    .nav-toggle{display:none;}
+    @media(max-width:900px){
+      .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;}
+      .hero-image{margin-top:2rem;}
+      .keyboard-scene{transform:scale(.72) !important;animation:floatKbd 5s ease-in-out infinite !important;}
+      .nav{
+        display:none;position:fixed;inset:0;top:64px;
+        background:rgba(10,10,15,.97);flex-direction:column;
+        align-items:center;justify-content:center;gap:2rem;
+        backdrop-filter:blur(20px);z-index:999;
+      }
+      .nav.open{display:flex;}
+      .nav-list{flex-direction:column;text-align:center;font-size:1.1rem;}
+      .nav-toggle{
+        display:block;background:none;border:none;cursor:none;
+        padding:.4rem;
+      }
+      .hamburger,.hamburger::before,.hamburger::after{
+        display:block;width:22px;height:2px;background:var(--text);
+        transition:all .3s;position:relative;
+      }
+      .hamburger::before,.hamburger::after{
+        content:'';position:absolute;left:0;
+      }
+      .hamburger::before{top:-6px;}
+      .hamburger::after{top:6px;}
+    }
+    @media(max-width:600px){
+      .about-stats{grid-template-columns:repeat(3,1fr);}
+    }
+  </style>
+</head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="#" class="logo">Mehdi's <span> Project</span></a>
 
-      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
-        <span class="hamburger"></span>
-      </button>
+<div class="noise"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div class="progress-bar" id="progress"></div>
+<div class="particles" id="particles"></div>
 
-      <nav class="nav" id="nav">
-        <ul class="nav-list">
-          <li><a href="#home" class="nav-link active">Home</a></li>
-          <li><a href="#about" class="nav-link">About</a></li>
-          <li><a href="#projects" class="nav-link">Projects</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
+<!-- FOLDER POPUP -->
+<div class="folder-popup-overlay" id="popup-overlay"></div>
+<div class="folder-popup" id="folder-popup">
+  <div class="popup-header">
+    <span class="popup-icon" id="popup-icon"></span>
+    <span id="popup-title"></span>
+    <button class="popup-close" id="popup-close">✕</button>
+  </div>
+  <div class="popup-preview">
+    <div class="popup-avatar" id="popup-avatar"></div>
+    <div class="pp-name" id="popup-name"></div>
+    <div class="pp-sub" id="popup-sub"></div>
+  </div>
+  <a class="popup-link" id="popup-link" href="#" target="_blank">Open ↗</a>
+</div>
+
+<!-- HEADER -->
+<header class="site-header" id="header">
+  <div class="container header-inner">
+    <a href="#" class="logo">Mehdi<span>.</span></a>
+    <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <nav class="nav" id="nav">
+      <ul class="nav-list">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="theme-toggle" class="btn secondary">◑ Theme</button>
+        <a href="#contact" class="btn">Hire Me ✦</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-bg"></div>
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Available for internship</div>
+      <h1 id="animated-text"></h1>
+      <p class="lead">2nd year Computer Engineering student at EST Sidi Bennour. Passionate about building things for the web — from systems programming to slick front-end experiences.</p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn">See my work ↓</a>
+        <a href="Mehdi Ghine.pdf.pdf" class="btn alt" download>Download CV ⤓</a>
+      </div>
+      <div class="skills-pills">
+        <span class="skill-pill">HTML</span>
+        <span class="skill-pill">CSS</span>
+        <span class="skill-pill">JavaScript</span>
+        <span class="skill-pill">JAVA</span>
+        <span class="skill-pill">PHP</span>
+        <span class="skill-pill">C</span>
+        <span class="skill-pill">SQL</span>
+      </div>
+    </div>
+
+    <!-- 3D KEYBOARD -->
+    <div class="hero-image" id="heroImg">
+      <div class="keyboard-scene" id="keyboardScene">
+        <div class="keyboard-body">
+          <div class="kbd-row" id="row0"></div>
+          <div class="kbd-row" id="row1"></div>
+          <div class="kbd-row" id="row2"></div>
+          <div class="kbd-row" id="row3"></div>
+          <div class="kbd-row" id="row4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section about">
+  <div class="container">
+    <h2 class="section-title reveal" data-num="01 — about">About Me</h2>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <h3>Who I am</h3>
+        <p>I'm a passionate developer who loves turning complex problems into elegant, accessible digital experiences. My focus: semantic HTML, modern CSS, performant JavaScript, and clean backend logic.</p>
+        <ul>
+          <li>Location: Marrakech, Morocco</li>
+          <li>Available for freelance &amp; internship</li>
+          <li>4+ personal projects shipped</li>
+          <li>Networked &amp; ready to collaborate</li>
         </ul>
-        <div class="nav-actions">
-          <button id="theme-toggle" class="btn secondary">Dark</button>
-          <a href="#contact" class="btn">Hire Me</a>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-   
-    <section id="home" class="hero">
-      <div class="container hero-grid">
-        <div class="hero-text">
-          <h1 id="animated-text"></h1>
-
-          <p class="lead"> Étudiant en deuxième année Génie Informatique à l’École Supérieure de Technologie de Sidi Bennour, passionné par l’informatique et les nouvelles technologies. Compétent en C, Java, PHP, HTML, CSS, algorithmique, réseaux et bases de données (SQL). Je recherche un stage d’initiation pour mettre en pratique mes compétences et découvrir le monde professionnel.</p>
-          <div class="hero-ctas">
-            <a href="#projects" class="btn">See my work</a>
-            <a href="Mehdi Ghine.pdf.pdf" class="btn alt" download>Download CV</a>
-          </div>
-          <ul class="skills">
-            <li>HTML</li><li>CSS</li><li>JavaScript</li><li>JAVA</li>
-          </ul>
-        </div>
-
-        <div class="hero-image">
-          <img src="Gemini_Generated_Image_oq2v9qoq2v9qoq2v.png" alt="MEHDI GHINE" />
-        </div>
       </div>
-    </section>
-
-  
-    <section id="about" class="section about">
-      <div class="container">
-        <h2 class="section-title">About Me</h2>
-        <div class="about-grid">
-          <div class="about-card">
-            <h3>Who I am</h3>
-            <p>I make user-friendly, accessible websites. I focus on semantic HTML, modern CSS, and performant JavaScript.</p>
-            <ul>
-              <li>Location: Marrackech</li>
-              <li>Available for freelance</li>
-              <li>4+ projects shipped</li>
-            </ul>
-          </div>
-
-          <div class="about-stats">
-            <div class="stat">
-              <div class="stat-num">1</div>
-              <div class="stat-label">Year experience</div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">3+</div>
-              <div class="stat-label">Projects</div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">30%</div>
-              <div class="stat-label">Student Progress</div>
-            </div>
-          </div>
+      <div class="about-stats-wrap">
+        <div class="cartoon-wrap" id="cartoonWrap">
+          <svg class="cartoon-svg" viewBox="0 0 200 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- keyboard platform -->
+            <rect x="18" y="122" width="164" height="32" rx="7" fill="#1a1a2e" stroke="rgba(108,99,255,0.35)" stroke-width="1.5"/>
+            <rect x="26" y="128" width="13" height="11" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <rect x="43" y="128" width="13" height="11" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <rect x="60" y="128" width="13" height="11" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <rect x="77" y="128" width="13" height="11" rx="2.5" fill="#2a2a48" stroke="rgba(108,99,255,0.5)" stroke-width="1"/>
+            <rect x="94" y="128" width="13" height="11" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <rect x="111" y="128" width="13" height="11" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <rect x="128" y="128" width="13" height="11" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <rect x="145" y="128" width="13" height="11" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <rect x="55" y="141" width="90" height="9" rx="2.5" fill="#1e1e32" stroke="rgba(108,99,255,0.25)" stroke-width="1"/>
+            <!-- glow -->
+            <ellipse cx="100" cy="123" rx="55" ry="5" fill="rgba(108,99,255,0.12)"/>
+            <!-- character -->
+            <g class="char-body">
+              <circle cx="100" cy="52" r="23" fill="#6c63ff" opacity=".92"/>
+              <circle cx="92" cy="49" r="3.5" fill="#fff" opacity=".95"/>
+              <circle cx="108" cy="49" r="3.5" fill="#fff" opacity=".95"/>
+              <circle cx="93" cy="50" r="2.2" fill="#0a0a0f"/>
+              <circle cx="109" cy="50" r="2.2" fill="#0a0a0f"/>
+              <circle cx="94" cy="48" r=".7" fill="#fff" opacity=".6"/>
+              <circle cx="110" cy="48" r=".7" fill="#fff" opacity=".6"/>
+              <path d="M92 60 Q100 67 108 60" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+              <path d="M80 42 Q84 27 100 29 Q116 27 120 42" stroke="#4a45cc" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <rect x="84" y="74" width="32" height="38" rx="8" fill="#4a45cc"/>
+              <text x="100" y="98" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.65)" font-family="monospace">&lt;/&gt;</text>
+              <g class="char-arm-l">
+                <rect x="64" y="76" width="11" height="26" rx="5.5" fill="#6c63ff" transform="rotate(-15 69.5 76)"/>
+                <rect x="59" y="100" width="13" height="11" rx="4.5" fill="#1a1a2e"/>
+              </g>
+              <g class="char-arm-r">
+                <rect x="125" y="76" width="11" height="26" rx="5.5" fill="#6c63ff" transform="rotate(15 130.5 76)"/>
+                <rect x="128" y="100" width="13" height="11" rx="4.5" fill="#1a1a2e"/>
+              </g>
+              <g class="char-leg-l">
+                <rect x="86" y="110" width="12" height="24" rx="6" fill="#2a2a48"/>
+                <rect x="81" y="131" width="16" height="9" rx="3.5" fill="#1a1a2e"/>
+              </g>
+              <g class="char-leg-r">
+                <rect x="102" y="110" width="12" height="24" rx="6" fill="#2a2a48"/>
+                <rect x="103" y="131" width="16" height="9" rx="3.5" fill="#1a1a2e"/>
+              </g>
+            </g>
+            <text x="152" y="36" font-size="7.5" fill="rgba(108,99,255,.5)" font-family="monospace">for(;;){</text>
+            <text x="20" y="34" font-size="7.5" fill="rgba(0,212,255,.4)" font-family="monospace">int n=0;</text>
+            <text x="155" y="78" font-size="7.5" fill="rgba(0,255,136,.3)" font-family="monospace">}</text>
+          </svg>
         </div>
-      </div>
-    </section>
-
-    <section id="projects" class="section projects">
-      <div class="container">
-        <h2 class="section-title">Selected Projects</h2>
-        <div class="projects-grid">
-
-        
-          <article class="project">
-            <img src="Capture22.PNG" alt="Project 1" />
-            <div class="project-body">
-              <h3>CODE CLASH</h3>
-              <p>Code Clash is an interactive platform that compares different programming languages side by side. It helps users discover the strengths, weaknesses, and best use cases of each language — making it easier to choose the right one for their projects.</p>
-              <div class="project-links">
-                <a href="code clash/index.html" class="btn small" data-demo="https://example.com">Try it</a>
-               
-              </div>
-            </div>
-          </article>
-
-          <article class="project">
-            <img src="Capture33.PNG" alt="Project 2" />
-            <div class="project-body">
-              <h3> Idea Garden</h3>
-              <p>Idea Garden is a space to plant your ideas and watch them grow! It’s where creativity blooms — a fun place to share, explore, and develop your best concepts.</p>
-              <div class="project-links">
-                <a href="idea garden/index.html" class="btn small">Try it</a>
-             
-              </div>
-            </div>
-          </article>
-
-          <article class="project">
-            <img src="Capturequiz.PNG" alt="Project 3" />
-            <div class="project-body">
-              <h3> QUIZ</h3>
-              <p>The Integrated Student Project Management Platform is a smart tool that helps students organize their projects, track progress, and collaborate efficiently within one digital workspace.</p>
-              <div class="project-links">
-                <a href="projet-front/index.html" class="btn small">Try it</a>
-              
-              </div>
-            </div>
-          </article>
+        <div class="about-stats">
+          <div class="stat"><span class="stat-num" data-target="1">0</span><div class="stat-label">Year exp.</div></div>
+          <div class="stat"><span class="stat-num" data-target="4">0</span><div class="stat-label">Projects</div></div>
+          <div class="stat"><span class="stat-num" data-target="7">0</span><div class="stat-label">Technologies</div></div>
         </div>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="section contact">
-      <div class="container contact-grid">
-        <div class="contact-info">
-          <h2 class="section-title">Get in touch</h2>
-          <p>If you have a project or just want to say hi — send a message!</p>
-          <ul class="contact-list">
-            <li>Email: <a href="mehdighine@gmail.com">mehdighine@gmail.com</a></li>
-            <li>Phone: <a href="tel:+212708732437">+212 708732437</a></li>
-            <li>Location: Marrackech, Morocco</li>
-          </ul>
-        </div>
-
-        <form id="contact-form" class="contact-form" action="#" novalidate>
-          <label>
-            <span>Name</span>
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            <span>Email</span>
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            <span>Message</span>
-            <textarea name="message" rows="6" required></textarea>
-          </label>
-          <div class="form-actions">
-            <button class="btn" type="submit">Send Message</button>
-            <button class="btn alt" type="reset">Reset</button>
-          </div>
-          <div id="form-status" class="form-status" aria-live="polite"></div>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>© <span id="year"></span> MEHDI GHINE. All rights reserved.</p>
-      <div class="social">
-        <a href="https://github.com/m3hdiix-h4x" aria-label="GitHub">GitHub</a><br>
-        <p>  </p>
-        <br><a href="https://www.linkedin.com/in/mehdi-ghine-a2b156275/" aria-label="LinkedIn">LinkedIn</a><br><br>
-        <p>  </p>
-        <br><a href="https://www.instagram.com/m3hdiix.h4x/" aria-label="Instagram">Instagram</a><br>
       </div>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script src="script.js" defer></script>
+<!-- PROJECTS -->
+<section id="projects" class="section projects">
+  <div class="container">
+    <h2 class="section-title reveal" data-num="02 — work">Selected Projects</h2>
+  </div>
+  <div class="projects-track-wrap">
+    <div class="projects-track" id="projectsTrack"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section contact">
+  <div class="container contact-grid">
+    <div class="contact-info reveal">
+      <h2 class="section-title" data-num="03 — contact">Get in touch</h2>
+      <p>Have a project or just want to say hi? I'd love to hear from you.</p>
+      <ul class="contact-list">
+        <li>Email: <a href="mailto:mehdighine@gmail.com">mehdighine@gmail.com</a></li>
+        <li>Phone: <a href="tel:+212708732437">+212 708 732 437</a></li>
+        <li>Location: Marrakech, Morocco</li>
+      </ul>
+      <div class="social-links">
+        <a class="social-item" data-social="github" href="#">
+          <span class="social-icon">🐙</span>
+          <span><div class="social-name">GitHub</div><div class="social-handle">m3hdiix-h4x</div></span>
+          <span class="social-arrow">↗</span>
+        </a>
+        <a class="social-item" data-social="linkedin" href="#">
+          <span class="social-icon">💼</span>
+          <span><div class="social-name">LinkedIn</div><div class="social-handle">mehdi-ghine</div></span>
+          <span class="social-arrow">↗</span>
+        </a>
+        <a class="social-item" data-social="instagram" href="#">
+          <span class="social-icon">📸</span>
+          <span><div class="social-name">Instagram</div><div class="social-handle">m3hdiix.h4x</div></span>
+          <span class="social-arrow">↗</span>
+        </a>
+        <a class="social-item" data-social="email" href="#">
+          <span class="social-icon">✉️</span>
+          <span><div class="social-name">Gmail</div><div class="social-handle">mehdighine@gmail.com</div></span>
+          <span class="social-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <form id="contact-form" class="contact-form reveal" action="#" novalidate>
+      <label><span>Name</span><input type="text" name="name" placeholder="Your name" required /></label>
+      <label><span>Email</span><input type="email" name="email" placeholder="you@email.com" required /></label>
+      <label><span>Message</span><textarea name="message" rows="5" placeholder="Tell me about your project..." required></textarea></label>
+      <div class="form-actions">
+        <button class="btn" type="submit">Send Message ↗</button>
+        <button class="btn alt" type="reset">Reset</button>
+      </div>
+      <div id="form-status" class="form-status"></div>
+    </form>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© <span id="year"></span> MEHDI GHINE — Built with ♥ &amp; too much coffee.</p>
+    <p>Marrakech, Morocco</p>
+  </div>
+</footer>
+
+<script>
+/* ─── CURSOR ─── */
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.key,.social-item,.project,.skill-pill').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='20px';cursor.style.height='20px';ring.style.width='55px';ring.style.height='55px';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';});
+});
+
+/* ─── PARTICLES ─── */
+const pc=document.getElementById('particles');
+for(let i=0;i<28;i++){
+  const p=document.createElement('div');p.className='particle';
+  p.style.cssText=`left:${Math.random()*100}%;--drift:${(Math.random()-.5)*80}px;animation-duration:${9+Math.random()*14}s;animation-delay:${Math.random()*10}s;`;
+  pc.appendChild(p);
+}
+
+/* ─── PROGRESS BAR ─── */
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  document.getElementById('progress').style.width=((s.scrollTop/(s.scrollHeight-s.clientHeight))*100)+'%';
+},{ passive:true });
+
+/* ─── TYPING + BINARY HOVER ─── */
+const lines=['MEHDI GHINE','Full-Stack Dev','EST Sidi Bennour','Code. Create. Ship.'];
+let li=0,ci=0,del=false,pause=false;
+const tEl=document.getElementById('animated-text');
+function buildName(t){
+  if(t==='MEHDI GHINE'){
+    return `<span class="name-hover-wrap"><span class="name-text">${t}</span><span class="binary-overlay">01001101 01000101 01001000<br>01000100 01001001 00100000<br>01000111 01001000 01001001<br>01001110 01000101 ✦</span></span>`;
+  }
+  return `<span style="color:var(--accent2)">${t}</span>`;
+}
+function type(){
+  if(pause)return;
+  const cur=lines[li];
+  if(!del){
+    ci++;
+    const p=cur.slice(0,ci);
+    tEl.innerHTML=(ci===cur.length?buildName(p):p)+'<span class="cursor-blink"></span>';
+    if(ci===cur.length){pause=true;setTimeout(()=>{pause=false;del=true;},2000);}
+  } else {
+    ci--;
+    tEl.innerHTML=cur.slice(0,ci)+'<span class="cursor-blink"></span>';
+    if(ci===0){del=false;li=(li+1)%lines.length;}
+  }
+}
+setInterval(type,del?45:85);
+setInterval(()=>{if(del)type();},45);
+
+/* ─── 3D KEYBOARD ─── */
+const keyDefs=[
+  // row0
+  [{label:'`',icon:'🔧',lang:'Bash',desc:'Shell scripting — automate tasks, control Unix systems with ease.'},
+   {label:'1',icon:'☕',lang:'Java',desc:'Object-oriented powerhouse. Android, backends & enterprise apps.'},
+   {label:'2',icon:'🐍',lang:'Python',desc:'Readable & versatile. ML, data science & automation king.'},
+   {label:'3',icon:'🌐',lang:'HTML',desc:'The skeleton of every website — structure & semantics.'},
+   {label:'4',icon:'🎨',lang:'CSS',desc:'Make the web beautiful. Animations, grids & custom properties.'},
+   {label:'5',icon:'⚡',lang:'JS',desc:'Bring pages to life. Event-driven, async & everywhere.'},
+   {label:'6',icon:'🐘',lang:'PHP',desc:'Server-side classic powering 80% of the web.'},
+   {label:'7',icon:'🗃️',lang:'SQL',desc:'Query databases. SELECT, JOIN & master your data.'},
+   {label:'8',icon:'⚙️',lang:'C',desc:'The mother of systems programming — raw speed & control.'},
+   {label:'9',icon:'🦀',lang:'Rust',desc:'Memory safety without GC — blazingly fast systems code.'},
+   {label:'0',icon:'🐹',lang:'Go',desc:'Simple, compiled & concurrent — great for backends & CLIs.'},
+   {label:'-',icon:'💎',lang:'Ruby',desc:'Developer happiness — convention over configuration.'},
+   {label:'=',icon:'🔺',lang:'Vue',desc:'Progressive JS framework — approachable and versatile.',wide:true}],
+  // row1
+  [{label:'Q',icon:'🎯',lang:'C++',desc:"Java's low-level cousin. Games, systems & performance code."},
+   {label:'W',icon:'🕸️',lang:'React',desc:'Component-based UI — the most popular frontend library.'},
+   {label:'E',icon:'🅰️',lang:'Angular',desc:'Full MVC framework by Google — enterprise-grade SPAs.'},
+   {label:'R',icon:'📘',lang:'TypeScript',desc:'Typed JavaScript — catch errors before they even happen.'},
+   {label:'T',icon:'🦕',lang:'Deno',desc:'Secure JS/TS runtime — the modern Node.js alternative.'},
+   {label:'Y',icon:'⚡',lang:'Svelte',desc:'Compile-time framework — write less, ship way faster.'},
+   {label:'U',icon:'🍎',lang:'Swift',desc:"Apple's modern language — build iOS & macOS apps."},
+   {label:'I',icon:'🎭',lang:'Scala',desc:'Functional + OOP on the JVM — big data with Spark.'},
+   {label:'O',icon:'💜',lang:'Elixir',desc:'Functional & concurrent — built on the mighty Erlang VM.'},
+   {label:'P',icon:'🔣',lang:'Lua',desc:'Lightweight scripting — game engines and configs love it.'},
+   {label:'[',icon:'📜',lang:'Perl',desc:'Text-processing legend — still strong in bioinformatics.'},
+   {label:']',icon:'🌺',lang:'Crystal',desc:'Ruby syntax + C performance — compiled and type-safe.'}],
+  // row2
+  [{label:'A',icon:'🏗️',lang:'Java',desc:'Object-oriented powerhouse — Android, backends, enterprise.'},
+   {label:'S',icon:'🗄️',lang:'SQL',desc:'Query relational databases — joins, indexes, transactions.'},
+   {label:'D',icon:'🐦',lang:'Dart',desc:"Google's language — powers Flutter mobile apps."},
+   {label:'F',icon:'🧪',lang:'F#',desc:'Functional-first .NET — type inference & elegant pipelines.'},
+   {label:'G',icon:'λ',lang:'Haskell',desc:'Pure functional — type system so strong it proves programs correct.'},
+   {label:'H',icon:'🔬',lang:'MATLAB',desc:'Scientific computing — matrix ops & signal processing.'},
+   {label:'J',icon:'📐',lang:'R',desc:'Statistics & data viz — ggplot2 is an absolute gem.'},
+   {label:'K',icon:'🍡',lang:'Kotlin',desc:'JVM modern language — concise, null-safe & Android-official.'},
+   {label:'L',icon:'🌊',lang:'Julia',desc:'High-performance scientific computing with Python-like syntax.'},
+   {label:';',icon:'⚡',lang:'Zig',desc:'New systems language — manual memory, safety without GC.'},
+   {label:"'",icon:'🌿',lang:'Node.js',desc:'JavaScript on the server — npm ecosystem is enormous.'}],
+  // row3
+  [{label:'Z',icon:'🔶',lang:'Nim',desc:'Statically typed, compiles to C — Pythonic & elegant syntax.'},
+   {label:'X',icon:'🏗️',lang:'COBOL',desc:'Legacy but immortal — banks still run millions of COBOL lines.'},
+   {label:'C',icon:'⚙️',lang:'C',desc:'The mother tongue of systems programming — pure performance.'},
+   {label:'V',icon:'🔮',lang:'V',desc:'Simple, fast & safe — inspired by Go with clean syntax.'},
+   {label:'B',icon:'🐝',lang:'Brainfuck',desc:'Esoteric 8-command lang — programs your patience more than your CPU.'},
+   {label:'N',icon:'🤖',lang:'Assembly',desc:'Closest to the metal — MOV, PUSH, POP & total control.'},
+   {label:'M',icon:'🦋',lang:'Clojure',desc:'Functional Lisp on the JVM — data-first & immutable.'},
+   {label:',',icon:'🔱',lang:'Prolog',desc:'Logic programming — declare facts, query the knowledge base.'},
+   {label:'.',icon:'🌙',lang:'Scheme',desc:'Minimalist Lisp — elegant syntax, powerful macros.'},
+   {label:'/',icon:'🏝️',lang:'Erlang',desc:'Concurrency king — built for fault-tolerant distributed systems.'}],
+  // row4
+  [{label:'Ctrl',icon:'🕹️',lang:'Git',desc:'Version control — branch, merge & collaborate seamlessly.',wide:true},
+   {label:'Alt',icon:'🐋',lang:'Docker',desc:'Containers for everything — ship your app anywhere.',wide:true},
+   {label:'— SPACE — ',icon:'🚀',lang:'DEPLOY',desc:'Ship the code. Make it live. Be the engineer you were meant to be.',space:true},
+   {label:'Alt',icon:'⬛',lang:'Linux',desc:'The OS that runs the world — free, open & unstoppable.',wide:true},
+   {label:'Ctrl',icon:'📡',lang:'HTTP',desc:'Protocol of the web — REST, headers & status codes.',wide:true}],
+];
+
+keyDefs.forEach((row,ri)=>{
+  const rowEl=document.getElementById('row'+ri);
+  row.forEach(k=>{
+    const d=document.createElement('div');
+    d.className='key'+(k.wide?' key-wide':'')+(k.space?' key-space key-accent':'');
+    d.innerHTML=`<span class="key-icon">${k.icon}</span><span class="key-label">${k.label}</span><div class="key-tooltip"><strong>${k.lang}</strong>${k.desc}</div>`;
+    rowEl.appendChild(d);
+  });
+});
+
+/* Keyboard 3D tilt */
+const kbScene=document.getElementById('keyboardScene');
+const heroImg=document.getElementById('heroImg');
+heroImg.addEventListener('mousemove',e=>{
+  const r=kbScene.getBoundingClientRect();
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const dx=(e.clientX-cx)/r.width*28,dy=(e.clientY-cy)/r.height*18;
+  kbScene.style.animation='none';
+  kbScene.style.transform=`rotateX(${22-dy}deg) rotateY(${-10+dx}deg)`;
+});
+heroImg.addEventListener('mouseleave',()=>{
+  kbScene.style.animation='';kbScene.style.transform='';
+});
+
+/* ─── PROJECTS TRACK ─── */
+const projects=[
+  {img:'Capture22.PNG',title:'CODE CLASH',tag:'JavaScript • CSS',desc:'Interactive platform comparing programming languages side-by-side. Discover strengths, weaknesses, and best use cases.',link:'code clash/index.html'},
+  {img:'Capture33.PNG',title:'Idea Garden',tag:'HTML • CSS • JS',desc:'A creative space to plant and grow your ideas — share, explore, and develop your best concepts in a lush digital garden.',link:'idea garden/index.html'},
+  {img:'Capturequiz.PNG',title:'QUIZ PLATFORM',tag:'JavaScript',desc:'Smart student project management platform — organize projects, track progress and collaborate digitally.',link:'projet-front/index.html'},
+  {img:'Capture.PNG',title:'Student Mgmt System',tag:'PHP • SQL • JS',desc:'Full-stack web app with secure auth, CRUD operations, grade management and a clean responsive dashboard.',link:'http://localhost/student-management-system/public/'},
+];
+const track=document.getElementById('projectsTrack');
+[...projects,...projects].forEach(p=>{
+  const a=document.createElement('article');a.className='project';
+  a.innerHTML=`<img src="${p.img}" alt="${p.title}" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#0f0f1a)';this.removeAttribute('src')"/>
+  <div class="project-body"><div class="project-tag">${p.tag}</div><h3>${p.title}</h3><p>${p.desc}</p>
+  <div class="project-links"><a href="${p.link}" class="btn small" target="_blank">Try it ↗</a></div></div>`;
+  track.appendChild(a);
+});
+
+/* ─── SCROLL REVEAL ─── */
+const revEls=document.querySelectorAll('.reveal');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*80);});
+},{threshold:.12});
+revEls.forEach(el=>revObs.observe(el));
+
+/* ─── CARTOON + STATS ─── */
+const cObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.getElementById('cartoonWrap').classList.add('visible');
+      document.querySelectorAll('.stat').forEach((s,i)=>{
+        setTimeout(()=>{
+          s.classList.add('visible');
+          const n=s.querySelector('.stat-num'),t=parseInt(n.dataset.target);let c=0;
+          const iv=setInterval(()=>{c++;n.textContent=c;if(c>=t)clearInterval(iv);},110);
+        },600+i*220);
+      });
+      cObs.disconnect();
+    }
+  });
+},{threshold:.25});
+cObs.observe(document.getElementById('cartoonWrap'));
+
+/* ─── SOCIAL FOLDER POPUP ─── */
+const socialData={
+  github:{icon:'🐙',name:'GitHub',handle:'@m3hdiix-h4x',sub:'Developer profile & open-source',avatar:'🐙',link:'https://github.com/m3hdiix-h4x'},
+  linkedin:{icon:'💼',name:'LinkedIn',handle:'Mehdi Ghine',sub:'Computer Engineering Student',avatar:'💼',link:'https://www.linkedin.com/in/mehdi-ghine-a2b156275/'},
+  instagram:{icon:'📸',name:'Instagram',handle:'@m3hdiix.h4x',sub:'Photos, code & moments',avatar:'📸',link:'https://www.instagram.com/m3hdiix.h4x/'},
+  email:{icon:'✉️',name:'Gmail',handle:'mehdighine@gmail.com',sub:'Available for collaboration',avatar:'✉️',link:'mailto:mehdighine@gmail.com'},
+};
+const overlay=document.getElementById('popup-overlay'),popup=document.getElementById('folder-popup');
+document.querySelectorAll('.social-item').forEach(item=>{
+  item.addEventListener('click',e=>{
+    e.preventDefault();
+    const d=socialData[item.dataset.social];
+    document.getElementById('popup-icon').textContent=d.icon;
+    document.getElementById('popup-title').textContent=d.name;
+    document.getElementById('popup-avatar').textContent=d.avatar;
+    document.getElementById('popup-name').textContent=d.handle;
+    document.getElementById('popup-sub').textContent=d.sub;
+    const lnk=document.getElementById('popup-link');
+    lnk.href=d.link;lnk.textContent=`Open ${d.name} ↗`;
+    overlay.classList.add('open');popup.classList.add('open');
+  });
+});
+function closePopup(){overlay.classList.remove('open');popup.classList.remove('open');}
+document.getElementById('popup-close').addEventListener('click',closePopup);
+overlay.addEventListener('click',closePopup);
+
+/* ─── CONTACT FORM ─── */
+document.getElementById('contact-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  const s=document.getElementById('form-status');
+  s.textContent='✓ Message sent! I\'ll get back to you soon.';
+  this.reset();setTimeout(()=>s.textContent='',4000);
+});
+
+/* ─── ACTIVE NAV ─── */
+const sections=document.querySelectorAll('section[id]'),navLinks=document.querySelectorAll('.nav-link');
+window.addEventListener('scroll',()=>{
+  let cur='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)cur=s.id;});
+  navLinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur));
+},{passive:true});
+
+/* ─── MOBILE NAV ─── */
+document.getElementById('nav-toggle').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));
+
+/* ─── THEME TOGGLE ─── */
+let light=false;
+document.getElementById('theme-toggle').addEventListener('click',function(){
+  light=!light;
+  const r=document.documentElement;
+  r.style.setProperty('--bg',light?'#f2f2f8':'#0a0a0f');
+  r.style.setProperty('--bg2',light?'#e8e8f4':'#0f0f1a');
+  r.style.setProperty('--surface',light?'#ffffff':'#13131f');
+  r.style.setProperty('--border',light?'#d0d0e8':'#1e1e30');
+  r.style.setProperty('--text',light?'#0a0a1a':'#e8e8f0');
+  r.style.setProperty('--text-muted',light?'#5050a0':'#7070a0');
+  this.textContent=light?'◑ Dark':'◑ Theme';
+});
+
+/* ─── FOOTER YEAR ─── */
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
 </body>
 </html>
