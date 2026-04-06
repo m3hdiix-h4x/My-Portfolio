@@ -1,0 +1,82 @@
+about.html
+booking.html
+chatbot.html
+confirmation.html
+contact.html
+dashboard.html
+dashboard.js
+dashboard.php
+find_phpmailer.php
+index.html
+login.html
+my-bookings.html
+payment.html
+profile.html
+register.html
+room-details.html
+rooms.html
+README.md
+admin/
+    login.html
+    reservations.php
+    reviews.php
+    rooms.php
+    statistics.html
+    users.php
+assets/
+    css/
+        accessibility.css
+        admin.css
+        floating-chatbot.css
+        style.css
+        theme-fixes.css
+    images/
+    js/
+        accessibility.js
+        booking.js
+        chatbot.js
+        floating-chatbot.js
+        language.js
+        main.js
+        theme-switcher.js
+backend/
+    api/
+        book-room.php
+        chatbot.php
+        get-bookings.php
+        get-rooms.php
+        login.php
+        register.php
+        reviews.php
+    config/
+        database.php
+    controllers/
+        AuthController.php
+        ChatbotController.php
+        ReservationController.php
+        ReviewController.php
+        RoomController.php
+    middleware/
+        auth.php
+    models/
+        Reservation.php
+        Review.php
+        Room.php
+        User.php
+database/
+    smart_hotel.sql
+docs/
+    diagrams/
+    report/
+includes/
+    footer.php
+    header.php
+PHPMailer/
+    src/
+        DSNConfigurator.php
+        Exception.php
+        OAuth.php
+        OAuthTokenProvider.php
+        PHPMailer.php
+        POP3.php
+        SMTP.php

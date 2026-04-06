@@ -1,0 +1,422 @@
+/* LIGHT THEME FIXES - All text visible and clear */
+
+/* Light Theme Base Colors */
+[data-theme="light"] {
+    --text-primary: #0a0a0a;
+    --text-secondary: #4a4a4a;
+    --text-tertiary: #666666;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-card: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Body and Main Elements */
+[data-theme="light"] body {
+    background: #f8f9fa;
+    color: #0a0a0a;
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] p {
+    color: #4a4a4a !important;
+}
+
+[data-theme="light"] a {
+    color: #667eea;
+}
+
+[data-theme="light"] a:hover {
+    color: #764ba2;
+}
+
+/* Navigation */
+[data-theme="light"] nav {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .nav-links a {
+    color: #0a0a0a;
+}
+
+[data-theme="light"] .nav-links a.active {
+    color: #667eea;
+}
+
+[data-theme="light"] .nav-links a:hover {
+    color: #667eea;
+}
+
+[data-theme="light"] .logo {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Hero Section */
+[data-theme="light"] .hero {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+[data-theme="light"] .hero h1 {
+    background: linear-gradient(135deg, #0a0a0a 0%, #667eea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .hero p {
+    color: #4a4a4a !important;
+}
+
+/* Page Header */
+[data-theme="light"] .page-header {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+[data-theme="light"] .page-header h1 {
+    background: linear-gradient(135deg, #0a0a0a 0%, #667eea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .page-header p,
+[data-theme="light"] .subtitle {
+    color: #4a4a4a !important;
+}
+
+/* Cards */
+[data-theme="light"] .room-card,
+[data-theme="light"] .service-card,
+[data-theme="light"] .feature-card,
+[data-theme="light"] .review-card,
+[data-theme="light"] .mission-card,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .booking-card {
+    background: #ffffff;
+    color: #0a0a0a;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .room-card:hover,
+[data-theme="light"] .service-card:hover,
+[data-theme="light"] .feature-card:hover {
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.15);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+[data-theme="light"] .room-card h3,
+[data-theme="light"] .service-card h3,
+[data-theme="light"] .feature-card h3 {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .room-card p,
+[data-theme="light"] .service-card p,
+[data-theme="light"] .feature-card p {
+    color: #4a4a4a !important;
+}
+
+/* Room Features */
+[data-theme="light"] .room-feature {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+/* Forms */
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group select,
+[data-theme="light"] .form-group textarea {
+    background: #ffffff;
+    color: #0a0a0a;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .form-group input::placeholder,
+[data-theme="light"] .form-group textarea::placeholder {
+    color: #999999;
+}
+
+[data-theme="light"] .form-group input:focus,
+[data-theme="light"] .form-group select:focus,
+[data-theme="light"] .form-group textarea:focus {
+    border-color: #667eea;
+    background: #ffffff;
+}
+
+[data-theme="light"] .form-group label {
+    color: #0a0a0a;
+}
+
+/* Buttons */
+[data-theme="light"] .btn-secondary {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+/* Footer */
+[data-theme="light"] footer {
+    background: #ffffff;
+    color: #4a4a4a;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .footer-section h4 {
+    color: #667eea !important;
+}
+
+[data-theme="light"] .footer-section p,
+[data-theme="light"] .footer-section a {
+    color: #4a4a4a !important;
+}
+
+[data-theme="light"] .footer-section a:hover {
+    color: #667eea !important;
+}
+
+[data-theme="light"] .footer-bottom {
+    color: #666666 !important;
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Contact Items */
+[data-theme="light"] .contact-item {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .contact-item h4 {
+    color: #667eea !important;
+}
+
+[data-theme="light"] .contact-item p {
+    color: #4a4a4a !important;
+}
+
+/* Section Titles */
+[data-theme="light"] .section-title {
+    background: linear-gradient(135deg, #0a0a0a 0%, #667eea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .section-subtitle {
+    color: #4a4a4a !important;
+}
+
+/* Stats */
+[data-theme="light"] .stat-number {
+    color: #667eea !important;
+}
+
+[data-theme="light"] .stat-label {
+    color: #4a4a4a !important;
+}
+
+/* Team Members */
+[data-theme="light"] .team-member h4 {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .team-member p {
+    color: #666666 !important;
+}
+
+/* About Section */
+[data-theme="light"] .about-text h2 {
+    color: #667eea !important;
+}
+
+[data-theme="light"] .about-text p {
+    color: #4a4a4a !important;
+}
+
+/* Service Features List */
+[data-theme="light"] .service-features li {
+    color: #4a4a4a !important;
+}
+
+[data-theme="light"] .service-features li::before {
+    color: #667eea !important;
+}
+
+/* Filters */
+[data-theme="light"] .filters {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .filters h3 {
+    color: #667eea !important;
+}
+
+[data-theme="light"] .filter-group label {
+    color: #0a0a0a !important;
+}
+
+/* Booking Summary */
+[data-theme="light"] .booking-summary {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .booking-summary h3 {
+    color: #667eea !important;
+}
+
+[data-theme="light"] .summary-item {
+    color: #0a0a0a !important;
+}
+
+/* Profile Section */
+[data-theme="light"] .profile-sidebar {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .profile-content {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .profile-content h2 {
+    color: #667eea !important;
+}
+
+/* Chatbot Light Theme */
+[data-theme="light"] .chatbot-window {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #0a0a0a;
+}
+
+[data-theme="light"] .chatbot-window-header {
+    background: rgba(102, 126, 234, 0.05);
+}
+
+[data-theme="light"] .chatbot-window-header h4 {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .chatbot-status-small {
+    color: #666666 !important;
+}
+
+[data-theme="light"] .message-content-small {
+    background: #f8f9fa;
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .message-content-small p {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .user-message-small .message-content-small {
+    background: rgba(102, 126, 234, 0.1);
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .chatbot-window-input input {
+    background: #f8f9fa;
+    color: #0a0a0a;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .chatbot-window-input input::placeholder {
+    color: #999999;
+}
+
+/* Accessibility Panel Light Theme */
+[data-theme="light"] .accessibility-panel {
+    background: #ffffff;
+    color: #0a0a0a;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .accessibility-panel-header {
+    background: rgba(16, 185, 129, 0.05);
+}
+
+[data-theme="light"] .accessibility-panel-header h3 {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .accessibility-option {
+    background: #f8f9fa;
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .accessibility-option label {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .close-panel-btn {
+    background: rgba(0, 0, 0, 0.05);
+    color: #0a0a0a;
+}
+
+/* Review Cards */
+[data-theme="light"] .review-header h4 {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .review-header p,
+[data-theme="light"] .reviewer-info p {
+    color: #666666 !important;
+}
+
+[data-theme="light"] .review-card p {
+    color: #4a4a4a !important;
+}
+
+/* Ensure all text is readable */
+[data-theme="light"] * {
+    scrollbar-color: #667eea #f8f9fa;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Make sure everything is visible */
+[data-theme="light"] .feature-icon,
+[data-theme="light"] .service-icon,
+[data-theme="light"] .contact-icon {
+    filter: none;
+    opacity: 1;
+}
+
+/* CTA Section */
+[data-theme="light"] .cta-section {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .cta-section h2 {
+    color: #0a0a0a !important;
+}
+
+[data-theme="light"] .cta-section p {
+    color: #4a4a4a !important;
+}

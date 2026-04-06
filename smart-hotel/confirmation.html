@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmed — SmartHotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold:     #c9b896;
+      --gold-lt:  #f4e4c1;
+      --gold-dk:  #a89674;
+      --black:    #080808;
+      --surface:  #111111;
+      --text:     rgba(255,255,255,0.88);
+      --text-dim: rgba(255,255,255,0.55);
+      --ease:     cubic-bezier(.4,0,.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Cormorant Garamond', Georgia, serif; background: var(--black); color: var(--text); overflow-x: hidden; }
+
+    /* CURSOR */
+    .cursor { width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease);mix-blend-mode:difference; }
+    .cursor-ring { width:36px;height:36px;border:1px solid rgba(201,184,150,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:transform .18s var(--ease),width .4s var(--ease),height .4s var(--ease); }
+
+    /* NAVBAR */
+    #navbar { position:fixed;top:0;width:100%;z-index:1000;padding:1.4rem 0;transition:all .5s var(--ease); }
+    #navbar.scrolled { background:rgba(8,8,8,.92);backdrop-filter:blur(24px);padding:.9rem 0;border-bottom:1px solid rgba(201,184,150,.12);box-shadow:0 8px 40px rgba(0,0,0,.5); }
+    .nav-container { max-width:1440px;margin:0 auto;padding:0 3rem;display:flex;justify-content:space-between;align-items:center; }
+    .logo { font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-lt) 50%,var(--gold) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmerLogo 4s ease infinite;text-decoration:none; }
+    @keyframes shimmerLogo{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    .nav-links { display:flex;list-style:none;gap:2.8rem;align-items:center; }
+    .nav-links a { font-family:'Montserrat',sans-serif;color:rgba(255,255,255,.75);text-decoration:none;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;padding:.4rem 0;position:relative;transition:color .3s; }
+    .nav-links a::after { content:'';position:absolute;bottom:-2px;left:50%;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease),left .4s var(--ease); }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-links a:hover::after { width:100%;left:0; }
+
+    /* PROGRESS */
+    .booking-progress { background:var(--surface);padding:3.5rem 5%;border-bottom:1px solid rgba(201,184,150,.1);padding-top:calc(3.5rem + 80px); }
+    .progress-container { max-width:720px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;position:relative; }
+    .progress-track { position:absolute;top:24px;left:10%;right:10%;height:1px;background:rgba(201,184,150,.15); }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));width:100%;box-shadow:0 0 16px rgba(201,184,150,.4);transition:width 1s var(--ease); }
+    .progress-step { position:relative;z-index:2;text-align:center; }
+    .step-circle { width:50px;height:50px;border-radius:50%;border:1px solid rgba(201,184,150,.25);background:rgba(201,184,150,.06);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;transition:all .5s var(--ease); }
+    .step-circle i { font-size:1.1rem;color:rgba(255,255,255,.4);transition:color .4s; }
+    .progress-step.completed .step-circle { background:#1a5e34;border-color:#2ecc71; }
+    .progress-step.completed .step-circle i { color:#2ecc71; }
+    .step-label { font-family:'Montserrat',sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);transition:color .4s; }
+    .progress-step.completed .step-label { color:#2ecc71; }
+
+    /* SUCCESS HERO */
+    .success-hero { padding:8rem 5% 6rem;background:var(--black);position:relative;overflow:hidden;text-align:center; }
+    .success-hero::before { content:'CONFIRMED';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:clamp(8vw,14vw,180px);font-weight:700;color:rgba(201,184,150,.028);letter-spacing:.08em;pointer-events:none;white-space:nowrap; }
+    .success-icon-wrap { position:relative;display:inline-flex;align-items:center;justify-content:center;width:130px;height:130px;margin:0 auto 3.5rem; }
+    .success-ring { position:absolute;inset:0;border-radius:50%;border:1px solid rgba(201,184,150,.25);animation:ringPulse 2.8s ease-out infinite; }
+    .success-ring:nth-child(2){animation-delay:.6s;}.success-ring:nth-child(3){animation-delay:1.2s;}
+    @keyframes ringPulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+    .success-icon { width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 0 0 12px rgba(201,184,150,.1),0 20px 60px rgba(201,184,150,.3);animation:iconPop .7s var(--ease) .2s both; }
+    @keyframes iconPop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+    .success-icon i { font-size:2.4rem;color:#000; }
+    .success-eyebrow { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.5em;text-transform:uppercase;color:#2ecc71;display:flex;align-items:center;justify-content:center;gap:1.4rem;margin-bottom:1.6rem;opacity:0;animation:revealUp .8s var(--ease) .5s forwards; }
+    .success-eyebrow::before,.success-eyebrow::after{content:'';flex:1;max-width:60px;height:1px;}
+    .success-eyebrow::before{background:linear-gradient(to right,transparent,#2ecc71);}
+    .success-eyebrow::after{background:linear-gradient(to left,transparent,#2ecc71);}
+    .success-title { font-family:'Playfair Display',serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:400;color:#fff;line-height:1.1;margin-bottom:1.8rem;opacity:0;animation:revealUp 1s var(--ease) .65s forwards; }
+    .success-title em { font-style:italic;background:linear-gradient(135deg,#fff 20%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+    .success-subtext { font-size:clamp(1.1rem,1.5vw,1.3rem);line-height:1.95;color:var(--text-dim);max-width:580px;margin:0 auto 3rem;opacity:0;animation:revealUp .9s var(--ease) .85s forwards; }
+    .conf-badge { display:inline-flex;align-items:center;gap:1.4rem;padding:1.3rem 2.6rem;background:linear-gradient(135deg,rgba(201,184,150,.1),rgba(201,184,150,.04));border:1px solid rgba(201,184,150,.25);border-radius:50px;margin-bottom:1rem;opacity:0;animation:revealUp .8s var(--ease) 1s forwards; }
+    .conf-badge-label { font-family:'Montserrat',sans-serif;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim); }
+    .conf-badge-number { font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.08em; }
+    .conf-badge-copy { width:36px;height:36px;border-radius:50%;border:1px solid rgba(201,184,150,.25);background:transparent;color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:all .3s var(--ease); }
+    .conf-badge-copy:hover { background:rgba(201,184,150,.12);border-color:var(--gold); }
+    .email-note { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.1em;color:var(--text-dim);display:flex;align-items:center;justify-content:center;gap:.6rem;opacity:0;animation:revealUp .7s var(--ease) 1.15s forwards; }
+    .email-note i { color:var(--gold); }
+    .email-note strong { color:var(--gold); }
+    @keyframes revealUp{to{opacity:1;transform:translateY(0)}}
+
+    /* EMAIL STATUS */
+    .email-status { display:inline-flex;align-items:center;gap:.8rem;margin-top:1rem;padding:.8rem 1.6rem;border-radius:50px;font-family:'Montserrat',sans-serif;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;opacity:0;animation:revealUp .7s var(--ease) 1.3s forwards;transition:all .4s var(--ease); }
+    .email-status.sending { background:rgba(201,184,150,.08);border:1px solid rgba(201,184,150,.2);color:var(--text-dim); }
+    .email-status.sent    { background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.3);color:#2ecc71; }
+    .email-status.failed  { background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.3);color:#e74c3c; }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* MAIN CONTENT */
+    .conf-section { padding:4rem 5% 10rem;background:var(--black);position:relative; }
+    .conf-container { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:3.5rem;align-items:start; }
+    .section-label { font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:1rem;margin-bottom:1.4rem; }
+    .section-label::before { content:'';width:36px;height:1px;background:linear-gradient(to right,transparent,var(--gold)); }
+
+    .detail-card { background:linear-gradient(rgba(201,184,150,.04),rgba(201,184,150,.01));border:1px solid rgba(201,184,150,.12);border-radius:28px;padding:3.2rem;margin-bottom:2.4rem;opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease),border-color .4s; }
+    .detail-card.visible { opacity:1;transform:translateY(0); }
+    .detail-card:hover { border-color:rgba(201,184,150,.24); }
+    .card-head { display:flex;align-items:center;gap:1.4rem;margin-bottom:2.4rem;padding-bottom:1.6rem;border-bottom:1px solid rgba(201,184,150,.1);position:relative; }
+    .card-head::after { content:'';position:absolute;bottom:-1px;left:0;width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent); }
+    .card-icon { width:46px;height:46px;flex-shrink:0;border:1px solid rgba(201,184,150,.25);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.1rem;background:rgba(201,184,150,.05); }
+    .card-head h3 { font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:400;color:#fff; }
+    .details-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.4rem; }
+    .detail-item { padding:1.5rem 1.8rem;background:rgba(201,184,150,.04);border:1px solid rgba(201,184,150,.1);border-radius:16px;border-left:2px solid var(--gold);transition:all .3s var(--ease); }
+    .detail-item:hover { background:rgba(201,184,150,.09);transform:translateX(4px); }
+    .detail-item .label { font-family:'Montserrat',sans-serif;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.5rem;display:flex;align-items:center;gap:.6rem; }
+    .detail-item .label i { color:var(--gold);font-size:.75rem; }
+    .detail-item .value { font-size:1.12rem;color:#fff;font-weight:500; }
+
+    .timeline { position:relative;padding-left:2rem; }
+    .timeline::before { content:'';position:absolute;left:11px;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--gold),transparent); }
+    .timeline-item { position:relative;padding:0 0 2.4rem 2.2rem; }
+    .timeline-item:last-child { padding-bottom:0; }
+    .timeline-dot { position:absolute;left:-2rem;top:4px;width:22px;height:22px;border-radius:50%;background:var(--surface);border:1px solid rgba(201,184,150,.3);display:flex;align-items:center;justify-content:center; }
+    .timeline-dot i { font-size:.6rem;color:var(--gold); }
+    .timeline-item h4 { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem; }
+    .timeline-item p { font-size:1.05rem;color:var(--text-dim);line-height:1.7; }
+
+    /* SIDEBAR */
+    .summary-sidebar { position:sticky;top:8rem; }
+    .summary-card { background:linear-gradient(135deg,rgba(201,184,150,.07),rgba(201,184,150,.02));border:1px solid rgba(201,184,150,.18);border-radius:28px;padding:3rem;backdrop-filter:blur(30px);position:relative;overflow:hidden;opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease) .2s,transform .9s var(--ease) .2s,border-color .4s; }
+    .summary-card.visible { opacity:1;transform:translateY(0); }
+    .summary-card::before { content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+    .summary-card:hover { border-color:rgba(201,184,150,.3);box-shadow:0 30px 80px rgba(0,0,0,.5); }
+    .summary-title { font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:400;text-align:center;margin-bottom:2.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+    .summary-room-img { width:100%;height:150px;border-radius:16px;overflow:hidden;margin-bottom:2rem;position:relative; }
+    .summary-room-img img { width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease); }
+    .summary-room-img:hover img { transform:scale(1.07); }
+    .summary-room-img::after { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.55)); }
+    .room-tag-overlay { position:absolute;bottom:1rem;left:1rem;z-index:2;font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#000;background:var(--gold);padding:.35rem .9rem;border-radius:50px; }
+    .summary-row { display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:1px solid rgba(201,184,150,.08);transition:padding-left .3s; }
+    .summary-row:hover { padding-left:.5rem; }
+    .summary-row .label { font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim); }
+    .summary-row .value { font-size:1.05rem;color:#fff; }
+    .summary-divider { height:1px;margin:1.2rem 0;background:linear-gradient(90deg,transparent,rgba(201,184,150,.2),transparent); }
+    .summary-total { display:flex;justify-content:space-between;align-items:center;padding:1.6rem 1.8rem;background:rgba(201,184,150,.06);border:1px solid rgba(201,184,150,.18);border-radius:14px;margin:1.2rem 0 2rem; }
+    .summary-total-label { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold); }
+    .summary-total-amount { font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+
+    /* BUTTONS */
+    .action-buttons { display:flex;flex-direction:column;gap:1rem; }
+    .btn-primary { font-family:'Montserrat',sans-serif;font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;padding:1.2rem 2.8rem;background:linear-gradient(135deg,var(--gold),var(--gold-lt));color:#000;border:none;border-radius:50px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:.7rem;transition:transform .4s var(--ease),box-shadow .4s var(--ease);position:relative;overflow:hidden; }
+    .btn-primary::before { content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-lt),var(--gold));opacity:0;transition:opacity .4s; }
+    .btn-primary:hover { transform:translateY(-4px);box-shadow:0 20px 50px rgba(201,184,150,.35); }
+    .btn-primary:hover::before { opacity:1; }
+    .btn-primary span,.btn-primary i { position:relative;z-index:1; }
+    .btn-outline { font-family:'Montserrat',sans-serif;font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;padding:1.2rem 2.8rem;background:transparent;color:var(--gold);border:1px solid rgba(201,184,150,.4);border-radius:50px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:.7rem;transition:all .4s var(--ease);position:relative;overflow:hidden; }
+    .btn-outline::before { content:'';position:absolute;inset:0;background:rgba(201,184,150,.07);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease); }
+    .btn-outline:hover { border-color:var(--gold);color:#fff;transform:translateY(-3px); }
+    .btn-outline:hover::before { transform:scaleX(1); }
+    .btn-outline span,.btn-outline i { position:relative;z-index:1; }
+    .next-steps { margin-top:1.8rem;padding:1.8rem;background:rgba(201,184,150,.04);border:1px solid rgba(201,184,150,.1);border-radius:16px; }
+    .next-steps h4 { font-family:'Montserrat',sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem; }
+    .next-step-item { display:flex;align-items:flex-start;gap:.9rem;margin-bottom:.9rem;font-size:.95rem;color:var(--text-dim);line-height:1.6; }
+    .next-step-item:last-child { margin-bottom:0; }
+    .next-step-item i { color:var(--gold);font-size:.8rem;margin-top:.3rem;flex-shrink:0; }
+
+    /* QUOTE */
+    .quote-strip { padding:6rem 6%;background:linear-gradient(135deg,var(--gold-dk),var(--gold));position:relative;overflow:hidden; }
+    .quote-strip::before { content:'"';position:absolute;top:-4rem;left:3%;font-family:'Playfair Display',serif;font-size:28rem;line-height:1;font-weight:700;color:rgba(0,0,0,.08);pointer-events:none; }
+    .quote-strip blockquote { max-width:900px;margin:0 auto;text-align:center;position:relative;z-index:2; }
+    .quote-strip blockquote p { font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.6rem);font-weight:400;font-style:italic;color:#000;line-height:1.5;margin-bottom:2rem; }
+    .quote-strip blockquote cite { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.6);font-style:normal; }
+
+    /* FOOTER */
+    footer { background:#000;border-top:1px solid rgba(201,184,150,.15);padding:6rem 6% 3rem; }
+    .footer-top { max-width:1440px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:5rem;margin-bottom:5rem; }
+    .footer-brand .logo { font-size:2rem;margin-bottom:1.4rem;display:block; }
+    .footer-brand p { font-size:1.08rem;line-height:1.9;color:var(--text-dim);max-width:300px;margin-bottom:2rem; }
+    .footer-socials { display:flex;gap:1rem; }
+    .footer-social { width:40px;height:40px;border:1px solid rgba(201,184,150,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:.9rem;transition:all .3s var(--ease);text-decoration:none; }
+    .footer-social:hover { border-color:var(--gold);color:var(--gold); }
+    .footer-col h4 { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem; }
+    .footer-col a { display:block;font-size:1.05rem;line-height:2.4;color:var(--text-dim);text-decoration:none;transition:color .3s,padding-left .3s; }
+    .footer-col a:hover { color:#fff;padding-left:6px; }
+    .footer-bottom { max-width:1440px;margin:0 auto;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center; }
+    .footer-bottom p { font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.1em;color:rgba(255,255,255,.3); }
+
+    @media print{#navbar,.quote-strip,footer,.action-buttons,.booking-progress{display:none!important}body{background:#fff;color:#000}.detail-card,.summary-card{border:1px solid #ccc;box-shadow:none}}
+    @media(max-width:1100px){.conf-container{grid-template-columns:1fr}.summary-sidebar{position:static}.footer-top{grid-template-columns:1fr 1fr;gap:3rem}}
+    @media(max-width:968px){.nav-links{display:none}.details-grid{grid-template-columns:1fr}}
+    @media(max-width:640px){.footer-top{grid-template-columns:1fr}.conf-badge{flex-direction:column;text-align:center;border-radius:20px}}
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">SmartHotel</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rooms.html">Rooms</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="my-bookings.html" style="color:var(--gold);border:1px solid rgba(201,184,150,.35);padding:.4rem 1.2rem;border-radius:50px;">My Stays</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="booking-progress">
+  <div class="progress-container">
+    <div class="progress-track"><div class="progress-fill"></div></div>
+    <div class="progress-step completed"><div class="step-circle"><i class="fas fa-check"></i></div><div class="step-label">Details</div></div>
+    <div class="progress-step completed"><div class="step-circle"><i class="fas fa-check"></i></div><div class="step-label">Payment</div></div>
+    <div class="progress-step completed"><div class="step-circle"><i class="fas fa-check"></i></div><div class="step-label">Confirmed</div></div>
+  </div>
+</section>
+
+<section class="success-hero">
+  <div class="success-icon-wrap">
+    <div class="success-ring"></div>
+    <div class="success-ring"></div>
+    <div class="success-ring"></div>
+    <div class="success-icon"><i class="fas fa-check"></i></div>
+  </div>
+
+  <div class="success-eyebrow">Booking Confirmed</div>
+  <h1 class="success-title">Your Stay Is<br><em>Reserved</em></h1>
+
+  <p class="success-subtext" id="successSubtext">
+    Your reservation has been successfully confirmed. We've sent a confirmation email to your inbox.
+  </p>
+
+  <div class="conf-badge">
+    <span class="conf-badge-label">Confirmation No.</span>
+    <span class="conf-badge-number" id="confirmationNumber">SH-000000000</span>
+    <button class="conf-badge-copy" id="copyBtn" title="Copy confirmation number"><i class="fas fa-copy"></i></button>
+  </div>
+
+  <div class="email-note" style="margin-top:1.2rem">
+    <i class="fas fa-envelope"></i>
+    Confirmation sent to <strong id="emailDisplay">your email</strong>
+  </div>
+
+  <div class="email-status sending" id="emailStatus">
+    <i class="fas fa-circle-notch" style="animation:spin 1s linear infinite"></i>
+    <span id="emailStatusText">Sending confirmation email…</span>
+  </div>
+</section>
+
+<section class="conf-section">
+  <div class="conf-container">
+    <div>
+      <!-- Reservation Details -->
+      <div class="detail-card" id="card1">
+        <div class="card-head">
+          <div class="card-icon"><i class="fas fa-bed"></i></div>
+          <h3>Reservation Details</h3>
+        </div>
+        <div class="details-grid">
+          <div class="detail-item">
+            <div class="label"><i class="fas fa-door-open"></i> Room Type</div>
+            <div class="value" id="detailRoom">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="label"><i class="fas fa-users"></i> Guests</div>
+            <div class="value" id="detailGuests">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="label"><i class="fas fa-calendar-check"></i> Check-in</div>
+            <div class="value" id="detailCheckin">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="label"><i class="fas fa-calendar-xmark"></i> Check-out</div>
+            <div class="value" id="detailCheckout">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="label"><i class="fas fa-moon"></i> Duration</div>
+            <div class="value" id="detailNights">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="label"><i class="fas fa-envelope"></i> Email</div>
+            <div class="value" id="detailEmail" style="font-size:.95rem;word-break:break-all;">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What Happens Next -->
+      <div class="detail-card" id="card2" style="transition-delay:.15s">
+        <div class="card-head">
+          <div class="card-icon"><i class="fas fa-map-signs"></i></div>
+          <h3>What Happens Next</h3>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"><i class="fas fa-envelope"></i></div>
+            <h4>Confirmation Email</h4>
+            <p>A detailed confirmation has been sent to your registered email address with all booking information and your digital voucher.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"><i class="fas fa-phone"></i></div>
+            <h4>Pre-Arrival Contact</h4>
+            <p>Our concierge team will reach out 48 hours before your arrival to arrange any special requests and personalise your experience.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"><i class="fas fa-star"></i></div>
+            <h4>Check-in from 3:00 PM</h4>
+            <p>Present your confirmation number at reception. Early check-in may be available — please contact us to arrange.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"><i class="fas fa-gem"></i></div>
+            <h4>Enjoy Your Stay</h4>
+            <p>Our team is available around the clock to ensure every moment of your stay exceeds expectations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="summary-sidebar">
+      <div class="summary-card" id="summaryCard">
+        <div class="section-label">Payment Receipt</div>
+        <p class="summary-title">Bill Summary</p>
+
+        <div class="summary-room-img">
+          <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=85&auto=format&fit=crop" alt="Your Room" />
+          <span class="room-tag-overlay" id="summaryRoomTag">Suite</span>
+        </div>
+
+        <div class="summary-row"><span class="label">Room Total</span><span class="value" id="sumRoomTotal">—</span></div>
+        <div class="summary-row"><span class="label">Services</span><span class="value" id="sumServices">—</span></div>
+        <div class="summary-row"><span class="label">Tax (10%)</span><span class="value" id="sumTax">—</span></div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <span class="summary-total-label">Total Charged</span>
+          <span class="summary-total-amount" id="sumTotal">—</span>
+        </div>
+
+        <div class="action-buttons">
+          <a href="my-bookings.html" class="btn-primary"><span>View My Bookings</span><i class="fas fa-arrow-right"></i></a>
+          <button class="btn-outline" onclick="window.print()"><span>Print / Save PDF</span><i class="fas fa-print"></i></button>
+          <a href="index.html" class="btn-outline"><span>Return to Home</span><i class="fas fa-house"></i></a>
+        </div>
+
+        <div class="next-steps">
+          <h4>Good to Know</h4>
+          <div class="next-step-item"><i class="fas fa-circle-dot"></i>Check-in from 3:00 PM · Check-out by 12:00 noon</div>
+          <div class="next-step-item"><i class="fas fa-circle-dot"></i>Free cancellation up to 48 hours before arrival</div>
+          <div class="next-step-item"><i class="fas fa-circle-dot"></i>24/7 concierge: <a href="tel:+212708732437" style="color:var(--gold)">+212 708-732437</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="quote-strip">
+  <blockquote>
+    <p>"We look forward to welcoming you — until then, permit us to exceed your every expectation."</p>
+    <cite>— The SmartHotel Concierge Team</cite>
+  </blockquote>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">SmartHotel</a>
+      <p>Redefining luxury hospitality through innovation, elegance, and the art of exceptional service.</p>
+      <div class="footer-socials">
+        <a href="#" class="footer-social"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Navigation</h4><a href="about.html">About</a><a href="services.html">Services</a><a href="rooms.html">Rooms</a><a href="contact.html">Contact</a></div>
+    <div class="footer-col"><h4>Guest Services</h4><a href="booking.html">Reservations</a><a href="my-bookings.html">My Stays</a><a href="profile.html">Account</a><a href="login.html">Login</a></div>
+    <div class="footer-col"><h4>Contact</h4><a href="#">123 Luxury Avenue</a><a href="mailto:mehdighine@gmail.com">mehdighine@gmail.com</a><a href="tel:+212708732437">+212 708-732437</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+    <p>Crafted with precision &amp; passion</p>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function animateCursor(){
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+  rx+=(mx-rx)*.15;ry+=(my-ry)*.15;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animateCursor);
+})();
+document.querySelectorAll('a,button,.detail-item,.summary-row').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='18px';cursor.style.height='18px';ring.style.width='56px';ring.style.height='56px';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';ring.style.width='36px';ring.style.height='36px';});
+});
+
+/* NAVBAR */
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',scrollY>60);});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
+['card1','card2','summaryCard'].forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+
+/* COPY */
+document.getElementById('copyBtn').addEventListener('click',function(){
+  const num=document.getElementById('confirmationNumber').textContent;
+  navigator.clipboard.writeText(num).then(()=>{
+    this.innerHTML='<i class="fas fa-check"></i>';
+    this.style.color='#2ecc71';this.style.borderColor='#2ecc71';
+    setTimeout(()=>{this.innerHTML='<i class="fas fa-copy"></i>';this.style.color='';this.style.borderColor='';},2000);
+  });
+});
+
+/* FORMAT DATE */
+function fmtDate(d){
+  if(!d)return '—';
+  const dt=new Date(d);
+  if(isNaN(dt))return d;
+  return dt.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+}
+
+/* EMAIL STATUS */
+function setEmailStatus(state,msg){
+  const el=document.getElementById('emailStatus');
+  el.className='email-status '+state;
+  const icon = state==='sending'
+    ? '<i class="fas fa-circle-notch" style="animation:spin 1s linear infinite"></i>'
+    : state==='sent'
+    ? '<i class="fas fa-check"></i>'
+    : '<i class="fas fa-exclamation-triangle"></i>';
+  el.innerHTML=icon+'<span>'+msg+'</span>';
+}
+
+/* SEND EMAIL via PHP */
+async function sendConfirmationEmail(bookingData){
+  setEmailStatus('sending','Sending confirmation email…');
+  try{
+    const res=await fetch('send_confirmation.php',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(bookingData)
+    });
+    const contentType=res.headers.get('content-type')||'';
+    if(!contentType.includes('application/json')){
+      const raw=await res.text();
+      console.error('Non-JSON response:',raw);
+      setEmailStatus('failed','Email delivery failed — check server logs');
+      return;
+    }
+    const json=await res.json();
+    if(json.success){
+      setEmailStatus('sent','Confirmation emailed to '+bookingData.email);
+    } else {
+      console.error('Mailer error:',json.message);
+      setEmailStatus('failed','Email failed: '+json.message);
+    }
+  } catch(err){
+    console.error('Fetch error:',err);
+    setEmailStatus('failed','Could not reach mail server. Please contact support.');
+  }
+}
+
+/* LOAD DATA & FIRE EMAIL */
+window.addEventListener('load',()=>{
+  // Pull from sessionStorage
+  const confirmationNumber = sessionStorage.getItem('confirmationNumber') || 'SH-'+Date.now();
+  const email     = sessionStorage.getItem('guestEmail')  || '';
+  const name      = sessionStorage.getItem('guestName')   || 'Valued Guest';
+  const roomType  = sessionStorage.getItem('roomType')    || '—';
+  const checkIn   = sessionStorage.getItem('checkIn')     || '';
+  const checkOut  = sessionStorage.getItem('checkOut')    || '';
+  const nights    = sessionStorage.getItem('nights')      || '—';
+  const guests    = sessionStorage.getItem('guests')      || '—';
+  const roomTotal = sessionStorage.getItem('roomTotal')   || '—';
+  const services  = sessionStorage.getItem('services')    || '$0';
+  const tax       = sessionStorage.getItem('tax')         || '—';
+  const total     = sessionStorage.getItem('totalAmount') || '—';
+  const location  = sessionStorage.getItem('location')    || 'SmartHotel';
+
+  // Make sure confirmationNumber is stored
+  sessionStorage.setItem('confirmationNumber', confirmationNumber);
+
+  // Populate hero
+  document.getElementById('confirmationNumber').textContent = confirmationNumber;
+  document.getElementById('emailDisplay').textContent = email || 'your email';
+  if(name && name !== 'Valued Guest'){
+    document.getElementById('successSubtext').innerHTML =
+      'Dear <strong style="color:var(--gold)">'+name+'</strong>, your reservation has been successfully confirmed.<br>We\'ve sent a full itinerary to your inbox.';
+  }
+
+  // Populate detail cards
+  document.getElementById('detailRoom').textContent    = roomType;
+  document.getElementById('detailGuests').textContent  = guests+(guests==='1'?' Guest':' Guests');
+  document.getElementById('detailCheckin').textContent = fmtDate(checkIn);
+  document.getElementById('detailCheckout').textContent= fmtDate(checkOut);
+  document.getElementById('detailNights').textContent  = nights+(nights==='1'?' Night':' Nights');
+  document.getElementById('detailEmail').textContent   = email || '—';
+
+  // Populate sidebar
+  document.getElementById('sumRoomTotal').textContent  = roomTotal;
+  document.getElementById('sumServices').textContent   = services;
+  document.getElementById('sumTax').textContent        = tax;
+  document.getElementById('sumTotal').textContent      = total;
+  document.getElementById('summaryRoomTag').textContent= (roomType!=='—'?roomType:'Suite').split(' ')[0];
+
+  // Guard: don't send if no email
+  if(!email){
+    setEmailStatus('failed','No guest email found — confirmation not sent.');
+    return;
+  }
+
+  // Build payload and fire email
+  const bookingData={
+    email,
+    name,
+    confirmationNumber,
+    roomType,
+    checkIn,
+    checkOut,
+    nights,
+    guests,
+    location,
+    roomTotal,
+    services,
+    tax,
+    totalAmount: total
+  };
+
+  sendConfirmationEmail(bookingData);
+});
+</script>
+</body>
+</html>

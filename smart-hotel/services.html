@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — SmartHotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:      #c9b896;
+      --gold-lt:   #f4e4c1;
+      --gold-dk:   #a89674;
+      --black:     #080808;
+      --surface:   #111111;
+      --surface2:  #181818;
+      --text:      rgba(255,255,255,0.88);
+      --text-dim:  rgba(255,255,255,0.55);
+      --radius:    20px;
+      --ease:      cubic-bezier(.4,0,.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--black);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── CURSOR ─── */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--gold); border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 99999;
+      transform: translate(-50%,-50%);
+      transition: transform .1s, width .3s var(--ease), height .3s var(--ease);
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(201,184,150,.5); border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 99998;
+      transform: translate(-50%,-50%);
+      transition: transform .18s var(--ease), width .4s var(--ease), height .4s var(--ease);
+    }
+
+    /* ─── NAVBAR ─── */
+    #navbar {
+      position: fixed; top: 0; width: 100%;
+      z-index: 1000; padding: 1.4rem 0;
+      transition: all .5s var(--ease);
+    }
+    #navbar.scrolled {
+      background: rgba(8,8,8,.92);
+      backdrop-filter: blur(24px);
+      padding: .9rem 0;
+      border-bottom: 1px solid rgba(201,184,150,.12);
+      box-shadow: 0 8px 40px rgba(0,0,0,.5);
+    }
+    .nav-container {
+      max-width: 1440px; margin: 0 auto;
+      padding: 0 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-lt) 50%, var(--gold) 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmerLogo 4s ease infinite;
+    }
+    @keyframes shimmerLogo {
+      0%,100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
+    .nav-links {
+      display: flex; list-style: none; gap: 2.8rem; align-items: center;
+    }
+    .nav-links a {
+      font-family: 'Montserrat', sans-serif;
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+      font-size: .78rem; letter-spacing: .18em; text-transform: uppercase;
+      font-weight: 500; padding: .4rem 0;
+      position: relative; transition: color .3s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute;
+      bottom: -2px; left: 50%;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width .4s var(--ease), left .4s var(--ease);
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; left: 0; }
+
+    /* ─── PAGE HERO ─── */
+    .page-hero {
+      position: relative; height: 72vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1920&q=85&auto=format&fit=crop');
+      background-size: cover; background-position: center;
+      background-attachment: fixed;
+      transition: transform 12s var(--ease);
+    }
+    .page-hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(160deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.25) 50%, rgba(0,0,0,.8) 100%);
+    }
+    .hero-vignette {
+      position: absolute; inset: 0; z-index: 2;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.65) 100%);
+    }
+    .page-hero-content {
+      position: relative; z-index: 10;
+      padding: 0 8vw; max-width: 1440px; margin: 0 auto; width: 100%;
+    }
+    .page-hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .72rem; letter-spacing: .5em; text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0; transform: translateY(20px);
+      animation: revealUp .9s var(--ease) .3s forwards;
+      display: flex; align-items: center; gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .page-hero-eyebrow::before {
+      content: ''; width: 50px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .page-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 7.5vw, 7rem);
+      font-weight: 400; line-height: 1.04; color: #fff;
+      max-width: 14ch;
+      opacity: 0; transform: translateY(40px);
+      animation: revealUp 1.1s var(--ease) .55s forwards;
+      text-shadow: 0 4px 40px rgba(0,0,0,.4);
+    }
+    .page-hero h1 em {
+      font-style: italic;
+      background: linear-gradient(135deg, #fff 20%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .page-hero-sub {
+      font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+      font-weight: 300; line-height: 1.9;
+      color: rgba(255,255,255,.8);
+      max-width: 500px; margin: 2rem 0 0;
+      opacity: 0; transform: translateY(30px);
+      animation: revealUp 1.1s var(--ease) .8s forwards;
+    }
+    /* scroll indicator */
+    .scroll-indicator {
+      position: absolute; bottom: 3.5rem; right: 4rem;
+      z-index: 20;
+      display: flex; flex-direction: column; align-items: center; gap: .8rem;
+      opacity: 0; animation: fadeIn 1s ease 1.4s forwards;
+    }
+    .scroll-indicator span {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .62rem; letter-spacing: .35em; text-transform: uppercase;
+      color: rgba(255,255,255,.5); writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%,100% { transform: scaleY(1); opacity:.6; }
+      50%      { transform: scaleY(.6); opacity:1; }
+    }
+
+    @keyframes revealUp { to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn   { to { opacity:1; } }
+
+    /* ─── SHARED SECTION LABELS ─── */
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .7rem; letter-spacing: .45em; text-transform: uppercase;
+      color: var(--gold);
+      display: inline-flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+    .section-label::before {
+      content: ''; width: 36px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      font-weight: 400; line-height: 1.15; color: #fff;
+    }
+    .section-desc {
+      font-size: 1.15rem; line-height: 2;
+      color: var(--text-dim); max-width: 600px;
+    }
+
+    /* ─── SERVICES INTRO (feature-item style like homepage) ─── */
+    .services-intro {
+      padding: 12rem 6% 8rem;
+      background: var(--surface);
+      position: relative; overflow: hidden;
+    }
+    .services-intro::before {
+      content: 'SERVICES';
+      position: absolute; top: 6%; right: -2%;
+      font-family: 'Playfair Display', serif;
+      font-size: 16vw; font-weight: 700;
+      color: rgba(201,184,150,.03);
+      letter-spacing: .1em; pointer-events: none;
+    }
+    .intro-layout {
+      max-width: 1440px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: start;
+    }
+    .intro-header { position: sticky; top: 8rem; }
+    .intro-header .section-title { margin-bottom: 1.5rem; }
+    .intro-header .section-desc { margin-bottom: 3rem; }
+    .intro-header-img {
+      width: 100%; height: 300px;
+      border-radius: var(--radius); overflow: hidden; position: relative;
+    }
+    .intro-header-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 1.2s var(--ease);
+    }
+    .intro-header-img:hover img { transform: scale(1.07); }
+    .intro-header-img::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,184,150,.25), transparent);
+    }
+
+    /* feature item — same as homepage */
+    .features-list { display: flex; flex-direction: column; gap: 2px; }
+    .feature-item {
+      padding: 2.8rem 2.4rem;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                  linear-gradient(135deg, transparent, transparent) border-box;
+      transition: all .5s var(--ease);
+      cursor: default; position: relative; overflow: hidden;
+    }
+    .feature-item::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transform: scaleX(0); transition: transform .5s var(--ease);
+    }
+    .feature-item:hover {
+      background: linear-gradient(rgba(201,184,150,.06), rgba(201,184,150,.03)) padding-box,
+                  linear-gradient(135deg, var(--gold-dk), transparent) border-box;
+      border-color: transparent;
+      transform: translateX(8px);
+    }
+    .feature-item:hover::before { transform: scaleX(1); }
+    .fi-top { display: flex; align-items: flex-start; gap: 1.8rem; }
+    .fi-icon {
+      width: 54px; height: 54px; flex-shrink: 0;
+      border: 1px solid rgba(201,184,150,.25); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 1.3rem;
+      transition: all .4s var(--ease);
+      background: rgba(201,184,150,.05);
+    }
+    .feature-item:hover .fi-icon { background: rgba(201,184,150,.12); border-color: var(--gold); }
+    .fi-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem; font-weight: 400; color: #fff;
+      margin-bottom: .7rem;
+    }
+    .fi-body p { font-size: 1.05rem; line-height: 1.85; color: var(--text-dim); }
+    .fi-number {
+      position: absolute; top: 2.4rem; right: 2.4rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; font-weight: 700;
+      color: rgba(201,184,150,.08); line-height: 1;
+      pointer-events: none; transition: color .4s;
+    }
+    .feature-item:hover .fi-number { color: rgba(201,184,150,.14); }
+
+    /* ─── QUOTE STRIP (same as homepage) ─── */
+    .quote-strip {
+      padding: 6rem 6%;
+      background: linear-gradient(135deg, var(--gold-dk), var(--gold));
+      position: relative; overflow: hidden;
+    }
+    .quote-strip::before {
+      content: '"';
+      position: absolute; top: -4rem; left: 3%;
+      font-family: 'Playfair Display', serif;
+      font-size: 28rem; line-height: 1; font-weight: 700;
+      color: rgba(0,0,0,.08); pointer-events: none;
+    }
+    .quote-strip blockquote {
+      max-width: 1000px; margin: 0 auto;
+      text-align: center; position: relative; z-index: 2;
+    }
+    .quote-strip blockquote p {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3.5vw, 3rem);
+      font-weight: 400; font-style: italic;
+      color: #000; line-height: 1.5; margin-bottom: 2rem;
+    }
+    .quote-strip blockquote cite {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .72rem; letter-spacing: .3em; text-transform: uppercase;
+      color: rgba(0,0,0,.6); font-style: normal;
+    }
+
+    /* ─── FULL SERVICES GRID ─── */
+    .services-full {
+      padding: 11rem 6% 10rem;
+      background: var(--black);
+      position: relative;
+    }
+    .services-full::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,184,150,.2), transparent);
+    }
+    .services-full-header {
+      max-width: 1440px; margin: 0 auto 6rem;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .services-full-header .section-title { max-width: 28ch; }
+
+    .services-grid {
+      max-width: 1440px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+
+    /* Service card — styled like room-card */
+    .service-card {
+      border-radius: 24px; overflow: hidden;
+      background: var(--surface2);
+      border: 1px solid rgba(201,184,150,.1);
+      transition: all .55s var(--ease);
+      display: flex; flex-direction: column;
+    }
+    .service-card:hover {
+      transform: translateY(-16px);
+      box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(201,184,150,.25);
+    }
+    .service-card.wide {
+      grid-column: span 2;
+    }
+
+    .service-image {
+      width: 100%; height: 260px;
+      overflow: hidden; position: relative; flex-shrink: 0;
+    }
+    .service-card.wide .service-image { height: 340px; }
+    .service-image img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 1.2s var(--ease);
+    }
+    .service-card:hover .service-image img { transform: scale(1.08); }
+    .service-image-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,.7));
+      opacity: 0; transition: opacity .5s;
+    }
+    .service-card:hover .service-image-overlay { opacity: 1; }
+    .service-tag {
+      position: absolute; top: 1.4rem; left: 1.4rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+      color: #000; background: var(--gold);
+      padding: .4rem 1rem; border-radius: 50px;
+    }
+
+    .service-body { padding: 2.4rem 2.6rem; flex: 1; display: flex; flex-direction: column; }
+    .service-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; font-weight: 400; color: #fff;
+      margin-bottom: .7rem;
+    }
+    .service-body > p {
+      font-size: 1.05rem; line-height: 1.9; color: var(--text-dim);
+      margin-bottom: 2rem; flex: 1;
+    }
+    .service-features {
+      display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 0;
+    }
+    .svc-feat {
+      display: flex; align-items: center; gap: .5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .svc-feat i { color: var(--gold); font-size: .8rem; }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      padding: 11rem 6% 10rem;
+      background: var(--surface);
+      position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,184,150,.2), transparent);
+    }
+    .cta-inner {
+      max-width: 900px; margin: 0 auto;
+      text-align: center;
+      padding: 6rem 4rem;
+      background: linear-gradient(135deg, rgba(201,184,150,.07), rgba(201,184,150,.02));
+      border: 1px solid rgba(201,184,150,.18);
+      border-radius: 28px;
+      position: relative; overflow: hidden;
+    }
+    .cta-inner::before {
+      content: ''; position: absolute;
+      top: 0; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .cta-inner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 4.5vw, 4rem);
+      font-weight: 400; line-height: 1.15;
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    .cta-inner p {
+      font-size: 1.3rem; color: var(--text-dim);
+      margin-bottom: 3rem; letter-spacing: .03em; line-height: 1.8;
+    }
+    .btn-primary {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .75rem; letter-spacing: .22em; text-transform: uppercase;
+      font-weight: 600; padding: 1.15rem 3rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      color: #000; border: none; border-radius: 50px;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: .7rem;
+      transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+      opacity: 0; transition: opacity .4s;
+    }
+    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(201,184,150,.35); }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary span, .btn-primary i { position: relative; z-index: 1; }
+    .btn-primary i { font-size: .85rem; }
+
+    .btn-outline {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .75rem; letter-spacing: .22em; text-transform: uppercase;
+      font-weight: 600; padding: 1.15rem 3rem;
+      background: transparent; color: var(--gold);
+      border: 1px solid rgba(201,184,150,.5); border-radius: 50px;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: .7rem;
+      transition: all .4s var(--ease); position: relative; overflow: hidden;
+    }
+    .btn-outline::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(201,184,150,.08);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .4s var(--ease);
+    }
+    .btn-outline:hover { border-color: var(--gold); color: #fff; transform: translateY(-4px); }
+    .btn-outline:hover::before { transform: scaleX(1); }
+
+    /* ─── STATS (same as homepage) ─── */
+    .stats-section {
+      padding: 8rem 6%;
+      background: linear-gradient(135deg, var(--gold-dk) 0%, #d4c4a0 50%, var(--gold-dk) 100%);
+      background-size: 200% 200%;
+      animation: gradShift 10s ease infinite;
+      position: relative; overflow: hidden;
+    }
+    @keyframes gradShift {
+      0%,100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
+    .stats-section::before {
+      content: ''; position: absolute;
+      top: -60%; left: -20%; width: 60%; height: 220%;
+      background: rgba(255,255,255,.06);
+      transform: rotate(-15deg); pointer-events: none;
+    }
+    .stats-grid {
+      max-width: 1440px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 3rem; position: relative; z-index: 2;
+    }
+    .stat-card {
+      text-align: center; padding: 3rem 2rem;
+      background: rgba(0,0,0,.15);
+      border-radius: 20px; border: 1px solid rgba(0,0,0,.15);
+      transition: all .4s var(--ease);
+    }
+    .stat-card:hover { transform: translateY(-12px); background: rgba(0,0,0,.22); }
+    .stat-icon { font-size: 2rem; color: rgba(0,0,0,.5); margin-bottom: 1.2rem; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem; font-weight: 700; color: #000;
+      line-height: 1; margin-bottom: .7rem;
+    }
+    .stat-lbl {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .72rem; letter-spacing: .25em; text-transform: uppercase;
+      color: rgba(0,0,0,.65);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #000;
+      border-top: 1px solid rgba(201,184,150,.15);
+      padding: 6rem 6% 3rem;
+    }
+    .footer-top {
+      max-width: 1440px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 5rem; margin-bottom: 5rem;
+    }
+    .footer-brand .logo { font-size: 2rem; margin-bottom: 1.4rem; display: block; }
+    .footer-brand p { font-size: 1.08rem; line-height: 1.9; color: var(--text-dim); max-width: 300px; margin-bottom: 2rem; }
+    .footer-socials { display: flex; gap: 1rem; }
+    .footer-social {
+      width: 40px; height: 40px;
+      border: 1px solid rgba(201,184,150,.25); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim); font-size: .9rem;
+      transition: all .3s var(--ease); text-decoration: none;
+    }
+    .footer-social:hover { border-color: var(--gold); color: var(--gold); }
+    .footer-col h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .72rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.8rem;
+    }
+    .footer-col a {
+      display: block; font-size: 1.05rem; line-height: 2.4;
+      color: var(--text-dim); text-decoration: none;
+      transition: color .3s, padding-left .3s;
+    }
+    .footer-col a:hover { color: #fff; padding-left: 6px; }
+    .footer-bottom {
+      max-width: 1440px; margin: 0 auto;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(255,255,255,.07);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-bottom p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .7rem; letter-spacing: .1em;
+      color: rgba(255,255,255,.3);
+    }
+
+    /* ─── CHATBOT ─── */
+    .chatbot-wrap { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; }
+    .chatbot-btn {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      border: none; cursor: pointer;
+      box-shadow: 0 8px 32px rgba(201,184,150,.35);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+      position: relative;
+    }
+    .chatbot-btn:hover { transform: scale(1.08); box-shadow: 0 14px 44px rgba(201,184,150,.5); }
+    .chatbot-btn svg { width: 28px; height: 28px; }
+    .cb-notif {
+      position: absolute; top: -2px; right: -2px;
+      width: 18px; height: 18px;
+      background: #e74c3c; border-radius: 50%;
+      border: 2px solid #080808;
+      animation: notifPulse 2s ease-in-out infinite;
+    }
+    @keyframes notifPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+    .chatbot-window {
+      position: fixed; bottom: 7rem; right: 2rem;
+      width: 400px; height: 580px;
+      background: var(--surface);
+      border: 1px solid rgba(201,184,150,.22);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.75);
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    .chatbot-window.active { display: flex; animation: cbSlideIn .4s var(--ease); }
+    @keyframes cbSlideIn { from{opacity:0;transform:translateY(20px) scale(.96)} to{opacity:1;transform:translateY(0) scale(1)} }
+    .cb-header {
+      padding: 1.4rem 1.8rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dk));
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cb-header-left { display: flex; align-items: center; gap: 1rem; }
+    .cb-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(0,0,0,.2);
+      display: flex; align-items: center; justify-content: center; color: #000;
+    }
+    .cb-avatar svg { width: 22px; height: 22px; }
+    .cb-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #000; }
+    .cb-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(0,0,0,.6);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .cb-dot { width: 7px; height: 7px; background: #1a7a40; border-radius: 50%; animation: cbBlink 2s ease infinite; }
+    @keyframes cbBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .cb-close {
+      background: none; border: none; cursor: pointer;
+      color: rgba(0,0,0,.6); font-size: 1.1rem;
+      transition: color .2s, transform .3s;
+    }
+    .cb-close:hover { color: #000; transform: rotate(90deg); }
+    .cb-messages {
+      flex: 1; padding: 1.6rem;
+      overflow-y: auto; display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .cb-messages::-webkit-scrollbar { width: 5px; }
+    .cb-messages::-webkit-scrollbar-thumb { background: rgba(201,184,150,.2); border-radius: 3px; }
+    .cb-msg { display: flex; gap: .8rem; animation: msgIn .3s var(--ease); }
+    @keyframes msgIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    .cb-msg.user { flex-direction: row-reverse; }
+    .cb-msg-av {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      display: flex; align-items: center; justify-content: center;
+      color: #000; font-size: .85rem;
+    }
+    .cb-msg.user .cb-msg-av {
+      background: rgba(201,184,150,.15);
+      border: 1px solid rgba(201,184,150,.25); color: var(--gold);
+    }
+    .cb-bubble {
+      max-width: 78%; padding: 1rem 1.3rem;
+      background: rgba(201,184,150,.1);
+      border: 1px solid rgba(201,184,150,.12);
+      border-radius: 18px 18px 18px 4px;
+      font-size: .95rem; line-height: 1.65;
+      color: rgba(255,255,255,.88);
+    }
+    .cb-msg.user .cb-bubble {
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      color: #000; border-color: transparent;
+      border-radius: 18px 18px 4px 18px;
+    }
+    .quick-chips { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; }
+    .quick-chip {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+      padding: .5rem 1.1rem;
+      background: transparent; border: 1px solid rgba(201,184,150,.3);
+      border-radius: 50px; color: var(--gold); cursor: pointer; transition: all .3s;
+    }
+    .quick-chip:hover { background: rgba(201,184,150,.1); border-color: var(--gold); }
+    .cb-typing {
+      display: none; gap: .4rem; padding: 1rem 1.3rem;
+      background: rgba(201,184,150,.1); border-radius: 18px 18px 18px 4px;
+      width: fit-content;
+    }
+    .cb-typing.active { display: flex; }
+    .td { width:7px; height:7px; background:var(--gold); border-radius:50%; animation: typeDot 1.4s ease infinite; }
+    .td:nth-child(2){ animation-delay:.2s; } .td:nth-child(3){ animation-delay:.4s; }
+    @keyframes typeDot { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} }
+    .cb-footer {
+      padding: 1.2rem 1.5rem;
+      background: rgba(201,184,150,.04);
+      border-top: 1px solid rgba(201,184,150,.12);
+      display: flex; gap: .8rem; align-items: center;
+    }
+    .cb-input {
+      flex: 1; padding: .9rem 1.3rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(201,184,150,.18);
+      border-radius: 50px; color: #fff; font-size: .95rem;
+      outline: none; transition: border-color .3s;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .cb-input:focus { border-color: var(--gold); }
+    .cb-send {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #000; font-size: .9rem;
+      transition: transform .3s, box-shadow .3s; flex-shrink: 0;
+    }
+    .cb-send:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(201,184,150,.35); }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-40px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1200px) {
+      .services-grid { grid-template-columns: repeat(2,1fr); }
+      .service-card.wide { grid-column: auto; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 3rem; }
+    }
+    @media (max-width: 968px) {
+      .nav-links { display: none; }
+      .intro-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .intro-header { position: static; }
+      .services-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      .services-full-header { flex-direction: column; gap: 2rem; align-items: flex-start; }
+      .chatbot-window { width: 90%; right: 5%; }
+    }
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <div class="nav-container">
+    <div class="logo">SmartHotel</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rooms.html">Rooms</a></li>
+      <li><a href="services.html" class="active">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html" style="color:var(--gold);border:1px solid rgba(201,184,150,.35);padding:.4rem 1.2rem;border-radius:50px;">Login</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ─── PAGE HERO ─── -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="hero-vignette"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-eyebrow">Est. 2026 &nbsp;·&nbsp; Curated Experiences</div>
+    <h1>The Art of<br><em>Exceptional&nbsp;Service</em></h1>
+    <p class="page-hero-sub">Every detail considered, every desire anticipated — a full spectrum of luxury services crafted for your perfect stay.</p>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── SERVICES INTRO (feature-item layout) ─── -->
+<section class="services-intro" id="services">
+  <div class="intro-layout">
+    <div class="intro-header reveal-left">
+      <div class="section-label">Our Offerings</div>
+      <h2 class="section-title">Crafted for Your Every Need</h2>
+      <p class="section-desc" style="margin-bottom:2.5rem">
+        From Michelin-starred dining to AI-powered concierge, each service is designed to elevate your stay beyond expectation.
+      </p>
+      <div class="intro-header-img">
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&q=85&auto=format&fit=crop" alt="Hotel service" loading="lazy" />
+      </div>
+    </div>
+
+    <div class="features-list">
+      <div class="feature-item reveal" style="transition-delay:.05s">
+        <div class="fi-top">
+          <div class="fi-icon"><i class="fas fa-utensils"></i></div>
+          <div class="fi-body">
+            <h3>Fine Dining</h3>
+            <p>World-class cuisine from Michelin-starred chefs, with room service, private dining rooms, and dietary accommodations available around the clock.</p>
+          </div>
+        </div>
+        <div class="fi-number">01</div>
+      </div>
+      <div class="feature-item reveal" style="transition-delay:.12s">
+        <div class="fi-top">
+          <div class="fi-icon"><i class="fas fa-spa"></i></div>
+          <div class="fi-body">
+            <h3>Spa & Wellness</h3>
+            <p>Rejuvenate body and mind with bespoke massage therapy, facial treatments, sauna, steam room, and curated yoga sessions.</p>
+          </div>
+        </div>
+        <div class="fi-number">02</div>
+      </div>
+      <div class="feature-item reveal" style="transition-delay:.19s">
+        <div class="fi-top">
+          <div class="fi-icon"><i class="fas fa-microchip"></i></div>
+          <div class="fi-body">
+            <h3>AI Concierge</h3>
+            <p>Intelligent 24/7 assistance — instant responses, local recommendations, multilingual support, and proactive service before you ask.</p>
+          </div>
+        </div>
+        <div class="fi-number">03</div>
+      </div>
+      <div class="feature-item reveal" style="transition-delay:.26s">
+        <div class="fi-top">
+          <div class="fi-icon"><i class="fas fa-car"></i></div>
+          <div class="fi-body">
+            <h3>Transportation</h3>
+            <p>Seamless travel from airport transfers and valet parking to Rolls Royce chauffeur service and bespoke local tours.</p>
+          </div>
+        </div>
+        <div class="fi-number">04</div>
+      </div>
+      <div class="feature-item reveal" style="transition-delay:.33s">
+        <div class="fi-top">
+          <div class="fi-icon"><i class="fas fa-briefcase"></i></div>
+          <div class="fi-body">
+            <h3>Business Services</h3>
+            <p>Fully equipped meeting rooms, high-speed connectivity, printing, and cutting-edge video conferencing for seamless business travel.</p>
+          </div>
+        </div>
+        <div class="fi-number">05</div>
+      </div>
+      <div class="feature-item reveal" style="transition-delay:.40s">
+        <div class="fi-top">
+          <div class="fi-icon"><i class="fas fa-champagne-glasses"></i></div>
+          <div class="fi-body">
+            <h3>Events & Weddings</h3>
+            <p>Unforgettable celebrations in our elegant venues, with dedicated planners, full catering, and state-of-the-art audio-visual equipment.</p>
+          </div>
+        </div>
+        <div class="fi-number">06</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── QUOTE STRIP ─── -->
+<div class="quote-strip reveal">
+  <blockquote>
+    <p>"True service is not what you offer — it is how you make someone feel at home anywhere in the world."</p>
+    <cite>— SmartHotel Philosophy</cite>
+  </blockquote>
+</div>
+
+<!-- ─── FULL SERVICES GRID ─── -->
+<section class="services-full">
+  <div class="services-full-header reveal">
+    <div>
+      <div class="section-label">All Services</div>
+      <h2 class="section-title">Everything You Need,<br>All in One Place</h2>
+    </div>
+    <a href="booking.html" class="btn-outline">
+      <span>Book Your Stay</span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <div class="services-grid">
+    <!-- Wide card -->
+    <div class="service-card wide reveal-left">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=85&auto=format&fit=crop" alt="Fine Dining" loading="lazy" />
+        <div class="service-image-overlay"></div>
+        <span class="service-tag">Signature Experience</span>
+      </div>
+      <div class="service-body">
+        <h3>Fine Dining & Room Service</h3>
+        <p>Our signature restaurant serves extraordinary dishes crafted from the finest seasonal ingredients. Available 24 hours, for your room or a private table experience.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-clock"></i> 24/7 Room Service</span>
+          <span class="svc-feat"><i class="fas fa-globe"></i> International Cuisine</span>
+          <span class="svc-feat"><i class="fas fa-door-closed"></i> Private Dining</span>
+          <span class="svc-feat"><i class="fas fa-leaf"></i> Dietary Options</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regular card -->
+    <div class="service-card reveal" style="transition-delay:.15s">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=900&q=85&auto=format&fit=crop" alt="Spa" loading="lazy" />
+        <div class="service-image-overlay"></div>
+      </div>
+      <div class="service-body">
+        <h3>Spa & Wellness</h3>
+        <p>A sanctuary of calm with holistic treatments, expert therapists, sauna, steam room, and daily yoga sessions tailored to your wellbeing.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-hands"></i> Massage Therapy</span>
+          <span class="svc-feat"><i class="fas fa-spa"></i> Facials</span>
+          <span class="svc-feat"><i class="fas fa-fire"></i> Sauna & Steam</span>
+          <span class="svc-feat"><i class="fas fa-person-walking"></i> Yoga</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regular card -->
+    <div class="service-card reveal" style="transition-delay:.25s">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=900&q=85&auto=format&fit=crop" alt="Fitness Pool" loading="lazy" />
+        <div class="service-image-overlay"></div>
+      </div>
+      <div class="service-body">
+        <h3>Fitness & Infinity Pool</h3>
+        <p>Stay active with 24/7 gym access, personal training, and our stunning rooftop infinity pool with an ocean backdrop and poolside bar.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-dumbbell"></i> 24/7 Gym</span>
+          <span class="svc-feat"><i class="fas fa-user-tie"></i> Personal Trainer</span>
+          <span class="svc-feat"><i class="fas fa-water"></i> Infinity Pool</span>
+          <span class="svc-feat"><i class="fas fa-martini-glass-citrus"></i> Poolside Bar</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regular card -->
+    <div class="service-card reveal" style="transition-delay:.35s">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=900&q=85&auto=format&fit=crop" alt="Business" loading="lazy" />
+        <div class="service-image-overlay"></div>
+      </div>
+      <div class="service-body">
+        <h3>Business Services</h3>
+        <p>Modern meeting rooms, fiber internet, printing, and full video conferencing — everything for seamless productivity wherever you work.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-door-open"></i> Meeting Rooms</span>
+          <span class="svc-feat"><i class="fas fa-wifi"></i> Fiber Internet</span>
+          <span class="svc-feat"><i class="fas fa-print"></i> Printing</span>
+          <span class="svc-feat"><i class="fas fa-video"></i> Video Conf.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wide card -->
+    <div class="service-card wide reveal-right" style="transition-delay:.1s">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1200&q=85&auto=format&fit=crop" alt="Events Weddings" loading="lazy" />
+        <div class="service-image-overlay"></div>
+        <span class="service-tag">Unforgettable Events</span>
+      </div>
+      <div class="service-body">
+        <h3>Events & Weddings</h3>
+        <p>From intimate ceremonies to grand celebrations, our elegant venues and experienced event team ensure every detail is perfect and every moment extraordinary.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-heart"></i> Wedding Planning</span>
+          <span class="svc-feat"><i class="fas fa-clipboard-list"></i> Event Coordination</span>
+          <span class="svc-feat"><i class="fas fa-plate-wheat"></i> Catering</span>
+          <span class="svc-feat"><i class="fas fa-volume-high"></i> AV Equipment</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regular card -->
+    <div class="service-card reveal" style="transition-delay:.2s">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=900&q=85&auto=format&fit=crop" alt="Family" loading="lazy" />
+        <div class="service-image-overlay"></div>
+      </div>
+      <div class="service-body">
+        <h3>Family Services</h3>
+        <p>Family-friendly amenities that delight every generation — from supervised kids clubs to tailored menus and curated family adventures.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-child"></i> Kids Club</span>
+          <span class="svc-feat"><i class="fas fa-baby"></i> Babysitting</span>
+          <span class="svc-feat"><i class="fas fa-burger"></i> Children's Menu</span>
+          <span class="svc-feat"><i class="fas fa-puzzle-piece"></i> Activities</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regular card -->
+    <div class="service-card reveal" style="transition-delay:.3s">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=900&q=85&auto=format&fit=crop" alt="Transportation" loading="lazy" />
+        <div class="service-image-overlay"></div>
+      </div>
+      <div class="service-body">
+        <h3>Transportation</h3>
+        <p>Arrive and depart in style. Airport transfers, Rolls Royce chauffeur service, car rental, and valet parking available at all times.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-plane-arrival"></i> Airport Shuttle</span>
+          <span class="svc-feat"><i class="fas fa-car-side"></i> Chauffeur</span>
+          <span class="svc-feat"><i class="fas fa-key"></i> Valet Parking</span>
+          <span class="svc-feat"><i class="fas fa-car"></i> Car Rental</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regular card -->
+    <div class="service-card reveal" style="transition-delay:.4s">
+      <div class="service-image">
+        <img src="https://images.unsplash.com/photo-1465310477141-6fb93167a273?w=900&q=85&auto=format&fit=crop" alt="Concierge" loading="lazy" />
+        <div class="service-image-overlay"></div>
+      </div>
+      <div class="service-body">
+        <h3>Concierge Services</h3>
+        <p>Our dedicated concierge team handles tour bookings, restaurant reservations, ticket services, and offers insider access no guide can provide.</p>
+        <div class="service-features">
+          <span class="svc-feat"><i class="fas fa-map"></i> Tour Bookings</span>
+          <span class="svc-feat"><i class="fas fa-calendar-check"></i> Reservations</span>
+          <span class="svc-feat"><i class="fas fa-ticket"></i> Tickets</span>
+          <span class="svc-feat"><i class="fas fa-lightbulb"></i> Local Insights</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card reveal" style="transition-delay:.0s">
+      <div class="stat-icon"><i class="fas fa-concierge-bell"></i></div>
+      <div class="stat-num">9+</div>
+      <div class="stat-lbl">Premium Services</div>
+    </div>
+    <div class="stat-card reveal" style="transition-delay:.1s">
+      <div class="stat-icon"><i class="fas fa-clock"></i></div>
+      <div class="stat-num">24/7</div>
+      <div class="stat-lbl">Always Available</div>
+    </div>
+    <div class="stat-card reveal" style="transition-delay:.2s">
+      <div class="stat-icon"><i class="fas fa-heart"></i></div>
+      <div class="stat-num">95%</div>
+      <div class="stat-lbl">Satisfaction Rate</div>
+    </div>
+    <div class="stat-card reveal" style="transition-delay:.3s">
+      <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+      <div class="stat-num">200+</div>
+      <div class="stat-lbl">Awards Won</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <h2>Ready to Experience Our Services?</h2>
+    <p>Book your stay today and let SmartHotel redefine what luxury hospitality means to you.</p>
+    <a href="booking.html" class="btn-primary">
+      <span>Reserve Your Stay</span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo">SmartHotel</span>
+      <p>Redefining luxury hospitality through innovation, elegance, and the art of exceptional service.</p>
+      <div class="footer-socials">
+        <a href="#" class="footer-social"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="rooms.html">Rooms</a>
+    </div>
+    <div class="footer-col">
+      <h4>Guest Services</h4>
+      <a href="booking.html">Reservations</a>
+      <a href="my-bookings.html">My Stays</a>
+      <a href="profile.html">Account</a>
+      <a href="login.html">Login</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="#">123 Luxury Avenue</a>
+      <a href="mailto:reservations@smarthotel.com">reservations@smarthotel.com</a>
+      <a href="tel:+15551234567">+1 (555) 123-4567</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+    <p>Crafted with precision &amp; passion</p>
+  </div>
+</footer>
+
+<!-- ─── CHATBOT ─── -->
+<div class="chatbot-wrap">
+  <button class="chatbot-btn" id="chatbotToggle" title="Talk to our AI Concierge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      <line x1="12" y1="2" x2="12" y2="4"/>
+    </svg>
+    <div class="cb-notif"></div>
+  </button>
+
+  <div class="chatbot-window" id="chatbotWindow">
+    <div class="cb-header">
+      <div class="cb-header-left">
+        <div class="cb-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2C7 2 3 6 3 11h18c0-5-4-9-9-9z"/>
+            <rect x="2" y="11" width="20" height="3" rx="1"/>
+            <line x1="12" y1="14" x2="12" y2="22"/>
+            <line x1="8" y1="22" x2="16" y2="22"/>
+          </svg>
+        </div>
+        <div>
+          <div class="cb-name">SmartHotel Concierge</div>
+          <div class="cb-sub"><span class="cb-dot"></span> Available Now</div>
+        </div>
+      </div>
+      <button class="cb-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cb-messages" id="chatbotMessages">
+      <div class="cb-msg">
+        <div class="cb-msg-av"><i class="fas fa-concierge-bell"></i></div>
+        <div class="cb-bubble">
+          Good day. I'm your SmartHotel concierge — how can I assist you with our services today?
+          <div class="quick-chips">
+            <button class="quick-chip" data-msg="Tell me about your spa">Spa</button>
+            <button class="quick-chip" data-msg="I'd like to book a room">Book a Room</button>
+            <button class="quick-chip" data-msg="Tell me about dining">Dining</button>
+            <button class="quick-chip" data-msg="What events do you host?">Events</button>
+          </div>
+        </div>
+      </div>
+      <div class="cb-typing" id="cbTyping">
+        <div class="td"></div><div class="td"></div><div class="td"></div>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <input class="cb-input" id="chatbotInput" type="text" placeholder="Ask me anything…" autocomplete="off" />
+      <button class="cb-send" id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ─── CURSOR ─── */
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  let mx=0, my=0, rx=0, ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  function animateCursor(){
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+    rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.querySelectorAll('a,button,.service-card,.feature-item').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ cursor.style.width='18px'; cursor.style.height='18px'; ring.style.width='56px'; ring.style.height='56px'; });
+    el.addEventListener('mouseleave',()=>{ cursor.style.width='10px'; cursor.style.height='10px'; ring.style.width='36px'; ring.style.height='36px'; });
+  });
+
+  /* ─── NAVBAR ─── */
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', scrollY > 60);
+  });
+
+  /* ─── SCROLL REVEAL ─── */
+  const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: .12 });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  /* ─── CHATBOT ─── */
+  const toggle = document.getElementById('chatbotToggle');
+  const win    = document.getElementById('chatbotWindow');
+  const close  = document.getElementById('chatbotClose');
+  const msgs   = document.getElementById('chatbotMessages');
+  const input  = document.getElementById('chatbotInput');
+  const send   = document.getElementById('chatbotSend');
+  const typing = document.getElementById('cbTyping');
+
+  toggle.addEventListener('click', () => { win.classList.toggle('active'); toggle.querySelector('.cb-notif').style.display='none'; });
+  close.addEventListener('click',  () => win.classList.remove('active'));
+
+  const botReplies = {
+    'spa': "Our Spa & Wellness centre offers massage therapy, bespoke facials, sauna, steam room, and daily yoga sessions. Reservations can be made at the spa desk or via this chat.",
+    'dining': "Our signature restaurant is open daily with international cuisine crafted by our head chef. Room service is available 24/7, and private dining rooms can be reserved for special occasions.",
+    'book': "I'd be happy to help you book a room! Please visit our Rooms page or I can connect you with our reservations team. Which dates are you considering?",
+    'events': "We host weddings, corporate events, and private celebrations. Our venues accommodate from 20 to 500 guests, with full catering and AV included. Would you like a brochure?",
+    'default': "Thank you for reaching out. Our team is here 24/7 to ensure your experience is exceptional. Could you tell me more so I can assist you better?"
+  };
+
+  function addMsg(text, isUser=false) {
+    const div = document.createElement('div');
+    div.className = 'cb-msg' + (isUser ? ' user' : '');
+    div.innerHTML = `<div class="cb-msg-av"><i class="fas fa-${isUser?'user':'concierge-bell'}"></i></div><div class="cb-bubble">${text}</div>`;
+    msgs.insertBefore(div, typing);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function botReply(text) {
+    const lower = text.toLowerCase();
+    let reply = botReplies.default;
+    if(lower.includes('spa')||lower.includes('wellness')||lower.includes('massage')) reply = botReplies.spa;
+    else if(lower.includes('dine')||lower.includes('dining')||lower.includes('food')||lower.includes('restaurant')) reply = botReplies.dining;
+    else if(lower.includes('book')||lower.includes('room')||lower.includes('reserv')) reply = botReplies.book;
+    else if(lower.includes('event')||lower.includes('wedding')||lower.includes('party')) reply = botReplies.events;
+    typing.classList.add('active');
+    setTimeout(() => { typing.classList.remove('active'); addMsg(reply); }, 1200);
+  }
+
+  function sendMsg() {
+    const text = input.value.trim();
+    if(!text) return;
+    addMsg(text, true);
+    input.value = '';
+    botReply(text);
+  }
+
+  send.addEventListener('click', sendMsg);
+  input.addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
+  document.querySelectorAll('.quick-chip').forEach(chip => {
+    chip.addEventListener('click', () => { addMsg(chip.dataset.msg, true); botReply(chip.dataset.msg); });
+  });
+</script>
+</body>
+</html>

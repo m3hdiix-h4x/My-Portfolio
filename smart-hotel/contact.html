@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — SmartHotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --ink:    #0d0c0a;
+      --cream:  #f5f0e8;
+      --warm:   #c8a96e;
+      --gold:   #e2c07a;
+      --smoke:  #6b6560;
+      --deep:   #1a1610;
+      --border: rgba(200,169,110,0.25);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--cream);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── NOISE ── */
+    body::before {
+      content:''; position:fixed; inset:0; z-index:9998; pointer-events:none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-repeat: repeat; opacity: 0.4;
+    }
+
+    /* ── CURSOR ── */
+    #cursor { position:fixed; top:0; left:0; pointer-events:none; z-index:99999; mix-blend-mode:difference; }
+    #cursor .dot { width:8px; height:8px; border-radius:50%; background:var(--cream); transform:translate(-50%,-50%); transition:transform .1s; }
+    #cursor .ring { position:absolute; top:-22px; left:-22px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(245,240,232,.5); transition:transform .4s cubic-bezier(.23,1,.32,1), width .3s, height .3s, top .3s, left .3s; }
+    body.hovering #cursor .ring { width:60px; height:60px; top:-30px; left:-30px; border-color:var(--warm); }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      position:fixed; top:0; width:100%; z-index:1000;
+      padding:2rem 4rem;
+      display:flex; justify-content:space-between; align-items:center;
+      transition: padding .5s, background .5s;
+    }
+    #navbar.scrolled {
+      padding:1.2rem 4rem;
+      background:rgba(13,12,10,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .logo { font-family:'Cinzel',serif; font-size:1.5rem; letter-spacing:.3em; color:var(--cream); text-decoration:none; }
+    .logo span { color:var(--warm); }
+    .nav-links { list-style:none; display:flex; gap:2.5rem; align-items:center; }
+    .nav-links a {
+      font-size:.8rem; letter-spacing:.2em; text-transform:uppercase;
+      color:rgba(245,240,232,.65); text-decoration:none;
+      transition:color .3s; position:relative; padding-bottom:3px;
+    }
+    .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--warm); transition:width .4s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--cream); }
+    .nav-links a:hover::after, .nav-links a.active::after { width:100%; }
+    .nav-book { padding:.7rem 1.8rem; border:1px solid var(--warm); color:var(--warm) !important; border-radius:2px; transition:background .3s, color .3s !important; }
+    .nav-book:hover { background:var(--warm); color:var(--ink) !important; }
+    .nav-book::after { display:none !important; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position:relative; height:70vh;
+      display:flex; flex-direction:column;
+      justify-content:flex-end; align-items:flex-start;
+      padding:0 8% 7rem;
+      overflow:hidden;
+    }
+    .ph-bg {
+      position:absolute; inset:0;
+      background:url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=90') center/cover no-repeat;
+      transform:scale(1.05);
+      animation:phZoom 16s ease-in-out infinite alternate;
+    }
+    @keyframes phZoom { from{transform:scale(1.05)} to{transform:scale(1)} }
+    .ph-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(13,12,10,1) 0%, rgba(13,12,10,.6) 45%, rgba(13,12,10,.1) 100%);
+    }
+    .ph-content { position:relative; z-index:2; }
+    .ph-tag {
+      font-size:.68rem; letter-spacing:.45em; text-transform:uppercase;
+      color:var(--warm); margin-bottom:1.2rem;
+      display:flex; align-items:center; gap:.8rem;
+      opacity:0; animation:fadeUp .8s ease-out .3s forwards;
+    }
+    .ph-tag::before { content:''; width:30px; height:1px; background:var(--warm); }
+    .ph-h1 {
+      font-family:'Cormorant Infant',serif;
+      font-size:clamp(3.5rem,8vw,7rem);
+      font-weight:300; line-height:1; color:var(--cream);
+      opacity:0; animation:fadeUp 1s ease-out .5s forwards;
+    }
+    .ph-h1 em { font-style:italic; color:var(--warm); }
+    .ph-sub {
+      margin-top:1.5rem; font-size:.95rem; letter-spacing:.15em;
+      text-transform:uppercase; color:rgba(245,240,232,.5);
+      opacity:0; animation:fadeUp .8s ease-out .8s forwards;
+    }
+
+    /* ── PARTICLES ── */
+    .particles { position:absolute; inset:0; overflow:hidden; z-index:1; }
+    .particle {
+      position:absolute; border-radius:50%;
+      background:radial-gradient(circle,rgba(200,169,110,.8),transparent);
+      opacity:0; animation:floatUp 15s infinite;
+    }
+    @keyframes floatUp {
+      0%{opacity:0;transform:translateY(100vh) scale(0)}
+      10%{opacity:.6}
+      90%{opacity:.3}
+      100%{opacity:0;transform:translateY(-120px) translateX(60px) scale(1)}
+    }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── SECTION COMMONS ── */
+    .section-label { font-size:.68rem; letter-spacing:.45em; text-transform:uppercase; color:var(--warm); display:flex; align-items:center; gap:.8rem; margin-bottom:1.2rem; }
+    .section-label::before { content:''; width:30px; height:1px; background:var(--warm); }
+    .section-title { font-family:'Cormorant Infant',serif; font-size:clamp(2.5rem,4vw,3.8rem); font-weight:300; line-height:1.1; color:var(--cream); }
+    .section-title em { font-style:italic; color:var(--warm); }
+
+    /* ── CONTACT MAIN ── */
+    .contact-section { padding:8rem 8%; }
+    .contact-grid {
+      max-width:1400px; margin:0 auto;
+      display:grid; grid-template-columns:1fr 1.3fr;
+      gap:6rem; align-items:start;
+    }
+
+    /* ── INFO SIDE ── */
+    .info-header { margin-bottom:3.5rem; }
+    .info-header p { margin-top:1.5rem; font-size:.95rem; line-height:1.9; color:rgba(245,240,232,.55); }
+
+    .contact-cards { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:2rem; }
+
+    .contact-card {
+      padding:2.2rem 2.5rem;
+      background:var(--ink);
+      display:flex; gap:1.8rem; align-items:flex-start;
+      transition:background .4s;
+      position:relative; overflow:hidden;
+      opacity:0; transform:translateX(-30px);
+      transition: background .4s, opacity .6s ease, transform .6s ease, border-color .3s;
+    }
+    .contact-card.visible { opacity:1; transform:translateX(0); }
+    .contact-card::before {
+      content:''; position:absolute; left:0; top:0; bottom:0;
+      width:0; background:var(--warm);
+      transition:width .4s;
+    }
+    .contact-card:hover { background:#141210; }
+    .contact-card:hover::before { width:3px; }
+
+    .card-icon {
+      width:48px; height:48px; flex-shrink:0;
+      border:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--warm); font-size:1.1rem;
+      transition:all .3s; border-radius:2px;
+    }
+    .contact-card:hover .card-icon { background:rgba(200,169,110,.08); border-color:var(--warm); }
+
+    .card-body h3 {
+      font-family:'Cormorant Infant',serif;
+      font-size:1.2rem; font-weight:400; color:var(--cream);
+      margin-bottom:.5rem;
+    }
+    .card-body p, .card-body a {
+      font-size:.88rem; line-height:1.9;
+      color:rgba(245,240,232,.5);
+      text-decoration:none; display:block;
+      transition:color .3s;
+    }
+    .card-body a:hover { color:var(--warm); }
+    .card-body small { font-size:.75rem; color:rgba(245,240,232,.3); letter-spacing:.08em; }
+
+    /* Social */
+    .social-block { padding:2rem 2.5rem; border:1px solid var(--border); }
+    .social-block h4 {
+      font-size:.68rem; letter-spacing:.35em; text-transform:uppercase;
+      color:var(--warm); margin-bottom:1.5rem;
+    }
+    .social-row { display:flex; gap:.8rem; flex-wrap:wrap; }
+    .social-btn {
+      width:44px; height:44px; border-radius:2px;
+      border:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      color:rgba(245,240,232,.5); font-size:.95rem;
+      text-decoration:none; transition:all .3s;
+    }
+    .social-btn:hover { border-color:var(--warm); color:var(--warm); background:rgba(200,169,110,.06); transform:translateY(-3px); }
+
+    /* ── FORM SIDE ── */
+    .form-wrap {
+      padding:4rem;
+      border:1px solid var(--border);
+      background:rgba(245,240,232,.015);
+      position:relative; overflow:hidden;
+      opacity:0; transform:translateY(40px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .form-wrap.visible { opacity:1; transform:translateY(0); }
+    .form-wrap::before {
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:2px; background:linear-gradient(90deg,transparent,var(--warm),transparent);
+    }
+
+    .form-header { margin-bottom:3rem; }
+    .form-header p { margin-top:.8rem; font-size:.88rem; color:rgba(245,240,232,.45); }
+
+    .form-grid { display:grid; gap:1.8rem; }
+    .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; }
+
+    .form-group { display:flex; flex-direction:column; gap:.6rem; }
+    .form-group label {
+      font-size:.68rem; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--warm); display:flex; align-items:center; gap:.5rem;
+    }
+    .form-group label i { font-size:.65rem; opacity:.8; }
+
+    .form-input, .form-select, .form-textarea {
+      width:100%; padding:1rem 1.3rem;
+      background:transparent;
+      border:1px solid rgba(200,169,110,.2);
+      border-radius:2px;
+      color:var(--cream); font-family:inherit; font-size:.9rem;
+      outline:none; transition:border-color .3s, background .3s;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color:rgba(245,240,232,.2); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color:var(--warm);
+      background:rgba(200,169,110,.04);
+    }
+    .form-input.error-field { border-color:#e55; }
+
+    .form-select {
+      cursor:pointer; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23c8a96e' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 1.2rem center;
+      padding-right:3rem;
+    }
+    .form-select option { background:#1a1610; color:var(--cream); }
+
+    .form-textarea { resize:vertical; min-height:140px; line-height:1.7; }
+
+    .char-hint { font-size:.7rem; color:rgba(245,240,232,.25); text-align:right; margin-top:.3rem; transition:color .3s; }
+    .char-hint.ok { color:var(--warm); }
+
+    .form-actions { display:flex; gap:1rem; margin-top:.5rem; }
+    .btn {
+      padding:1rem 2.5rem; font-size:.75rem; letter-spacing:.2em; text-transform:uppercase;
+      border:none; cursor:pointer; font-family:inherit; font-weight:500;
+      border-radius:2px; transition:all .35s; position:relative; overflow:hidden;
+    }
+    .btn-primary {
+      flex:1; background:var(--warm); color:var(--ink);
+    }
+    .btn-primary::before {
+      content:''; position:absolute; inset:0;
+      background:var(--gold); opacity:0; transition:opacity .3s;
+    }
+    .btn-primary:hover::before { opacity:1; }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(200,169,110,.3); }
+    .btn-primary:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+    .btn-primary span { position:relative; z-index:1; }
+    .btn-ghost {
+      border:1px solid var(--border); background:transparent;
+      color:rgba(245,240,232,.5);
+    }
+    .btn-ghost:hover { border-color:var(--warm); color:var(--warm); }
+
+    /* Spinner */
+    .btn-primary.loading .btn-label { opacity:0; }
+    .btn-primary.loading::after {
+      content:''; position:absolute; width:18px; height:18px;
+      top:50%; left:50%; margin:-9px 0 0 -9px;
+      border:2px solid rgba(13,12,10,.25); border-top-color:var(--ink);
+      border-radius:50%; animation:spin .7s linear infinite;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* Form message */
+    .form-msg {
+      margin-top:1.5rem; padding:1.2rem 1.5rem;
+      border-radius:2px; font-size:.85rem;
+      display:none; align-items:center; gap:.8rem;
+      animation:msgSlide .4s ease-out;
+    }
+    @keyframes msgSlide { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+    .form-msg.success { display:flex; background:rgba(46,204,113,.08); border:1px solid rgba(46,204,113,.25); color:#2ecc71; }
+    .form-msg.error   { display:flex; background:rgba(231,76,60,.08);  border:1px solid rgba(231,76,60,.25);  color:#e74c3c; }
+
+    /* ── MAP ── */
+    .map-section {
+      padding:0 8% 10rem;
+      max-width:1400px; margin:0 auto;
+    }
+    .map-header { margin-bottom:3rem; }
+    .map-header p { margin-top:1rem; font-size:.9rem; color:rgba(245,240,232,.45); }
+
+    .map-wrap {
+      position:relative; height:500px;
+      border:1px solid var(--border);
+      overflow:hidden;
+      opacity:0; transform:translateY(30px);
+      transition:opacity .8s ease, transform .8s ease;
+    }
+    .map-wrap.visible { opacity:1; transform:translateY(0); }
+    .map-wrap::before {
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:2px; z-index:2;
+      background:linear-gradient(90deg,transparent,var(--warm),transparent);
+    }
+    .map-wrap iframe { width:100%; height:100%; border:none; display:block; filter:grayscale(.15) contrast(1.05); }
+
+    /* ── FOOTER ── */
+    footer {
+      background:var(--deep);
+      padding:7rem 8% 3rem;
+      border-top:1px solid var(--border);
+    }
+    .footer-top {
+      display:grid; grid-template-columns:1.8fr 1fr 1fr 1.2fr;
+      gap:5rem; padding-bottom:5rem;
+      border-bottom:1px solid var(--border);
+    }
+    .footer-brand .logo { display:inline-block; margin-bottom:1.5rem; }
+    .footer-brand p { font-size:.9rem; line-height:1.9; color:rgba(245,240,232,.45); max-width:280px; }
+    .footer-col h5 { font-size:.68rem; letter-spacing:.35em; text-transform:uppercase; color:var(--warm); margin-bottom:2rem; }
+    .footer-col a { display:block; font-size:.9rem; color:rgba(245,240,232,.45); text-decoration:none; margin-bottom:.9rem; transition:color .3s; }
+    .footer-col a:hover { color:var(--cream); }
+    .footer-col p { font-size:.9rem; color:rgba(245,240,232,.45); line-height:1.9; }
+    .footer-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:3rem; flex-wrap:wrap; gap:1rem; }
+    .footer-bottom p { font-size:.78rem; letter-spacing:.1em; color:rgba(245,240,232,.25); }
+    .social-links-f { display:flex; gap:1.5rem; }
+    .social-links-f a { color:rgba(245,240,232,.35); text-decoration:none; transition:color .3s; }
+    .social-links-f a:hover { color:var(--warm); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(35px); transition:opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1100px){
+      .contact-grid { grid-template-columns:1fr; gap:4rem; }
+      .footer-top { grid-template-columns:1fr 1fr; }
+    }
+    @media(max-width:900px){
+      #navbar { padding:1.5rem 2rem; }
+      #navbar.scrolled { padding:1rem 2rem; }
+      .nav-links { display:none; }
+      .form-wrap { padding:2.5rem 2rem; }
+      .form-row-2 { grid-template-columns:1fr; }
+      .form-actions { flex-direction:column; }
+    }
+    @media(max-width:600px){
+      .footer-top { grid-template-columns:1fr; gap:3rem; }
+      .page-header { padding:0 5% 5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor">
+    <div class="dot"></div>
+    <div class="ring"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <a href="index.html" class="logo">Smart<span>Hotel</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rooms.html">Rooms</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="rooms.html" class="nav-book">Book Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="ph-bg"></div>
+    <div class="ph-overlay"></div>
+    <div class="particles" id="particles"></div>
+    <div class="ph-content">
+      <div class="ph-tag">Get In Touch</div>
+      <h1 class="ph-h1">We're here<br>to <em>help</em></h1>
+      <p class="ph-sub">24/7 Luxury Concierge at Your Service</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTACT -->
+  <section class="contact-section">
+    <div class="contact-grid">
+
+      <!-- LEFT: INFO -->
+      <div class="contact-left">
+        <div class="info-header reveal">
+          <div class="section-label">Reach Out</div>
+          <h2 class="section-title">Let's start a<br><em>conversation</em></h2>
+          <p>Our dedicated team is available around the clock to assist with reservations, inquiries, and every special request — no matter how grand.</p>
+        </div>
+
+        <div class="contact-cards">
+          <div class="contact-card">
+            <div class="card-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="card-body">
+              <h3>Visit Us</h3>
+              <p>123 Gueliz, Downtown District<br>Marrakech, 40000</p>
+            </div>
+          </div>
+          <div class="contact-card" style="transition-delay:.1s">
+            <div class="card-icon"><i class="fas fa-phone-alt"></i></div>
+            <div class="card-body">
+              <h3>Call Us</h3>
+              <a href="tel:+212708732437">+212 708 732 437</a>
+              <a href="tel:+212687352614">+212 687 352 614</a>
+              <small>Available 24/7</small>
+            </div>
+          </div>
+          <div class="contact-card" style="transition-delay:.2s">
+            <div class="card-icon"><i class="fas fa-envelope"></i></div>
+            <div class="card-body">
+              <h3>Email Us</h3>
+              <a href="mailto:mehdighine@gmail.com">mehdighine@gmail.com</a>
+              <a href="mailto:komitari00@gmail.com">komitari00@gmail.com</a>
+              <a href="mailto:bahraoui.hotmail.com">bahraoui.hotmail.com</a>
+            </div>
+          </div>
+          <div class="contact-card" style="transition-delay:.3s">
+            <div class="card-icon"><i class="fas fa-clock"></i></div>
+            <div class="card-body">
+              <h3>Hours</h3>
+              <p>Front Desk &amp; Concierge: 24/7<br>Restaurant: 6:00 AM – 11:00 PM<br>Spa &amp; Wellness: 8:00 AM – 9:00 PM</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="social-block reveal">
+          <h4>Connect With Us</h4>
+          <div class="social-row">
+            <a href="#" class="social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.linkedin.com/in/mehdi-ghine-a2b156275/" class="social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-btn" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://github.com/m3hdiix-h4x" class="social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: FORM -->
+      <div class="form-wrap" id="formWrap">
+        <div class="form-header">
+          <div class="section-label">Send a Message</div>
+          <h2 class="section-title">Tell us how we<br>can <em>help</em></h2>
+          <p>We'll get back to you within 24 hours.</p>
+        </div>
+
+        <form id="contactForm" class="form-grid" novalidate>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="firstName"><i class="fas fa-user"></i> First Name *</label>
+              <input type="text" id="firstName" name="firstName" class="form-input" placeholder="John" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName"><i class="fas fa-user"></i> Last Name *</label>
+              <input type="text" id="lastName" name="lastName" class="form-input" placeholder="Doe" required />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="email"><i class="fas fa-envelope"></i> Email *</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="john.doe@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="phone"><i class="fas fa-phone"></i> Phone</label>
+              <input type="tel" id="phone" name="phone" class="form-input" placeholder="+1 (555) 000-0000" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="subject"><i class="fas fa-tag"></i> Subject *</label>
+            <select id="subject" name="subject" class="form-select" required>
+              <option value="">Select a subject</option>
+              <option value="reservation">Reservation Inquiry</option>
+              <option value="feedback">General Feedback</option>
+              <option value="complaint">Service Complaint</option>
+              <option value="suggestion">Suggestion</option>
+              <option value="partnership">Partnership Opportunity</option>
+              <option value="event">Event Planning</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message"><i class="fas fa-comment-alt"></i> Your Message *</label>
+            <textarea id="message" name="message" class="form-textarea" placeholder="Tell us how we can help you…" required></textarea>
+            <div class="char-hint" id="charHint">0 characters</div>
+          </div>
+
+          <div class="form-actions">
+            <button type="reset" class="btn btn-ghost">Clear</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+              <span class="btn-label">Send Message</span>
+            </button>
+          </div>
+
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <div class="map-section">
+    <div class="map-header reveal">
+      <div class="section-label">Find Us</div>
+      <h2 class="section-title">Our <em>location</em></h2>
+      <p>Visit us at the heart of Marrakech's most prestigious district.</p>
+    </div>
+    <div class="map-wrap" id="mapWrap">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.9476519598093!2d-73.99185492346532!3d40.74228127138964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1706234567890!5m2!1sen!2sus"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Smart<span>Hotel</span></a>
+        <p>Redefining luxury hospitality through innovation, artistry, and a deep respect for the places we call home.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigate</h5>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Guest Services</h5>
+        <a href="booking.html">Reservations</a>
+        <a href="my-bookings.html">My Stays</a>
+        <a href="profile.html">My Account</a>
+        <a href="login.html">Login</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>123 Gueliz, Downtown<br>mehdighine@gmail.com<br>+212 708 732 437</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+      <div class="social-links-f">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="https://www.linkedin.com/in/mehdi-ghine-a2b156275/"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── CURSOR ──
+    const cursorEl=document.getElementById('cursor');
+    const dot=cursorEl.querySelector('.dot');
+    const ring=cursorEl.querySelector('.ring');
+    let cx=0,cy=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{
+      cx=e.clientX; cy=e.clientY;
+      dot.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+    });
+    (function loop(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ring.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(loop);})();
+    document.querySelectorAll('a,button,.contact-card,.social-btn').forEach(el=>{
+      el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+    });
+
+    // ── NAVBAR ──
+    window.addEventListener('scroll',()=>{
+      document.getElementById('navbar').classList.toggle('scrolled',scrollY>60);
+    });
+
+    // ── PARTICLES ──
+    const pCont=document.getElementById('particles');
+    for(let i=0;i<35;i++){
+      const p=document.createElement('div');
+      p.className='particle';
+      const sz=2+Math.random()*4;
+      p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;
+        animation-delay:${Math.random()*15}s;animation-duration:${10+Math.random()*12}s;`;
+      pCont.appendChild(p);
+    }
+
+    // ── SCROLL REVEAL ──
+    const ro=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+    },{threshold:0.1});
+    document.querySelectorAll('.reveal,.contact-card,.form-wrap,#mapWrap').forEach(el=>ro.observe(el));
+
+    // ── CHAR COUNTER ──
+    const msgField=document.getElementById('message');
+    const charHint=document.getElementById('charHint');
+    msgField.addEventListener('input',()=>{
+      const n=msgField.value.length;
+      charHint.textContent=`${n} character${n!==1?'s':''}`;
+      charHint.classList.toggle('ok',n>=10);
+    });
+
+    // ── EMAIL LIVE VALIDATION ──
+    document.getElementById('email').addEventListener('blur',function(){
+      const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
+      this.classList.toggle('error-field',this.value&&!ok);
+    });
+
+    // ── FORM ──
+    const form=document.getElementById('contactForm');
+    const submitBtn=document.getElementById('submitBtn');
+    const formMsg=document.getElementById('formMsg');
+
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();
+
+      const data={
+        firstName:document.getElementById('firstName').value.trim(),
+        lastName:document.getElementById('lastName').value.trim(),
+        email:document.getElementById('email').value.trim(),
+        phone:document.getElementById('phone').value.trim(),
+        subject:document.getElementById('subject').value,
+        message:document.getElementById('message').value.trim()
+      };
+
+      // Validate
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)){
+        showMsg('Please enter a valid email address.','error');
+        document.getElementById('email').focus(); return;
+      }
+      if(data.message.length<10){
+        showMsg('Please write a message of at least 10 characters.','error');
+        msgField.focus(); return;
+      }
+
+      // Loading
+      submitBtn.classList.add('loading');
+      submitBtn.disabled=true;
+
+      try{
+        await new Promise(r=>setTimeout(r,1500)); // replace with real API call
+        showMsg('Thank you! We\'ll get back to you within 24 hours.','success');
+        form.reset();
+        charHint.textContent='0 characters';
+        charHint.classList.remove('ok');
+      }catch{
+        showMsg('Something went wrong. Please try again or contact us directly.','error');
+      }finally{
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled=false;
+      }
+    });
+
+    function showMsg(text,type){
+      formMsg.className=`form-msg ${type}`;
+      formMsg.innerHTML=`<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i><span>${text}</span>`;
+      formMsg.scrollIntoView({behavior:'smooth',block:'nearest'});
+      setTimeout(()=>{ formMsg.className='form-msg'; formMsg.innerHTML=''; },6000);
+    }
+  </script>
+</body>
+</html>

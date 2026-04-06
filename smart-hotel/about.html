@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — SmartHotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --ink:    #0d0c0a;
+      --cream:  #f5f0e8;
+      --warm:   #c8a96e;
+      --gold:   #e2c07a;
+      --mist:   #e8e2d8;
+      --smoke:  #6b6560;
+      --deep:   #1a1610;
+      --glass:  rgba(245,240,232,0.06);
+      --border: rgba(200,169,110,0.25);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--cream);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── NOISE ── */
+    body::before {
+      content:''; position:fixed; inset:0; z-index:9998; pointer-events:none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-repeat: repeat; opacity: 0.4;
+    }
+
+    /* ── CURSOR ── */
+    #cursor { position:fixed; top:0; left:0; pointer-events:none; z-index:99999; mix-blend-mode:difference; }
+    #cursor .dot { width:8px; height:8px; border-radius:50%; background:var(--cream); transform:translate(-50%,-50%); transition:transform .1s; }
+    #cursor .ring { position:absolute; top:-22px; left:-22px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(245,240,232,.5); transition:transform .4s cubic-bezier(.23,1,.32,1), width .3s, height .3s, top .3s, left .3s; }
+    body.hovering #cursor .ring { width:60px; height:60px; top:-30px; left:-30px; border-color:var(--warm); }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      position:fixed; top:0; width:100%; z-index:1000;
+      padding:2rem 4rem;
+      display:flex; justify-content:space-between; align-items:center;
+      transition: padding .5s, background .5s;
+    }
+    #navbar.scrolled {
+      padding:1.2rem 4rem;
+      background:rgba(13,12,10,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .logo { font-family:'Cinzel',serif; font-size:1.5rem; letter-spacing:.3em; color:var(--cream); text-decoration:none; }
+    .logo span { color:var(--warm); }
+    .nav-links { list-style:none; display:flex; gap:2.5rem; align-items:center; }
+    .nav-links a {
+      font-size:.8rem; letter-spacing:.2em; text-transform:uppercase;
+      color:rgba(245,240,232,.65); text-decoration:none;
+      transition:color .3s; position:relative; padding-bottom:3px;
+    }
+    .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--warm); transition:width .4s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--cream); }
+    .nav-links a:hover::after, .nav-links a.active::after { width:100%; }
+    .nav-book { padding:.7rem 1.8rem; border:1px solid var(--warm); color:var(--warm) !important; border-radius:2px; transition:background .3s, color .3s !important; }
+    .nav-book:hover { background:var(--warm); color:var(--ink) !important; }
+    .nav-book::after { display:none !important; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position:relative; height:70vh;
+      display:flex; flex-direction:column;
+      justify-content:flex-end; align-items:flex-start;
+      padding:0 8% 7rem;
+      overflow:hidden; margin-top:0;
+    }
+    .ph-bg {
+      position:absolute; inset:0;
+      background:url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=90') center/cover no-repeat;
+      transform:scale(1.05);
+      animation:phZoom 16s ease-in-out infinite alternate;
+    }
+    @keyframes phZoom { from{transform:scale(1.05)} to{transform:scale(1)} }
+    .ph-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(13,12,10,1) 0%, rgba(13,12,10,.6) 45%, rgba(13,12,10,.15) 100%);
+    }
+    .ph-content { position:relative; z-index:2; }
+    .ph-tag {
+      font-size:.68rem; letter-spacing:.45em; text-transform:uppercase;
+      color:var(--warm); margin-bottom:1.2rem;
+      display:flex; align-items:center; gap:.8rem;
+      opacity:0; animation:fadeUp .8s ease-out .3s forwards;
+    }
+    .ph-tag::before { content:''; width:30px; height:1px; background:var(--warm); }
+    .ph-h1 {
+      font-family:'Cormorant Infant',serif;
+      font-size:clamp(3.5rem,8vw,7rem);
+      font-weight:300; line-height:1; color:var(--cream);
+      opacity:0; animation:fadeUp 1s ease-out .5s forwards;
+    }
+    .ph-h1 em { font-style:italic; color:var(--warm); }
+    .ph-sub {
+      margin-top:1.5rem; font-size:.95rem; letter-spacing:.15em;
+      text-transform:uppercase; color:rgba(245,240,232,.5);
+      opacity:0; animation:fadeUp .8s ease-out .8s forwards;
+    }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { to{opacity:1} }
+
+    /* ── MARQUEE ── */
+    .marquee-strip { overflow:hidden; background:var(--warm); padding:.85rem 0; }
+    .marquee-track { display:flex; gap:3rem; width:max-content; animation:marquee 20s linear infinite; }
+    .marquee-item { font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.3em; color:var(--ink); white-space:nowrap; display:flex; align-items:center; gap:1.5rem; }
+    .marquee-item::after { content:'✦'; opacity:.5; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ── SECTION COMMONS ── */
+    .section-label { font-size:.68rem; letter-spacing:.45em; text-transform:uppercase; color:var(--warm); display:flex; align-items:center; gap:.8rem; margin-bottom:1.2rem; }
+    .section-label::before { content:''; width:30px; height:1px; background:var(--warm); }
+    .section-title { font-family:'Cormorant Infant',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:300; line-height:1.1; color:var(--cream); }
+    .section-title em { font-style:italic; color:var(--warm); }
+
+    /* ── STORY SECTION ── */
+    .story-section {
+      padding:10rem 8%;
+      display:grid; grid-template-columns:1fr 1.1fr;
+      gap:8rem; align-items:center;
+      max-width:1400px; margin:0 auto;
+    }
+    .story-left {}
+    .story-left p {
+      margin-top:2.5rem; font-size:1.05rem; line-height:2;
+      color:rgba(245,240,232,.65);
+    }
+    .story-left p + p { margin-top:1.2rem; }
+    .story-right { position:relative; }
+    .story-img-wrap {
+      position:relative;
+      width:100%;
+    }
+    .story-img-main {
+      width:100%; aspect-ratio:4/5;
+      background:url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=85') center/cover;
+      border-radius:2px;
+    }
+    .story-img-accent {
+      position:absolute; bottom:-3rem; left:-3rem;
+      width:55%; aspect-ratio:1;
+      background:url('https://images.unsplash.com/photo-1614642264762-d0a3b8bf3700?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=85') center/cover;
+      border:4px solid var(--ink); border-radius:2px;
+    }
+    .story-badge {
+      position:absolute; top:2rem; right:-2rem;
+      width:120px; height:120px; border-radius:50%;
+      background:var(--warm); display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center;
+      animation:rotateBadge 12s linear infinite;
+    }
+    .story-badge .num { font-family:'Cinzel',serif; font-size:1.6rem; color:var(--ink); font-weight:600; line-height:1; }
+    .story-badge .lbl { font-size:.5rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(13,12,10,.7); margin-top:.2rem; }
+    @keyframes rotateBadge { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+    /* ── PILLARS / MISSION-VISION ── */
+    .pillars-section {
+      padding:0 8% 10rem;
+    }
+    .pillars-header { max-width:600px; margin-bottom:5rem; }
+    .pillars-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:1px; background:var(--border);
+      border:1px solid var(--border);
+    }
+    .pillar-card {
+      padding:4rem 3rem;
+      background:var(--ink);
+      transition:background .4s;
+      position:relative; overflow:hidden;
+    }
+    .pillar-card::before {
+      content:''; position:absolute; top:0; left:0;
+      width:3px; height:0; background:var(--warm);
+      transition:height .5s;
+    }
+    .pillar-card:hover { background:#141210; }
+    .pillar-card:hover::before { height:100%; }
+    .pillar-icon { font-size:1.8rem; color:var(--warm); margin-bottom:2rem; display:block; transition:transform .3s; }
+    .pillar-card:hover .pillar-icon { transform:scale(1.1) translateY(-3px); }
+    .pillar-card h3 { font-family:'Cormorant Infant',serif; font-size:1.7rem; font-weight:400; color:var(--cream); margin-bottom:1.2rem; }
+    .pillar-card p { font-size:.9rem; line-height:1.85; color:rgba(245,240,232,.55); }
+
+    /* ── STATS ── */
+    .stats-section {
+      background:#080806;
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      display:grid; grid-template-columns:repeat(4,1fr);
+    }
+    .stat-cell {
+      padding:5rem 3rem; text-align:center;
+      border-right:1px solid var(--border);
+      transition:background .3s;
+      position:relative; overflow:hidden;
+    }
+    .stat-cell::after {
+      content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+      width:0; height:2px; background:var(--warm);
+      transition:width .4s;
+    }
+    .stat-cell:last-child { border-right:none; }
+    .stat-cell:hover { background:rgba(200,169,110,.04); }
+    .stat-cell:hover::after { width:60%; }
+    .stat-num { font-family:'Cormorant Infant',serif; font-size:4rem; font-weight:300; color:var(--warm); line-height:1; margin-bottom:.6rem; }
+    .stat-lbl { font-size:.68rem; letter-spacing:.3em; text-transform:uppercase; color:var(--smoke); }
+
+    /* ── TIMELINE ── */
+    .timeline-section { padding:10rem 8%; max-width:1400px; margin:0 auto; }
+    .timeline-header { max-width:600px; margin-bottom:6rem; }
+    .timeline { position:relative; }
+    .timeline::before {
+      content:''; position:absolute; left:50%; top:0; bottom:0;
+      width:1px; background:var(--border);
+      transform:translateX(-50%);
+    }
+    .tl-item {
+      display:grid; grid-template-columns:1fr 80px 1fr;
+      gap:0; margin-bottom:4rem; align-items:center;
+      opacity:0; transform:translateY(30px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .tl-item.visible { opacity:1; transform:translateY(0); }
+    .tl-left { padding-right:4rem; text-align:right; }
+    .tl-right { padding-left:4rem; }
+    .tl-item:nth-child(even) .tl-left { order:3; text-align:left; padding-right:0; padding-left:4rem; }
+    .tl-item:nth-child(even) .tl-center { order:2; }
+    .tl-item:nth-child(even) .tl-right { order:1; text-align:right; padding-left:0; padding-right:4rem; }
+    .tl-year {
+      font-family:'Cormorant Infant',serif; font-size:1rem; color:var(--warm);
+      letter-spacing:.15em; margin-bottom:.5rem;
+    }
+    .tl-left h4, .tl-right h4 {
+      font-family:'Cormorant Infant',serif;
+      font-size:1.5rem; font-weight:400; color:var(--cream); margin-bottom:.6rem;
+    }
+    .tl-left p, .tl-right p {
+      font-size:.88rem; line-height:1.8; color:rgba(245,240,232,.5);
+    }
+    .tl-center {
+      display:flex; justify-content:center; align-items:center;
+      position:relative; z-index:2;
+    }
+    .tl-dot {
+      width:14px; height:14px; border-radius:50%;
+      background:var(--warm); border:3px solid var(--ink);
+      box-shadow:0 0 0 1px var(--warm);
+      transition:transform .3s;
+    }
+    .tl-item:hover .tl-dot { transform:scale(1.4); }
+
+    /* ── OWNER SECTION ── */
+    .owner-section {
+      padding:10rem 8%;
+      background:#080806;
+      border-top:1px solid var(--border);
+    }
+    .owner-inner { max-width:1000px; margin:0 auto; text-align:center; }
+    .owner-header { margin-bottom:5rem; }
+    .owner-photo-wrap {
+      position:relative; display:inline-block; margin-bottom:3.5rem;
+    }
+    .owner-photo {
+      width:220px; height:220px; border-radius:50%;
+      overflow:hidden; margin:0 auto;
+      border:1px solid var(--border);
+      position:relative;
+      background: #1a1610;
+    }
+    .owner-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+    .owner-photo-placeholder {
+      width:100%; height:100%;
+      display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg,#1a1610,#211e18);
+    }
+    .owner-photo-placeholder i { font-size:4rem; color:var(--warm); opacity:.5; }
+    .owner-ring {
+      position:absolute; inset:-10px; border-radius:50%;
+      border:1px solid rgba(200,169,110,.25);
+      animation:ringPulse 3s ease-in-out infinite;
+    }
+    .owner-ring-2 {
+      position:absolute; inset:-22px; border-radius:50%;
+      border:1px solid rgba(200,169,110,.1);
+      animation:ringPulse 3s ease-in-out infinite .6s;
+    }
+    @keyframes ringPulse {
+      0%,100%{transform:scale(1);opacity:.6}
+      50%{transform:scale(1.04);opacity:1}
+    }
+    .owner-gold-dot {
+      position:absolute; bottom:10px; right:10px;
+      width:28px; height:28px; border-radius:50%;
+      background:var(--warm); border:3px solid var(--ink);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .owner-gold-dot i { font-size:.65rem; color:var(--ink); }
+    .owner-name {
+      font-family:'Cormorant Infant',serif;
+      font-size:clamp(2.5rem,5vw,3.5rem);
+      font-weight:300; color:var(--cream); letter-spacing:.02em;
+      margin-bottom:.5rem;
+    }
+    .owner-title {
+      font-size:.75rem; letter-spacing:.4em; text-transform:uppercase;
+      color:var(--warm); margin-bottom:2.5rem;
+    }
+    .owner-divider {
+      width:60px; height:1px; background:var(--warm);
+      margin:0 auto 2.5rem;
+    }
+    .owner-quote {
+      font-family:'Cormorant Infant',serif;
+      font-size:clamp(1.4rem,2.5vw,1.8rem);
+      font-weight:300; font-style:italic;
+      color:rgba(245,240,232,.75);
+      line-height:1.7; max-width:700px; margin:0 auto 2rem;
+    }
+    .owner-bio {
+      font-size:.95rem; line-height:1.9;
+      color:rgba(245,240,232,.5);
+      max-width:600px; margin:0 auto;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background:var(--deep);
+      padding:7rem 8% 3rem;
+      border-top:1px solid var(--border);
+    }
+    .footer-top {
+      display:grid; grid-template-columns:1.8fr 1fr 1fr 1.2fr;
+      gap:5rem; padding-bottom:5rem;
+      border-bottom:1px solid var(--border);
+    }
+    .footer-brand .logo { display:inline-block; margin-bottom:1.5rem; }
+    .footer-brand p { font-size:.9rem; line-height:1.9; color:rgba(245,240,232,.45); max-width:280px; }
+    .footer-col h5 { font-size:.68rem; letter-spacing:.35em; text-transform:uppercase; color:var(--warm); margin-bottom:2rem; }
+    .footer-col a { display:block; font-size:.9rem; color:rgba(245,240,232,.45); text-decoration:none; margin-bottom:.9rem; transition:color .3s; }
+    .footer-col a:hover { color:var(--cream); }
+    .footer-col p { font-size:.9rem; color:rgba(245,240,232,.45); line-height:1.9; }
+    .footer-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:3rem; flex-wrap:wrap; gap:1rem; }
+    .footer-bottom p { font-size:.78rem; letter-spacing:.1em; color:rgba(245,240,232,.25); }
+    .social-links { display:flex; gap:1.5rem; }
+    .social-links a { color:rgba(245,240,232,.35); text-decoration:none; transition:color .3s; }
+    .social-links a:hover { color:var(--warm); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(35px); transition:opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-left { opacity:0; transform:translateX(-40px); transition:opacity .9s ease, transform .9s ease; }
+    .reveal-left.visible { opacity:1; transform:translateX(0); }
+    .reveal-right { opacity:0; transform:translateX(40px); transition:opacity .9s ease, transform .9s ease; }
+    .reveal-right.visible { opacity:1; transform:translateX(0); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1100px){
+      .story-section { grid-template-columns:1fr; gap:4rem; }
+      .story-img-accent { display:none; }
+      .story-badge { top:2rem; right:2rem; }
+      .stats-section { grid-template-columns:repeat(2,1fr); }
+      .stats-section .stat-cell:nth-child(2) { border-right:none; }
+      .footer-top { grid-template-columns:1fr 1fr; }
+      .pillars-grid { grid-template-columns:1fr; }
+      .timeline::before { left:30px; }
+      .tl-item { grid-template-columns:60px 1fr; gap:0; }
+      .tl-left { display:none; }
+      .tl-right { padding-left:2rem; text-align:left; order:2; }
+      .tl-center { order:1; justify-content:flex-start; }
+      .tl-item:nth-child(even) .tl-left { display:none; }
+      .tl-item:nth-child(even) .tl-right { order:2; padding-left:2rem; padding-right:0; text-align:left; }
+      .tl-item:nth-child(even) .tl-center { order:1; justify-content:flex-start; }
+    }
+    @media(max-width:900px){
+      #navbar { padding:1.5rem 2rem; }
+      #navbar.scrolled { padding:1rem 2rem; }
+      .nav-links { display:none; }
+      .page-header { padding:0 5% 5rem; }
+      .stats-section { grid-template-columns:repeat(2,1fr); }
+      .footer-top { grid-template-columns:1fr; gap:3rem; }
+    }
+    @media(max-width:600px){
+      .stats-section { grid-template-columns:1fr; }
+      .stats-section .stat-cell { border-right:none; border-bottom:1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor">
+    <div class="dot"></div>
+    <div class="ring"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <a href="index.html" class="logo">Smart<span>Hotel</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rooms.html">Rooms</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="rooms.html" class="nav-book">Book Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="ph-bg"></div>
+    <div class="ph-overlay"></div>
+    <div class="ph-content">
+      <div class="ph-tag">Our Story</div>
+      <h1 class="ph-h1">About<br><em>SmartHotel</em></h1>
+      <p class="ph-sub">Where Technology Meets Hospitality</p>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Our Story</span>
+      <span class="marquee-item">Our Mission</span>
+      <span class="marquee-item">Our Vision</span>
+      <span class="marquee-item">Our Values</span>
+      <span class="marquee-item">Excellence</span>
+      <span class="marquee-item">Innovation</span>
+      <span class="marquee-item">Hospitality</span>
+      <span class="marquee-item">Our Story</span>
+      <span class="marquee-item">Our Mission</span>
+      <span class="marquee-item">Our Vision</span>
+      <span class="marquee-item">Our Values</span>
+      <span class="marquee-item">Excellence</span>
+      <span class="marquee-item">Innovation</span>
+      <span class="marquee-item">Hospitality</span>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <section>
+    <div class="story-section">
+      <div class="story-left reveal-left">
+        <div class="section-label">The SmartHotel Story</div>
+        <h2 class="section-title">A vision born<br>from <em>passion</em></h2>
+        <p>SmartHotel was founded with a singular vision: to revolutionize the hospitality industry by seamlessly weaving cutting-edge technology into the fabric of world-class service. Since our inception, we have been committed to crafting guest experiences that are as memorable as they are innovative.</p>
+        <p>Our properties feature intelligent room controls, AI-powered concierge services, and sustainable practices that honor the environments we inhabit. Every detail is meticulously considered — because extraordinary experiences are built from extraordinary details.</p>
+      </div>
+      <div class="story-right reveal-right">
+        <div class="story-img-wrap">
+          <div class="story-img-main"></div>
+          <div class="story-img-accent"></div>
+          <div class="story-badge">
+            <span class="num">2026</span>
+            <span class="lbl">Est.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS (Mission / Vision / Values) -->
+  <section class="pillars-section">
+    <div class="pillars-header reveal">
+      <div class="section-label">What Drives Us</div>
+      <h2 class="section-title">Our guiding <em>pillars</em></h2>
+    </div>
+    <div class="pillars-grid reveal">
+      <div class="pillar-card">
+        <i class="pillar-icon fas fa-compass"></i>
+        <h3>Our Mission</h3>
+        <p>To deliver exceptional hospitality powered by innovative technology — ensuring every guest feels valued, comfortable, and genuinely connected to the places they visit.</p>
+      </div>
+      <div class="pillar-card">
+        <i class="pillar-icon fas fa-eye"></i>
+        <h3>Our Vision</h3>
+        <p>To become the world's foremost smart hotel brand — setting new standards in sustainable luxury and deeply personalized experiences that stay with guests long after they leave.</p>
+      </div>
+      <div class="pillar-card">
+        <i class="pillar-icon fas fa-gem"></i>
+        <h3>Our Values</h3>
+        <p>Innovation, Excellence, Sustainability, and Guest-Centricity. These four pillars define who we are and shape every decision — from how we design a room to how we greet a guest.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-section">
+    <div class="stat-cell reveal">
+      <div class="stat-num" data-target="10000">0</div>
+      <div class="stat-lbl">Happy Guests</div>
+    </div>
+    <div class="stat-cell reveal">
+      <div class="stat-num" data-target="150">0</div>
+      <div class="stat-lbl">Luxury Rooms</div>
+    </div>
+    <div class="stat-cell reveal">
+      <div class="stat-num" data-target="50">0</div>
+      <div class="stat-lbl">Expert Staff</div>
+    </div>
+    <div class="stat-cell reveal">
+      <div class="stat-num" data-target="4.9" data-suffix="/5">0</div>
+      <div class="stat-lbl">Average Rating</div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <section class="timeline-section">
+    <div class="timeline-header reveal">
+      <div class="section-label">Our Journey</div>
+      <h2 class="section-title">Milestones that<br>shaped <em>us</em></h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-year">2022</div>
+          <h4>The Idea</h4>
+          <p>A bold vision takes shape — a hotel group where technology and human warmth coexist without compromise.</p>
+        </div>
+        <div class="tl-center"><div class="tl-dot"></div></div>
+        <div class="tl-right"></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"></div>
+        <div class="tl-center"><div class="tl-dot"></div></div>
+        <div class="tl-right">
+          <div class="tl-year">2023</div>
+          <h4>First Property</h4>
+          <p>Our flagship opens in Marrakech, redefining what a luxury riad can be with AI-powered service and traditional craftsmanship.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-year">2024</div>
+          <h4>Global Expansion</h4>
+          <p>Properties in Paris and Tokyo launch to critical acclaim, establishing SmartHotel as a truly international brand.</p>
+        </div>
+        <div class="tl-center"><div class="tl-dot"></div></div>
+        <div class="tl-right"></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"></div>
+        <div class="tl-center"><div class="tl-dot"></div></div>
+        <div class="tl-right">
+          <div class="tl-year">2025</div>
+          <h4>1 Million Guests</h4>
+          <p>A milestone that reflects not just growth, but a commitment to turning every stay into a story worth telling.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-year">2026</div>
+          <h4>The Future</h4>
+          <p>50+ destinations, 200+ awards, and an unwavering promise: to keep redefining what luxury hospitality can be.</p>
+        </div>
+        <div class="tl-center"><div class="tl-dot"></div></div>
+        <div class="tl-right"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OWNER -->
+  <section class="owner-section">
+    <div class="owner-inner reveal">
+      <div class="owner-header">
+        <div class="section-label" style="justify-content:center;">The Founder</div>
+        <h2 class="section-title" style="text-align:center;">Meet the <em>owner</em></h2>
+      </div>
+
+      <div class="owner-photo-wrap">
+        <div class="owner-photo">
+          <img src="mehdi.png" alt="Mehdi GHINE" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <div class="owner-photo-placeholder" style="display:none;">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+        <div class="owner-ring"></div>
+        <div class="owner-ring-2"></div>
+        <div class="owner-gold-dot"><i class="fas fa-crown"></i></div>
+      </div>
+
+      <h3 class="owner-name">Mehdi GHINE</h3>
+      <div class="owner-title">Founder &amp; Owner</div>
+      <div class="owner-divider"></div>
+
+      <p class="owner-quote">
+        "I built SmartHotel because I believe the future of luxury is not about opulence alone — it is about moments that feel genuinely personal."
+      </p>
+      <p class="owner-bio">
+        With a passion for both technology and the art of hospitality, Mehdi GHINE envisioned a hotel brand that would stand apart — one where every guest is seen, every need is anticipated, and every stay becomes a memory. Under his leadership, SmartHotel has grown from a single riad in Marrakech to a globally recognized name in luxury hospitality.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Smart<span>Hotel</span></a>
+        <p>Redefining luxury hospitality through innovation, artistry, and a deep respect for the places we call home.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigate</h5>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Guest Services</h5>
+        <a href="booking.html">Reservations</a>
+        <a href="my-bookings.html">My Stays</a>
+        <a href="profile.html">My Account</a>
+        <a href="login.html">Login</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>123 Luxury Avenue<br>reservations@smarthotel.com<br>+1 (555) 123-4567</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── CURSOR ──
+    const cursorEl=document.getElementById('cursor');
+    const dot=cursorEl.querySelector('.dot');
+    const ring=cursorEl.querySelector('.ring');
+    let cx=0,cy=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{
+      cx=e.clientX;cy=e.clientY;
+      dot.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+    });
+    (function animCursor(){
+      rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;
+      ring.style.transform=`translate(${rx}px,${ry}px)`;
+      requestAnimationFrame(animCursor);
+    })();
+    document.querySelectorAll('a,button,.pillar-card,.stat-cell').forEach(el=>{
+      el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+    });
+
+    // ── NAVBAR ──
+    window.addEventListener('scroll',()=>{
+      document.getElementById('navbar').classList.toggle('scrolled',scrollY>60);
+    });
+
+    // ── SCROLL REVEAL ──
+    const ro=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+    },{threshold:0.1});
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.tl-item').forEach(el=>ro.observe(el));
+
+    // ── COUNTER ANIMATION ──
+    let countersRun=false;
+    const statsObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting && !countersRun){
+          countersRun=true;
+          document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
+            const target=parseFloat(el.dataset.target);
+            const suffix=el.dataset.suffix||'+';
+            const isDecimal=target%1!==0;
+            const duration=1800;
+            const steps=80;
+            const step=target/steps;
+            let current=0;
+            const fmt=v=> isDecimal ? v.toFixed(1)+suffix : Math.floor(v).toLocaleString()+suffix;
+            const timer=setInterval(()=>{
+              current+=step;
+              if(current>=target){ el.textContent=fmt(target); clearInterval(timer); }
+              else { el.textContent=fmt(current); }
+            },duration/steps);
+          });
+        }
+      });
+    },{threshold:0.3});
+    document.querySelectorAll('.stats-section').forEach(el=>statsObs.observe(el));
+  </script>
+</body>
+</html>

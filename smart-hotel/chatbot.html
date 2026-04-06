@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - Smart Hotel</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">SmartHotel</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="rooms.html">Rooms</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="chatbot-section">
+        <div class="container">
+            <div class="chatbot-container">
+                <div class="chatbot-header">
+                    <div class="chatbot-title">
+                        <div class="bot-avatar">🤖</div>
+                        <div>
+                            <h2>SmartHotel AI Assistant</h2>
+                            <p class="status">Online - Available 24/7</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-small" onclick="clearChat()">Clear Chat</button>
+                </div>
+
+                <div class="chatbot-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>Hello! 👋 Welcome to SmartHotel. I'm your AI assistant, here to help you 24/7.</p>
+                            <p>I can assist you with:</p>
+                            <ul>
+                                <li>Room bookings and availability</li>
+                                <li>Hotel services and amenities</li>
+                                <li>Local recommendations</li>
+                                <li>Questions about your stay</li>
+                            </ul>
+                            <p>How can I help you today?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="sendQuickMessage('Check room availability')">
+                        🏨 Check Availability
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Tell me about hotel services')">
+                        ⭐ Hotel Services
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Recommend local attractions')">
+                        🗺️ Local Attractions
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Help with my booking')">
+                        📋 Booking Help
+                    </button>
+                </div>
+
+                <div class="chatbot-input">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Type your message here..." 
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="send-btn" onclick="sendMessage()">
+                        <span>📤</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>SmartHotel</h4>
+                <p>Experience the future of hospitality.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="about.html">About Us</a>
+                <a href="services.html">Services</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>123 Luxury Avenue</p>
+                <p>info@smarthotel.com</p>
+                <p>+1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/chatbot.js"></script>
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+
+        function clearChat() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Chat cleared! How can I help you?</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user-message';
+            userMsg.innerHTML = `
+                <div class="message-content">
+                    <p>${message}</p>
+                </div>
+                <div class="message-avatar">👤</div>
+            `;
+            chatMessages.appendChild(userMsg);
+            
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate bot thinking
+            setTimeout(() => {
+                const botResponse = getBotResponse(message);
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot-message';
+                botMsg.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>${botResponse}</p>
+                    </div>
+                `;
+                chatMessages.appendChild(botMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        }
+
+        function getBotResponse(message) {
+            const msg = message.toLowerCase();
+            
+            if (msg.includes('availability') || msg.includes('book') || msg.includes('reserve')) {
+                return "I'd be happy to help you check room availability! We have several room types available:<br><br>• Standard Room - $129/night<br>• Executive Room - $199/night<br>• Deluxe Suite - $299/night<br>• Presidential Suite - $499/night<br><br>What dates are you interested in?";
+            } else if (msg.includes('service') || msg.includes('amenities')) {
+                return "SmartHotel offers a wide range of premium services:<br><br>🍽️ Fine Dining & Room Service<br>💆 Luxury Spa & Wellness<br>🏊 Infinity Pool & Fitness Center<br>🚗 Airport Transfer & Valet<br>💼 Business Center<br>🎉 Event Venues<br><br>Would you like more details about any specific service?";
+            } else if (msg.includes('attraction') || msg.includes('recommend') || msg.includes('nearby')) {
+                return "Great question! Here are some popular attractions near SmartHotel:<br><br>🏛️ City Museum (5 min walk)<br>🌳 Central Park (10 min walk)<br>🎭 Theater District (15 min drive)<br>🛍️ Shopping Mall (20 min walk)<br>🏖️ Beach (25 min drive)<br><br>I can also arrange tours and transportation for you!";
+            } else if (msg.includes('help') || msg.includes('question')) {
+                return "I'm here to help! You can ask me about:<br><br>• Room availability and booking<br>• Hotel services and amenities<br>• Check-in/check-out times<br>• Local attractions and dining<br>• Special requests<br>• Cancellation policies<br><br>What would you like to know?";
+            } else if (msg.includes('price') || msg.includes('cost')) {
+                return "Our room rates are:<br><br>Standard Room: $129/night<br>Executive Room: $199/night<br>Deluxe Suite: $299/night<br>Presidential Suite: $499/night<br><br>All rates include free WiFi, breakfast, and access to our fitness center and pool. Special packages and discounts are available for extended stays!";
+            } else {
+                return "Thank you for your message! I'm here to assist with bookings, hotel information, and local recommendations. Could you please provide more details about what you'd like to know? Feel free to use the quick action buttons below for common requests!";
+            }
+        }
+    </script>
+</body>
+</html>

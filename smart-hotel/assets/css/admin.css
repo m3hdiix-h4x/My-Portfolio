@@ -1,0 +1,30 @@
+body {
+  font-family: Arial;
+  background: #f0f0f0;
+}
+
+nav {
+  background: #222;
+  color: #fff;
+  padding: 10px;
+}
+
+nav a {
+  color: #fff;
+  margin: 0 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}

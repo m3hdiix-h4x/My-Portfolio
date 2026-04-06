@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Your Stay — SmartHotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold:      #c9b896;
+      --gold-lt:   #f4e4c1;
+      --gold-dk:   #a89674;
+      --black:     #080808;
+      --surface:   #111111;
+      --surface2:  #181818;
+      --text:      rgba(255,255,255,0.88);
+      --text-dim:  rgba(255,255,255,0.55);
+      --ease:      cubic-bezier(.4,0,.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Cormorant Garamond', Georgia, serif; background: var(--black); color: var(--text); overflow-x: hidden; }
+
+    /* CURSOR */
+    .cursor { width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease);mix-blend-mode:difference; }
+    .cursor-ring { width:36px;height:36px;border:1px solid rgba(201,184,150,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:transform .18s var(--ease),width .4s var(--ease),height .4s var(--ease); }
+
+    /* NAVBAR */
+    #navbar { position:fixed;top:0;width:100%;z-index:1000;padding:1.4rem 0;transition:all .5s var(--ease); }
+    #navbar.scrolled { background:rgba(8,8,8,.92);backdrop-filter:blur(24px);padding:.9rem 0;border-bottom:1px solid rgba(201,184,150,.12);box-shadow:0 8px 40px rgba(0,0,0,.5); }
+    .nav-container { max-width:1440px;margin:0 auto;padding:0 3rem;display:flex;justify-content:space-between;align-items:center; }
+    .logo { font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-lt) 50%,var(--gold) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmerLogo 4s ease infinite;text-decoration:none; }
+    @keyframes shimmerLogo { 0%,100%{background-position:0% 50%}50%{background-position:100% 50%} }
+    .nav-links { display:flex;list-style:none;gap:2.8rem;align-items:center; }
+    .nav-links a { font-family:'Montserrat',sans-serif;color:rgba(255,255,255,.75);text-decoration:none;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;padding:.4rem 0;position:relative;transition:color .3s; }
+    .nav-links a::after { content:'';position:absolute;bottom:-2px;left:50%;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease),left .4s var(--ease); }
+    .nav-links a:hover,.nav-links a.active { color:var(--gold); }
+    .nav-links a:hover::after,.nav-links a.active::after { width:100%;left:0; }
+
+    /* HERO */
+    .booking-hero { position:relative;height:62vh;min-height:480px;overflow:hidden; }
+    .hero-bg { position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=85&auto=format&fit=crop');background-size:cover;background-position:center;transform:scale(1.08);animation:heroZoom 14s ease-in-out infinite alternate; }
+    @keyframes heroZoom { from{transform:scale(1.08)}to{transform:scale(1.14)} }
+    .hero-bg::after { content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.75) 100%); }
+    .hero-vignette { position:absolute;inset:0;z-index:2;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.7) 100%); }
+    .hero-content { position:relative;z-index:10;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 8vw; }
+    .hero-eyebrow { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);opacity:0;transform:translateY(20px);animation:revealUp .9s var(--ease) .3s forwards;display:flex;align-items:center;gap:1.4rem;margin-bottom:1.8rem; }
+    .hero-eyebrow::before,.hero-eyebrow::after { content:'';flex:1;max-width:60px;height:1px; }
+    .hero-eyebrow::before { background:linear-gradient(to right,transparent,var(--gold)); }
+    .hero-eyebrow::after { background:linear-gradient(to left,transparent,var(--gold)); }
+    .hero-title { font-family:'Playfair Display',serif;font-size:clamp(3rem,6.5vw,6rem);font-weight:400;line-height:1.06;color:#fff;opacity:0;transform:translateY(40px);animation:revealUp 1.1s var(--ease) .55s forwards;text-shadow:0 4px 40px rgba(0,0,0,.4); }
+    .hero-title em { font-style:italic;background:linear-gradient(135deg,#fff 20%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+    .hero-subtitle { font-size:clamp(1.1rem,1.6vw,1.35rem);font-weight:300;color:rgba(255,255,255,.75);margin-top:1.6rem;opacity:0;transform:translateY(20px);animation:revealUp .9s var(--ease) .8s forwards; }
+    @keyframes revealUp { to{opacity:1;transform:translateY(0)} }
+
+    /* PROGRESS */
+    .booking-progress { background:var(--surface);padding:3.5rem 5%;border-bottom:1px solid rgba(201,184,150,.1); }
+    .progress-container { max-width:720px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;position:relative; }
+    .progress-track { position:absolute;top:24px;left:10%;right:10%;height:1px;background:rgba(201,184,150,.15); }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));width:0%;transition:width .8s var(--ease);box-shadow:0 0 16px rgba(201,184,150,.4); }
+    .progress-step { position:relative;z-index:2;text-align:center; }
+    .step-circle { width:50px;height:50px;border-radius:50%;border:1px solid rgba(201,184,150,.25);background:rgba(201,184,150,.06);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;transition:all .5s var(--ease); }
+    .step-circle i { font-size:1.1rem;color:rgba(255,255,255,.4);transition:color .4s; }
+    .progress-step.active .step-circle { background:linear-gradient(135deg,var(--gold),var(--gold-lt));border-color:var(--gold-lt);box-shadow:0 0 0 8px rgba(201,184,150,.1),0 12px 30px rgba(201,184,150,.35);transform:scale(1.12); }
+    .progress-step.active .step-circle i { color:#000; }
+    .progress-step.completed .step-circle { background:#1a5e34;border-color:#2ecc71; }
+    .progress-step.completed .step-circle i { color:#2ecc71; }
+    .step-label { font-family:'Montserrat',sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);transition:color .4s; }
+    .progress-step.active .step-label { color:var(--gold); }
+
+    /* SECTION LABEL */
+    .section-label { font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:1rem;margin-bottom:1.4rem; }
+    .section-label::before { content:'';width:36px;height:1px;background:linear-gradient(to right,transparent,var(--gold)); }
+
+    /* MAIN LAYOUT */
+    .booking-section { padding:8rem 5% 10rem;background:var(--black);position:relative; }
+    .booking-section::before { content:'RESERVATIONS';position:absolute;top:6%;right:-2%;font-family:'Playfair Display',serif;font-size:14vw;font-weight:700;color:rgba(201,184,150,.025);letter-spacing:.1em;pointer-events:none; }
+    .booking-container { max-width:1440px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:4rem;align-items:start;position:relative;z-index:2; }
+
+    /* FORM CARD */
+    .booking-form-card { background:linear-gradient(rgba(201,184,150,.04),rgba(201,184,150,.01));border:1px solid rgba(201,184,150,.12);border-radius:28px;padding:4rem;transition:border-color .4s; }
+    .booking-form-card:hover { border-color:rgba(201,184,150,.22); }
+    .form-block { margin-bottom:4rem;opacity:0;transform:translateY(30px);transition:opacity .8s var(--ease),transform .8s var(--ease); }
+    .form-block.visible { opacity:1;transform:translateY(0); }
+    .form-block-head { display:flex;align-items:center;gap:1.4rem;margin-bottom:2.6rem;padding-bottom:1.6rem;border-bottom:1px solid rgba(201,184,150,.1);position:relative; }
+    .form-block-head::after { content:'';position:absolute;bottom:-1px;left:0;width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent); }
+    .form-block-icon { width:46px;height:46px;flex-shrink:0;border:1px solid rgba(201,184,150,.25);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.1rem;background:rgba(201,184,150,.05); }
+    .form-block-head h3 { font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;color:#fff; }
+
+    /* FORM ROWS */
+    .form-row { display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem; }
+    .form-group { position:relative; }
+    .form-group label { display:block;font-family:'Montserrat',sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.8rem;transition:color .3s; }
+    .form-group:focus-within label { color:var(--gold); }
+    .form-group input,.form-group select,.form-group textarea { width:100%;padding:1.1rem 1.4rem;background:rgba(201,184,150,.04);border:1px solid rgba(201,184,150,.15);border-radius:14px;color:#fff;font-size:1.05rem;font-family:'Cormorant Garamond',serif;outline:none;transition:all .4s var(--ease); }
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(--gold);background:rgba(201,184,150,.08);box-shadow:0 8px 28px rgba(201,184,150,.12);transform:translateY(-2px); }
+    .form-group input::placeholder { color:rgba(255,255,255,.25); }
+    .form-group select { cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23c9b896' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1.4rem center;background-color:rgba(201,184,150,.04);padding-right:3rem; }
+    .form-group select option { background:#181818;color:#fff; }
+    .form-group textarea { resize:vertical;min-height:110px;line-height:1.7; }
+    .form-group.full { grid-column:span 2; }
+    .form-group input.error { border-color:rgba(231,76,60,.6) !important; box-shadow: 0 0 0 3px rgba(231,76,60,.15); }
+
+    /* SERVICES */
+    .services-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.2rem; }
+    .service-checkbox { position:absolute;opacity:0;width:0;height:0; }
+    .service-label { display:flex;align-items:center;gap:1.2rem;padding:1.4rem 1.6rem;background:rgba(201,184,150,.04);border:1px solid rgba(201,184,150,.12);border-radius:14px;cursor:pointer;transition:all .4s var(--ease);position:relative;overflow:hidden; }
+    .service-label::before { content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,184,150,.08),transparent);opacity:0;transition:opacity .4s; }
+    .service-label:hover { border-color:rgba(201,184,150,.35);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.3); }
+    .service-label:hover::before { opacity:1; }
+    .service-checkbox:checked+.service-label { border-color:var(--gold);background:rgba(201,184,150,.1); }
+    .service-checkbox:checked+.service-label::before { opacity:1; }
+    .service-check-box { width:22px;height:22px;flex-shrink:0;border:1px solid rgba(201,184,150,.3);border-radius:6px;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .3s;color:#000;font-size:.75rem; }
+    .service-checkbox:checked+.service-label .service-check-box { background:linear-gradient(135deg,var(--gold),var(--gold-lt));border-color:transparent; }
+    .service-icon { width:36px;height:36px;flex-shrink:0;color:var(--gold);font-size:1.1rem;display:flex;align-items:center;justify-content:center;position:relative;z-index:1; }
+    .service-text { flex:1;position:relative;z-index:1; }
+    .service-text strong { display:block;font-size:1rem;color:#fff;margin-bottom:.2rem; }
+    .service-text span { font-family:'Montserrat',sans-serif;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+
+    /* BUTTON */
+    .btn-primary { font-family:'Montserrat',sans-serif;font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;padding:1.25rem 3.5rem;background:linear-gradient(135deg,var(--gold),var(--gold-lt));color:#000;border:none;border-radius:50px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.7rem;transition:transform .4s var(--ease),box-shadow .4s var(--ease);position:relative;overflow:hidden;width:100%;margin-top:1rem; }
+    .btn-primary::before { content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-lt),var(--gold));opacity:0;transition:opacity .4s; }
+    .btn-primary:hover { transform:translateY(-4px);box-shadow:0 20px 50px rgba(201,184,150,.35); }
+    .btn-primary:hover::before { opacity:1; }
+    .btn-primary span,.btn-primary i { position:relative;z-index:1; }
+    .btn-primary i { font-size:.85rem;transition:transform .4s; }
+    .btn-primary:hover i { transform:translateX(5px); }
+
+    /* SUMMARY */
+    .booking-summary { position:sticky;top:8rem;height:fit-content; }
+    .summary-card { background:linear-gradient(135deg,rgba(201,184,150,.07),rgba(201,184,150,.02));border:1px solid rgba(201,184,150,.18);border-radius:28px;padding:3.2rem;backdrop-filter:blur(30px);transition:all .4s;position:relative;overflow:hidden; }
+    .summary-card::before { content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+    .summary-card:hover { border-color:rgba(201,184,150,.3);box-shadow:0 30px 80px rgba(0,0,0,.5); }
+    .summary-title { font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;text-align:center;margin-bottom:2.6rem;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+    .summary-row { display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:1px solid rgba(201,184,150,.08);transition:padding-left .3s; }
+    .summary-row:hover { padding-left:.5rem; }
+    .summary-row-label { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim); }
+    .summary-row-value { font-size:1.05rem;color:#fff;text-align:right; }
+    .summary-divider { height:1px;margin:1.2rem 0;background:linear-gradient(90deg,transparent,rgba(201,184,150,.2),transparent); }
+    .summary-total { display:flex;justify-content:space-between;align-items:center;padding:1.6rem 1.8rem;background:rgba(201,184,150,.06);border:1px solid rgba(201,184,150,.18);border-radius:14px;margin-top:1rem; }
+    .summary-total-label { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold); }
+    .summary-total-amount { font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:transform .2s; }
+    .summary-total-amount.pop { transform:scale(1.12); }
+    .ssl-badge { display:flex;align-items:center;gap:1rem;padding:1.4rem 1.6rem;background:rgba(46,204,113,.07);border:1px solid rgba(46,204,113,.2);border-radius:14px;margin-top:1.8rem; }
+    .ssl-badge i { font-size:1.8rem;color:#2ecc71; }
+    .ssl-badge-text strong { display:block;font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#2ecc71;margin-bottom:.3rem; }
+    .ssl-badge-text span { font-size:.88rem;color:var(--text-dim);line-height:1.5; }
+
+    .reveal { opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease); }
+    .reveal.visible { opacity:1;transform:translateY(0); }
+
+    /* FOOTER */
+    footer { background:#000;border-top:1px solid rgba(201,184,150,.15);padding:6rem 6% 3rem; }
+    .footer-top { max-width:1440px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:5rem;margin-bottom:5rem; }
+    .footer-brand .logo { font-size:2rem;margin-bottom:1.4rem;display:block; }
+    .footer-brand p { font-size:1.08rem;line-height:1.9;color:var(--text-dim);max-width:300px;margin-bottom:2rem; }
+    .footer-socials { display:flex;gap:1rem; }
+    .footer-social { width:40px;height:40px;border:1px solid rgba(201,184,150,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:.9rem;transition:all .3s var(--ease);text-decoration:none; }
+    .footer-social:hover { border-color:var(--gold);color:var(--gold); }
+    .footer-col h4 { font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem; }
+    .footer-col a { display:block;font-size:1.05rem;line-height:2.4;color:var(--text-dim);text-decoration:none;transition:color .3s,padding-left .3s; }
+    .footer-col a:hover { color:#fff;padding-left:6px; }
+    .footer-bottom { max-width:1440px;margin:0 auto;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center; }
+    .footer-bottom p { font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.1em;color:rgba(255,255,255,.3); }
+
+    @media(max-width:1200px){ .booking-container{grid-template-columns:1fr} .booking-summary{position:static} .footer-top{grid-template-columns:1fr 1fr;gap:3rem} }
+    @media(max-width:968px){ .nav-links{display:none} .form-row{grid-template-columns:1fr} .form-group.full{grid-column:span 1} .services-grid{grid-template-columns:1fr} .booking-form-card{padding:2.4rem} }
+    @media(max-width:640px){ .footer-top{grid-template-columns:1fr} .hero-title{font-size:2.6rem} }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">SmartHotel</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rooms.html">Rooms</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="booking.html" class="active" style="color:var(--gold);border:1px solid rgba(201,184,150,.35);padding:.4rem 1.2rem;border-radius:50px;">Book Now</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="booking-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Reservations &nbsp;·&nbsp; Est. 2026</div>
+    <h1 class="hero-title">Begin Your<br><em>Perfect Stay</em></h1>
+    <p class="hero-subtitle">Tailor every detail of your luxury experience</p>
+  </div>
+</section>
+
+<section class="booking-progress">
+  <div class="progress-container">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-step active" id="step1">
+      <div class="step-circle"><i class="fas fa-calendar-alt"></i></div>
+      <div class="step-label">Details</div>
+    </div>
+    <div class="progress-step" id="step2">
+      <div class="step-circle"><i class="fas fa-credit-card"></i></div>
+      <div class="step-label">Payment</div>
+    </div>
+    <div class="progress-step" id="step3">
+      <div class="step-circle"><i class="fas fa-check"></i></div>
+      <div class="step-label">Confirmed</div>
+    </div>
+  </div>
+</section>
+
+<section class="booking-section">
+  <div class="booking-container">
+    <div class="booking-form-card reveal">
+      <form id="bookingForm" novalidate>
+
+        <!-- Guest Info -->
+        <div class="form-block" id="block1">
+          <div class="form-block-head">
+            <div class="form-block-icon"><i class="fas fa-user"></i></div>
+            <h3>Guest Information</h3>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" placeholder="James" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input type="text" id="lastName" placeholder="Whitfield" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" placeholder="james@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" placeholder="+1 (555) 000-0000" required />
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Details -->
+        <div class="form-block" id="block2">
+          <div class="form-block-head">
+            <div class="form-block-icon"><i class="fas fa-bed"></i></div>
+            <h3>Booking Details</h3>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="roomType">Room Type *</label>
+              <select id="roomType" required>
+                <option value="">Select a room</option>
+                <option value="Standard Room" data-price="129">Standard Room — $129 / night</option>
+                <option value="Executive Room" data-price="199">Executive Room — $199 / night</option>
+                <option value="Garden Terrace Suite" data-price="449">Garden Terrace Suite — $449 / night</option>
+                <option value="Deluxe Ocean View" data-price="599">Deluxe Ocean View — $599 / night</option>
+                <option value="Presidential Suite" data-price="899">Presidential Suite — $899 / night</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="guests">Guests *</label>
+              <select id="guests" required>
+                <option value="1">1 Guest</option>
+                <option value="2" selected>2 Guests</option>
+                <option value="3">3 Guests</option>
+                <option value="4">4 Guests</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="checkin">Check-in Date *</label>
+              <input type="date" id="checkin" required />
+            </div>
+            <div class="form-group">
+              <label for="checkout">Check-out Date *</label>
+              <input type="date" id="checkout" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="specialRequests">Special Requests</label>
+              <textarea id="specialRequests" placeholder="Early check-in, high floor, dietary preferences, special occasions…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Services -->
+        <div class="form-block" id="block3">
+          <div class="form-block-head">
+            <div class="form-block-icon"><i class="fas fa-gem"></i></div>
+            <h3>Additional Services</h3>
+          </div>
+          <div class="services-grid">
+            <div>
+              <input class="service-checkbox" type="checkbox" id="airport" name="services" value="Airport Transfer" data-price="50" data-type="once" />
+              <label class="service-label" for="airport">
+                <div class="service-check-box"><i class="fas fa-check"></i></div>
+                <div class="service-icon"><i class="fas fa-plane-arrival"></i></div>
+                <div class="service-text"><strong>Airport Transfer</strong><span>$50 one-time</span></div>
+              </label>
+            </div>
+            <div>
+              <input class="service-checkbox" type="checkbox" id="breakfast" name="services" value="Daily Breakfast" data-price="25" data-type="night" />
+              <label class="service-label" for="breakfast">
+                <div class="service-check-box"><i class="fas fa-check"></i></div>
+                <div class="service-icon"><i class="fas fa-mug-hot"></i></div>
+                <div class="service-text"><strong>Daily Breakfast</strong><span>$25 / night</span></div>
+              </label>
+            </div>
+            <div>
+              <input class="service-checkbox" type="checkbox" id="spa" name="services" value="Spa Package" data-price="100" data-type="once" />
+              <label class="service-label" for="spa">
+                <div class="service-check-box"><i class="fas fa-check"></i></div>
+                <div class="service-icon"><i class="fas fa-spa"></i></div>
+                <div class="service-text"><strong>Spa Package</strong><span>$100 one-time</span></div>
+              </label>
+            </div>
+            <div>
+              <input class="service-checkbox" type="checkbox" id="parking" name="services" value="Valet Parking" data-price="20" data-type="night" />
+              <label class="service-label" for="parking">
+                <div class="service-check-box"><i class="fas fa-check"></i></div>
+                <div class="service-icon"><i class="fas fa-car"></i></div>
+                <div class="service-text"><strong>Valet Parking</strong><span>$20 / night</span></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn">
+          <span>Proceed to Payment</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="booking-summary">
+      <div class="summary-card reveal" style="transition-delay:.2s">
+        <div class="section-label">Your Booking</div>
+        <p class="summary-title">Stay Summary</p>
+        <div class="summary-row"><span class="summary-row-label">Room</span><span class="summary-row-value" id="summaryRoom">—</span></div>
+        <div class="summary-row"><span class="summary-row-label">Check-in</span><span class="summary-row-value" id="summaryCheckin">—</span></div>
+        <div class="summary-row"><span class="summary-row-label">Check-out</span><span class="summary-row-value" id="summaryCheckout">—</span></div>
+        <div class="summary-row"><span class="summary-row-label">Guests</span><span class="summary-row-value" id="summaryGuests">2</span></div>
+        <div class="summary-row"><span class="summary-row-label">Nights</span><span class="summary-row-value" id="summaryNights">0</span></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row"><span class="summary-row-label">Room Total</span><span class="summary-row-value" id="summaryRoomTotal">$0</span></div>
+        <div class="summary-row"><span class="summary-row-label">Services</span><span class="summary-row-value" id="summaryServices">$0</span></div>
+        <div class="summary-row"><span class="summary-row-label">Tax (10%)</span><span class="summary-row-value" id="summaryTax">$0</span></div>
+        <div class="summary-total">
+          <span class="summary-total-label">Total</span>
+          <span class="summary-total-amount" id="summaryTotal">$0</span>
+        </div>
+        <div class="ssl-badge">
+          <i class="fas fa-shield-alt"></i>
+          <div class="ssl-badge-text">
+            <strong>Secure Booking</strong>
+            <span>256-bit SSL encryption protects your data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">SmartHotel</a>
+      <p>Redefining luxury hospitality through innovation, elegance, and the art of exceptional service.</p>
+      <div class="footer-socials">
+        <a href="#" class="footer-social"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" class="footer-social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="rooms.html">Rooms</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Guest Services</h4>
+      <a href="booking.html">Reservations</a>
+      <a href="my-bookings.html">My Stays</a>
+      <a href="profile.html">Account</a>
+      <a href="login.html">Login</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="#">123 Luxury Avenue</a>
+      <a href="mailto:mehdighine@gmail.com">mehdighine@gmail.com</a>
+      <a href="tel:+212708732437">+212 708-732437</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+    <p>Crafted with precision &amp; passion</p>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function animateCursor(){
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+  rx+=(mx-rx)*.15;ry+=(my-ry)*.15;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animateCursor);
+})();
+document.querySelectorAll('a,button,.service-label,.summary-row').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='18px';cursor.style.height='18px';ring.style.width='56px';ring.style.height='56px';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';ring.style.width='36px';ring.style.height='36px';});
+});
+
+/* NAVBAR */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',scrollY>60);
+});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const blockObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.08});
+document.querySelectorAll('.form-block').forEach(el=>blockObs.observe(el));
+
+/* DATE SETUP */
+const today=new Date().toISOString().split('T')[0];
+document.getElementById('checkin').min=today;
+document.getElementById('checkin').addEventListener('change',function(){
+  const d=new Date(this.value);d.setDate(d.getDate()+1);
+  document.getElementById('checkout').min=d.toISOString().split('T')[0];
+  const co=document.getElementById('checkout');
+  if(co.value&&new Date(co.value)<=new Date(this.value))co.value='';
+  updateSummary();
+});
+
+/* LIVE SUMMARY */
+const roomType=document.getElementById('roomType');
+const guests=document.getElementById('guests');
+const checkin=document.getElementById('checkin');
+const checkout=document.getElementById('checkout');
+const serviceBoxes=document.querySelectorAll('.service-checkbox');
+
+[roomType,guests,checkout].forEach(el=>el.addEventListener('change',updateSummary));
+serviceBoxes.forEach(cb=>cb.addEventListener('change',updateSummary));
+
+function fmt(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+
+function calcNights(){
+  if(!checkin.value||!checkout.value)return 0;
+  return Math.max(0,Math.ceil((new Date(checkout.value)-new Date(checkin.value))/(864e5)));
+}
+
+function updateSummary(){
+  const selRoom=roomType.options[roomType.selectedIndex];
+  document.getElementById('summaryRoom').textContent=selRoom.value?selRoom.value:'—';
+  document.getElementById('summaryCheckin').textContent=checkin.value?fmt(checkin.value):'—';
+  document.getElementById('summaryCheckout').textContent=checkout.value?fmt(checkout.value):'—';
+  document.getElementById('summaryGuests').textContent=guests.value;
+
+  const nights=calcNights();
+  document.getElementById('summaryNights').textContent=nights;
+
+  const roomPrice=parseFloat(selRoom.dataset.price)||0;
+  const roomTotal=roomPrice*nights;
+  document.getElementById('summaryRoomTotal').textContent='$'+roomTotal;
+
+  let svcTotal=0;
+  serviceBoxes.forEach(cb=>{
+    if(cb.checked){
+      const p=parseInt(cb.dataset.price);
+      svcTotal+=cb.dataset.type==='night'?p*nights:p;
+    }
+  });
+  document.getElementById('summaryServices').textContent='$'+svcTotal;
+
+  const subtotal=roomTotal+svcTotal;
+  const tax=Math.round(subtotal*.1);
+  document.getElementById('summaryTax').textContent='$'+tax;
+
+  const total=subtotal+tax;
+  const el=document.getElementById('summaryTotal');
+  el.textContent='$'+total;
+  el.classList.add('pop');
+  setTimeout(()=>el.classList.remove('pop'),200);
+}
+updateSummary();
+
+/* FORM SUBMIT — save ALL data to sessionStorage */
+document.getElementById('bookingForm').addEventListener('submit',e=>{
+  e.preventDefault();
+
+  // Validate required fields
+  const requiredFields=['firstName','lastName','email','phone'];
+  let valid=true;
+  requiredFields.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el.value.trim()){el.classList.add('error');valid=false;}
+    else{el.classList.remove('error');}
+  });
+  if(!roomType.value){roomType.style.borderColor='rgba(231,76,60,.6)';valid=false;}
+  else{roomType.style.borderColor='';}
+  if(!checkin.value||!checkout.value){valid=false;}
+  if(!valid)return;
+
+  // Collect selected services names
+  const selectedServices=[];
+  serviceBoxes.forEach(cb=>{if(cb.checked)selectedServices.push(cb.value);});
+
+  const nights=calcNights();
+  const selRoom=roomType.options[roomType.selectedIndex];
+  const roomPrice=parseFloat(selRoom.dataset.price)||0;
+  const roomTotal=roomPrice*nights;
+
+  let svcTotal=0;
+  serviceBoxes.forEach(cb=>{
+    if(cb.checked){
+      const p=parseInt(cb.dataset.price);
+      svcTotal+=cb.dataset.type==='night'?p*nights:p;
+    }
+  });
+  const subtotal=roomTotal+svcTotal;
+  const tax=Math.round(subtotal*.1);
+  const total=subtotal+tax;
+
+  // ── Save everything to sessionStorage ──
+  sessionStorage.setItem('guestFirstName', document.getElementById('firstName').value.trim());
+  sessionStorage.setItem('guestLastName',  document.getElementById('lastName').value.trim());
+  sessionStorage.setItem('guestName',      document.getElementById('firstName').value.trim()+' '+document.getElementById('lastName').value.trim());
+  sessionStorage.setItem('guestEmail',     document.getElementById('email').value.trim());
+  sessionStorage.setItem('guestPhone',     document.getElementById('phone').value.trim());
+  sessionStorage.setItem('roomType',       selRoom.value);
+  sessionStorage.setItem('roomPrice',      roomPrice);
+  sessionStorage.setItem('guests',         guests.value);
+  sessionStorage.setItem('checkIn',        checkin.value);
+  sessionStorage.setItem('checkOut',       checkout.value);
+  sessionStorage.setItem('nights',         nights);
+  sessionStorage.setItem('specialRequests',document.getElementById('specialRequests').value.trim());
+  sessionStorage.setItem('selectedServices',JSON.stringify(selectedServices));
+  sessionStorage.setItem('roomTotal',      '$'+roomTotal);
+  sessionStorage.setItem('services',       '$'+svcTotal);
+  sessionStorage.setItem('tax',            '$'+tax);
+  sessionStorage.setItem('totalAmount',    '$'+total);
+  sessionStorage.setItem('location',       'SmartHotel');
+
+  // Animate progress
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step1').classList.add('completed');
+  document.getElementById('step2').classList.add('active');
+  document.getElementById('progressFill').style.width='50%';
+
+  const btn=document.getElementById('submitBtn');
+  btn.innerHTML='<span>Processing…</span><i class="fas fa-spinner fa-spin"></i>';
+  btn.style.opacity='.8';
+
+  setTimeout(()=>{window.location.href='payment.html';},900);
+});
+</script>
+</body>
+</html>

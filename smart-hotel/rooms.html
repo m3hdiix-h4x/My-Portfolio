@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rooms & Suites — SmartHotel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --ink:    #0d0c0a;
+      --cream:  #f5f0e8;
+      --warm:   #c8a96e;
+      --gold:   #e2c07a;
+      --smoke:  #6b6560;
+      --deep:   #1a1610;
+      --border: rgba(200,169,110,0.25);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--cream);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── NOISE ── */
+    body::before {
+      content:''; position:fixed; inset:0; z-index:9998; pointer-events:none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-repeat:repeat; opacity:.4;
+    }
+
+    /* ── CURSOR ── */
+    #cursor { position:fixed; top:0; left:0; pointer-events:none; z-index:99999; mix-blend-mode:difference; }
+    #cursor .dot { width:8px; height:8px; border-radius:50%; background:var(--cream); transform:translate(-50%,-50%); transition:transform .1s; }
+    #cursor .ring { position:absolute; top:-22px; left:-22px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(245,240,232,.5); transition:transform .4s cubic-bezier(.23,1,.32,1), width .3s, height .3s, top .3s, left .3s; }
+    body.hovering #cursor .ring { width:60px; height:60px; top:-30px; left:-30px; border-color:var(--warm); }
+
+    /* ── LOADING ── */
+    #loadingOverlay {
+      position:fixed; inset:0; background:var(--ink); z-index:10000;
+      display:flex; align-items:center; justify-content:center;
+      transition:opacity .6s, visibility .6s;
+    }
+    #loadingOverlay.hidden { opacity:0; visibility:hidden; }
+    .loader-wrap { display:flex; flex-direction:column; align-items:center; gap:2rem; }
+    .loader-logo { font-family:'Cinzel',serif; font-size:1.8rem; letter-spacing:.3em; color:var(--cream); }
+    .loader-logo span { color:var(--warm); }
+    .loader-bar { width:120px; height:1px; background:rgba(200,169,110,.2); position:relative; overflow:hidden; }
+    .loader-bar::after { content:''; position:absolute; inset:0; background:var(--warm); transform:translateX(-100%); animation:loaderAnim 1s ease-out forwards; }
+    @keyframes loaderAnim { to{transform:translateX(0)} }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      position:fixed; top:0; width:100%; z-index:1000;
+      padding:2rem 4rem;
+      display:flex; justify-content:space-between; align-items:center;
+      transition:padding .5s, background .5s;
+    }
+    #navbar.scrolled { padding:1.2rem 4rem; background:rgba(13,12,10,.92); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); }
+    .logo { font-family:'Cinzel',serif; font-size:1.5rem; letter-spacing:.3em; color:var(--cream); text-decoration:none; }
+    .logo span { color:var(--warm); }
+    .nav-links { list-style:none; display:flex; gap:2.5rem; align-items:center; }
+    .nav-links a { font-size:.8rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(245,240,232,.65); text-decoration:none; transition:color .3s; position:relative; padding-bottom:3px; }
+    .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--warm); transition:width .4s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--cream); }
+    .nav-links a:hover::after, .nav-links a.active::after { width:100%; }
+    .nav-book { padding:.7rem 1.8rem; border:1px solid var(--warm); color:var(--warm) !important; border-radius:2px; transition:background .3s, color .3s !important; }
+    .nav-book:hover { background:var(--warm); color:var(--ink) !important; }
+    .nav-book::after { display:none !important; }
+
+    /* ── HERO ── */
+    .rooms-hero {
+      position:relative; height:100vh; overflow:hidden;
+      display:flex; align-items:flex-end;
+    }
+    .hero-video {
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; opacity:.35;
+    }
+    .hero-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(13,12,10,1) 0%, rgba(13,12,10,.55) 45%, rgba(13,12,10,.1) 100%);
+    }
+    .particles-bg { position:absolute; inset:0; overflow:hidden; z-index:1; }
+    .particle { position:absolute; border-radius:50%; background:radial-gradient(circle,rgba(200,169,110,.8),transparent); opacity:0; animation:floatParticle 15s infinite; }
+    @keyframes floatParticle { 0%{opacity:0;transform:translateY(100vh) scale(0)} 10%{opacity:.5} 90%{opacity:.3} 100%{opacity:0;transform:translateY(-120px) translateX(60px) scale(1)} }
+
+    .hero-content {
+      position:relative; z-index:2;
+      padding:0 8% 8rem;
+      width:100%;
+    }
+    .hero-tag { font-size:.68rem; letter-spacing:.45em; text-transform:uppercase; color:var(--warm); margin-bottom:1.5rem; display:flex; align-items:center; gap:.8rem; opacity:0; animation:fadeUp .8s ease-out .3s forwards; }
+    .hero-tag::before { content:''; width:30px; height:1px; background:var(--warm); }
+    .hero-h1 { font-family:'Cormorant Infant',serif; font-size:clamp(4rem,9vw,9rem); font-weight:300; line-height:1; color:var(--cream); opacity:0; animation:fadeUp 1s ease-out .5s forwards; }
+    .hero-h1 em { font-style:italic; color:var(--warm); }
+    .hero-sub { margin-top:1.5rem; font-size:.95rem; letter-spacing:.12em; color:rgba(245,240,232,.5); text-transform:uppercase; opacity:0; animation:fadeUp .8s ease-out .8s forwards; }
+
+    .hero-scroll { position:absolute; right:4%; bottom:8%; display:flex; flex-direction:column; align-items:center; gap:.8rem; font-size:.65rem; letter-spacing:.3em; text-transform:uppercase; color:rgba(245,240,232,.4); opacity:0; animation:fadeIn 1s ease-out 1.5s forwards; writing-mode:vertical-rl; }
+    .hero-scroll::after { content:''; width:1px; height:60px; background:linear-gradient(to bottom,var(--warm),transparent); animation:scrollBar 2s ease-in-out infinite; }
+    @keyframes scrollBar { 0%,100%{height:60px;opacity:.5} 50%{height:40px;opacity:1} }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { to{opacity:1} }
+
+    /* ── FILTER SECTION ── */
+    .filter-section {
+      background:#080806;
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      padding:5rem 8%;
+    }
+    .filter-inner { max-width:1400px; margin:0 auto; }
+    .filter-top { margin-bottom:3.5rem; }
+    .filter-top .section-label { margin-bottom:1rem; }
+
+    .filters-grid {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:1px; background:var(--border);
+      border:1px solid var(--border);
+      margin-bottom:2.5rem;
+    }
+    .filter-group { background:var(--ink); padding:1.8rem 2rem; }
+    .filter-group label { display:block; font-size:.65rem; letter-spacing:.3em; text-transform:uppercase; color:var(--warm); margin-bottom:.8rem; }
+    .filter-group select {
+      width:100%; padding:.9rem 1rem;
+      background:transparent;
+      border:none; border-bottom:1px solid rgba(200,169,110,.2);
+      color:var(--cream); font-family:inherit; font-size:.88rem;
+      cursor:pointer; outline:none; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23c8a96e' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right .5rem center;
+      padding-right:2rem;
+      transition:border-color .3s;
+    }
+    .filter-group select:focus { border-color:var(--warm); }
+    .filter-group select option { background:#1a1610; color:var(--cream); }
+
+    .filter-actions { display:flex; gap:1rem; }
+    .btn-filter {
+      padding:.9rem 2.5rem; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+      border:1px solid var(--border); background:transparent;
+      color:rgba(245,240,232,.6); cursor:pointer; font-family:inherit;
+      border-radius:2px; transition:all .3s; display:flex; align-items:center; gap:.7rem;
+    }
+    .btn-filter:hover { border-color:var(--warm); color:var(--warm); background:rgba(200,169,110,.06); }
+    .btn-filter.primary { background:var(--warm); color:var(--ink); border-color:var(--warm); }
+    .btn-filter.primary:hover { background:var(--gold); }
+
+    .filter-stats {
+      margin-top:2rem; display:flex; align-items:center; gap:1rem;
+      font-size:.82rem; color:rgba(245,240,232,.4); letter-spacing:.08em;
+    }
+    .filter-stats::before { content:''; width:30px; height:1px; background:var(--border); }
+    .filter-stats strong { color:var(--warm); font-size:1rem; }
+
+    /* ── SECTION COMMONS ── */
+    .section-label { font-size:.68rem; letter-spacing:.45em; text-transform:uppercase; color:var(--warm); display:flex; align-items:center; gap:.8rem; }
+    .section-label::before { content:''; width:30px; height:1px; background:var(--warm); }
+    .section-title { font-family:'Cormorant Infant',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:300; line-height:1.1; color:var(--cream); }
+    .section-title em { font-style:italic; color:var(--warm); }
+
+    /* ── ROOMS GRID ── */
+    .rooms-showcase {
+      padding:8rem 8%;
+      position:relative;
+    }
+    .showcase-bg { position:absolute; inset:0; background:radial-gradient(circle at 20% 50%,rgba(200,169,110,.02) 0%,transparent 50%),radial-gradient(circle at 80% 50%,rgba(200,169,110,.02) 0%,transparent 50%); pointer-events:none; }
+
+    .rooms-container { max-width:1400px; margin:0 auto; position:relative; z-index:2; }
+    .section-intro { margin-bottom:5rem; }
+
+    .rooms-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(550px,1fr));
+      gap:3rem;
+    }
+
+    /* ── ROOM CARD ── */
+    .room-card {
+      opacity:0; transform:translateY(60px);
+      transition:opacity .8s cubic-bezier(.4,0,.2,1), transform .8s cubic-bezier(.4,0,.2,1);
+      cursor:pointer;
+    }
+    .room-card.visible { opacity:1; transform:translateY(0); }
+
+    .room-card-inner {
+      border:1px solid var(--border);
+      overflow:hidden; position:relative;
+      transition:border-color .4s, box-shadow .4s;
+      background:rgba(245,240,232,.015);
+    }
+    .room-card:hover .room-card-inner {
+      border-color:var(--warm);
+      box-shadow:0 40px 80px rgba(200,169,110,.12);
+    }
+
+    .room-image-container { position:relative; width:100%; height:420px; overflow:hidden; }
+    .room-image { width:100%; height:100%; background-size:cover; background-position:center; transition:transform .8s cubic-bezier(.4,0,.2,1); }
+    .room-card:hover .room-image { transform:scale(1.06); }
+    .room-image::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,transparent 40%,rgba(13,12,10,.75)); }
+
+    .room-badge {
+      position:absolute; top:1.5rem; left:1.5rem;
+      padding:.4rem 1.2rem;
+      background:rgba(13,12,10,.85); backdrop-filter:blur(10px);
+      border:1px solid var(--warm);
+      font-size:.65rem; letter-spacing:.3em; text-transform:uppercase; color:var(--warm);
+      z-index:2;
+    }
+    .room-capacity {
+      position:absolute; top:1.5rem; right:1.5rem;
+      display:flex; align-items:center; gap:.5rem;
+      padding:.5rem 1rem;
+      background:rgba(13,12,10,.85); backdrop-filter:blur(10px);
+      font-size:.8rem; color:var(--cream); z-index:2;
+    }
+    .room-capacity i { color:var(--warm); }
+
+    .room-rating {
+      position:absolute; bottom:1.5rem; left:1.5rem;
+      display:flex; align-items:center; gap:.3rem;
+      padding:.5rem 1rem;
+      background:rgba(13,12,10,.85); backdrop-filter:blur(10px);
+      z-index:2;
+    }
+    .room-rating i { color:#d4af37; font-size:.75rem; }
+    .room-rating span { color:var(--cream); font-weight:500; font-size:.85rem; margin-left:.3rem; }
+
+    .room-info { padding:2.8rem; }
+    .room-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; }
+    .room-name { font-family:'Cormorant Infant',serif; font-size:2.2rem; font-weight:400; color:var(--cream); line-height:1.1; }
+    .room-price { text-align:right; }
+    .price-amount { font-family:'Cormorant Infant',serif; font-size:2.2rem; font-weight:300; color:var(--warm); display:block; line-height:1; }
+    .price-period { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(245,240,232,.4); margin-top:.3rem; display:block; }
+
+    .room-description { color:rgba(245,240,232,.6); line-height:1.85; margin-bottom:2rem; font-size:.9rem; }
+
+    .room-features {
+      display:grid; grid-template-columns:repeat(2,1fr);
+      gap:.6rem; margin-bottom:2.5rem;
+    }
+    .feature-item {
+      display:flex; align-items:center; gap:.8rem;
+      padding:.8rem 1rem;
+      border:1px solid rgba(200,169,110,.12);
+      background:rgba(200,169,110,.03);
+      transition:all .3s;
+    }
+    .feature-item:hover { border-color:rgba(200,169,110,.3); background:rgba(200,169,110,.06); }
+    .feature-icon { width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:var(--warm); font-size:.9rem; flex-shrink:0; }
+    .feature-text { color:rgba(245,240,232,.7); font-size:.83rem; }
+
+    .room-divider { height:1px; background:var(--border); margin-bottom:2rem; }
+
+    .room-actions { display:flex; gap:1rem; }
+    .btn-luxury {
+      flex:1; padding:1rem 1.5rem; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+      border:1px solid var(--border); background:transparent;
+      color:rgba(245,240,232,.65); cursor:pointer;
+      transition:all .35s; text-decoration:none; display:inline-block; text-align:center;
+      font-family:inherit; font-weight:500; border-radius:2px;
+    }
+    .btn-luxury:hover { border-color:var(--warm); color:var(--warm); }
+    .btn-luxury.btn-primary { background:var(--warm); color:var(--ink); border-color:var(--warm); }
+    .btn-luxury.btn-primary:hover { background:var(--gold); border-color:var(--gold); color:var(--ink); transform:translateY(-2px); box-shadow:0 8px 25px rgba(200,169,110,.3); }
+
+    /* ── AMENITIES SECTION ── */
+    .experience-section {
+      padding:10rem 8%;
+      background:#080806;
+      border-top:1px solid var(--border);
+    }
+    .experience-inner { max-width:1400px; margin:0 auto; }
+    .exp-header { max-width:600px; margin-bottom:5rem; }
+
+    .experience-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:1px; background:var(--border);
+      border:1px solid var(--border);
+    }
+    .experience-card {
+      padding:3.5rem 3rem;
+      background:var(--ink);
+      transition:background .4s;
+      position:relative; overflow:hidden;
+      opacity:0; transform:translateY(40px);
+      transition:background .4s, opacity .7s ease, transform .7s ease;
+    }
+    .experience-card.visible { opacity:1; transform:translateY(0); }
+    .experience-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--warm); transition:height .4s; }
+    .experience-card:hover { background:#141210; }
+    .experience-card:hover::before { height:100%; }
+
+    .experience-icon { font-size:2rem; margin-bottom:1.8rem; display:block; transition:transform .3s; }
+    .experience-card:hover .experience-icon { transform:scale(1.1) translateY(-3px); }
+    .experience-card h3 { font-family:'Cormorant Infant',serif; font-size:1.5rem; font-weight:400; color:var(--cream); margin-bottom:1rem; }
+    .experience-card p { font-size:.88rem; line-height:1.85; color:rgba(245,240,232,.5); }
+
+    /* ── FOOTER ── */
+    footer { background:var(--deep); padding:7rem 8% 3rem; border-top:1px solid var(--border); }
+    .footer-top { display:grid; grid-template-columns:1.8fr 1fr 1fr 1.2fr; gap:5rem; padding-bottom:5rem; border-bottom:1px solid var(--border); }
+    .footer-brand .logo { display:inline-block; margin-bottom:1.5rem; }
+    .footer-brand p { font-size:.9rem; line-height:1.9; color:rgba(245,240,232,.45); max-width:280px; }
+    .footer-col h5 { font-size:.68rem; letter-spacing:.35em; text-transform:uppercase; color:var(--warm); margin-bottom:2rem; }
+    .footer-col a { display:block; font-size:.9rem; color:rgba(245,240,232,.45); text-decoration:none; margin-bottom:.9rem; transition:color .3s; }
+    .footer-col a:hover { color:var(--cream); }
+    .footer-col p { font-size:.9rem; color:rgba(245,240,232,.45); line-height:1.9; }
+    .footer-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:3rem; flex-wrap:wrap; gap:1rem; }
+    .footer-bottom p { font-size:.78rem; letter-spacing:.1em; color:rgba(245,240,232,.25); }
+    .social-links { display:flex; gap:1.5rem; }
+    .social-links a { color:rgba(245,240,232,.35); text-decoration:none; transition:color .3s; }
+    .social-links a:hover { color:var(--warm); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(35px); transition:opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1200px){ .rooms-grid{grid-template-columns:1fr;} .filters-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:1100px){ .footer-top{grid-template-columns:1fr 1fr;} .experience-grid{grid-template-columns:1fr;} }
+    @media(max-width:900px){
+      #navbar{padding:1.5rem 2rem;} #navbar.scrolled{padding:1rem 2rem;} .nav-links{display:none;}
+      .filters-grid{grid-template-columns:1fr;}
+      .room-features{grid-template-columns:1fr;}
+      .room-actions{flex-direction:column;}
+    }
+    @media(max-width:600px){
+      .hero-content{padding:0 5% 6rem;} .rooms-showcase{padding:5rem 5%;} .filter-section{padding:4rem 5%;}
+      .room-image-container{height:300px;} .room-info{padding:2rem;}
+      .footer-top{grid-template-columns:1fr; gap:3rem;}
+      .filter-actions{flex-direction:column;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING -->
+  <div id="loadingOverlay">
+    <div class="loader-wrap">
+      <div class="loader-logo">Smart<span>Hotel</span></div>
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
+  <!-- CURSOR -->
+  <div id="cursor">
+    <div class="dot"></div>
+    <div class="ring"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <a href="index.html" class="logo">Smart<span>Hotel</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rooms.html" class="active">Rooms</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="my-bookings.html">My Bookings</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="rooms.html" class="nav-book">Book Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="rooms-hero">
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="https://cdn.pixabay.com/video/2020/05/17/39815-421277078_large.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="particles-bg" id="particlesBg"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Luxury Accommodations</div>
+      <h1 class="hero-h1">Rooms &amp;<br><em>Suites</em></h1>
+      <p class="hero-sub">Where elegance meets comfort in perfect harmony</p>
+    </div>
+    <div class="hero-scroll">Explore</div>
+  </section>
+
+  <!-- FILTERS -->
+  <section class="filter-section">
+    <div class="filter-inner">
+      <div class="filter-top reveal">
+        <div class="section-label" style="margin-bottom:1rem;">Refine Your Search</div>
+        <h2 class="section-title">Find your perfect <em>stay</em></h2>
+      </div>
+
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="priceFilter">Price Range</label>
+          <select id="priceFilter">
+            <option value="all">All Prices</option>
+            <option value="budget">Under $200</option>
+            <option value="mid">$200 – $500</option>
+            <option value="luxury">$500 – $1000</option>
+            <option value="ultra">$1000+</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="typeFilter">Room Type</label>
+          <select id="typeFilter">
+            <option value="all">All Types</option>
+            <option value="standard">Standard Room</option>
+            <option value="executive">Executive Suite</option>
+            <option value="deluxe">Deluxe Suite</option>
+            <option value="suite">Premium Suite</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="capacityFilter">Guest Capacity</label>
+          <select id="capacityFilter">
+            <option value="all">Any Capacity</option>
+            <option value="1">1 Guest</option>
+            <option value="2">2 Guests</option>
+            <option value="3">3 Guests</option>
+            <option value="4">4+ Guests</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="viewFilter">View Type</label>
+          <select id="viewFilter">
+            <option value="all">All Views</option>
+            <option value="ocean">Ocean View</option>
+            <option value="city">City View</option>
+            <option value="garden">Garden View</option>
+            <option value="pool">Pool View</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn-filter primary" onclick="applyFilters()"><i class="fas fa-sliders-h"></i> Apply Filters</button>
+        <button class="btn-filter" onclick="resetFilters()"><i class="fas fa-undo"></i> Reset</button>
+      </div>
+
+      <div class="filter-stats">
+        Showing <strong id="roomCount">8</strong> available rooms
+      </div>
+    </div>
+  </section>
+
+  <!-- ROOMS -->
+  <section class="rooms-showcase">
+    <div class="showcase-bg"></div>
+    <div class="rooms-container">
+      <div class="section-intro reveal">
+        <div class="section-label" style="margin-bottom:1rem;">Our Collection</div>
+        <h2 class="section-title">Discover luxury <em>redefined</em></h2>
+      </div>
+      <div class="rooms-grid" id="roomsGrid"></div>
+    </div>
+  </section>
+
+  <!-- AMENITIES -->
+  <section class="experience-section">
+    <div class="experience-inner">
+      <div class="exp-header reveal">
+        <div class="section-label" style="margin-bottom:1rem;">The SmartHotel Difference</div>
+        <h2 class="section-title">Unparalleled <em>amenities</em></h2>
+      </div>
+      <div class="experience-grid">
+        <div class="experience-card">
+          <span class="experience-icon">🏊</span>
+          <h3>Infinity Pool</h3>
+          <p>Relax in our stunning rooftop infinity pool with panoramic city views and personalised poolside service.</p>
+        </div>
+        <div class="experience-card">
+          <span class="experience-icon">💆</span>
+          <h3>Luxury Spa</h3>
+          <p>Indulge in world-class treatments at our award-winning spa featuring holistic wellness therapies.</p>
+        </div>
+        <div class="experience-card">
+          <span class="experience-icon">🍽️</span>
+          <h3>Gourmet Dining</h3>
+          <p>Savour Michelin-starred cuisine crafted by renowned chefs using the finest seasonal ingredients.</p>
+        </div>
+        <div class="experience-card">
+          <span class="experience-icon">🏋️</span>
+          <h3>Fitness Center</h3>
+          <p>State-of-the-art gym equipped with cutting-edge technology and personal training services.</p>
+        </div>
+        <div class="experience-card">
+          <span class="experience-icon">🤵</span>
+          <h3>Butler Service</h3>
+          <p>24/7 dedicated butler service ensuring every need is anticipated and exceeded.</p>
+        </div>
+        <div class="experience-card">
+          <span class="experience-icon">🚗</span>
+          <h3>Premium Transport</h3>
+          <p>Complimentary luxury car service for exploring the city in style and comfort.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Smart<span>Hotel</span></a>
+        <p>Redefining luxury hospitality through innovation, artistry, and a deep respect for the places we call home.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigate</h5>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Guest Services</h5>
+        <a href="booking.html">Reservations</a>
+        <a href="my-bookings.html">My Stays</a>
+        <a href="profile.html">My Account</a>
+        <a href="login.html">Login</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>123 Gueliz, Downtown<br>mehdighine@gmail.com<br>+212 708 732 437</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── CURSOR ──
+    const cursorEl=document.getElementById('cursor');
+    const dot=cursorEl.querySelector('.dot');
+    const ring=cursorEl.querySelector('.ring');
+    let cx=0,cy=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;dot.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;});
+    (function loop(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ring.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(loop);})();
+    const hoverEls=()=>document.querySelectorAll('a,button,.room-card,.filter-group select,.btn-filter').forEach(el=>{
+      el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+    });
+
+    // ── NAVBAR ──
+    window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>60));
+
+    // ── PARTICLES ──
+    function initializeParticles(){
+      const c=document.getElementById('particlesBg');
+      for(let i=0;i<40;i++){
+        const p=document.createElement('div'); p.className='particle';
+        const sz=2+Math.random()*4;
+        p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;animation-delay:${Math.random()*15}s;animation-duration:${10+Math.random()*12}s;`;
+        c.appendChild(p);
+      }
+    }
+
+    // ── ROOMS DATA ── (preserved exactly)
+    const rooms=[
+      {id:1,name:"Presidential Suite",type:"suite",price:1299,capacity:4,view:"ocean",rating:4.9,image:"https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800",features:[{icon:"fas fa-bed",text:"2 King Beds"},{icon:"fas fa-couch",text:"Private Living Room"},{icon:"fas fa-hot-tub",text:"Jacuzzi & Spa"},{icon:"fas fa-door-open",text:"Ocean Balcony"}],description:"Experience the pinnacle of luxury in our Presidential Suite with expansive living spaces, panoramic ocean views, and dedicated butler service available 24/7.",badge:"Premium"},
+      {id:2,name:"Deluxe Ocean Suite",type:"deluxe",price:699,capacity:3,view:"ocean",rating:4.8,image:"https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800",features:[{icon:"fas fa-bed",text:"King Bed Premium"},{icon:"fas fa-water",text:"Ocean View"},{icon:"fas fa-tv",text:'Smart TV 75"'},{icon:"fas fa-wine-glass",text:"Premium Mini Bar"}],description:"Wake up to breathtaking ocean vistas in this elegantly appointed suite with private balcony, premium amenities, and complimentary breakfast.",badge:"Popular"},
+      {id:3,name:"Executive Business Suite",type:"executive",price:449,capacity:2,view:"city",rating:4.7,image:"https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800",features:[{icon:"fas fa-bed",text:"Queen Bed"},{icon:"fas fa-desktop",text:"Executive Desk"},{icon:"fas fa-wifi",text:"High-Speed WiFi"},{icon:"fas fa-mug-hot",text:"Espresso Machine"}],description:"Perfect for business travelers with dedicated workspace, high-speed connectivity, access to executive lounge, and complimentary printing services.",badge:"Business"},
+      {id:4,name:"Grand Family Suite",type:"suite",price:599,capacity:4,view:"garden",rating:4.8,image:"https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800",features:[{icon:"fas fa-bed",text:"2 Queen Beds"},{icon:"fas fa-utensils",text:"Full Kitchenette"},{icon:"fas fa-gamepad",text:"Entertainment System"},{icon:"fas fa-child",text:"Kids Welcome"}],description:"Spacious family suite designed for comfort with separate living area, entertainment options for all ages, and complimentary kids amenities package.",badge:"Family"},
+      {id:5,name:"Luxury Penthouse",type:"suite",price:1899,capacity:4,view:"city",rating:5.0,image:"https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800",features:[{icon:"fas fa-bed",text:"Master Suite"},{icon:"fas fa-building",text:"Private Terrace"},{icon:"fas fa-champagne-glasses",text:"Bar Lounge"},{icon:"fas fa-swimming-pool",text:"Private Pool"}],description:"Ultimate luxury with private rooftop terrace, infinity pool, 360-degree city views, personal chef service, and helicopter pad access.",badge:"Exclusive"},
+      {id:6,name:"Modern Studio Deluxe",type:"standard",price:249,capacity:2,view:"city",rating:4.6,image:"https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800",features:[{icon:"fas fa-bed",text:"Double Bed"},{icon:"fas fa-city",text:"City View"},{icon:"fas fa-wifi",text:"Free WiFi"},{icon:"fas fa-mug-hot",text:"Coffee Station"}],description:"Stylish and comfortable studio perfect for couples or solo travelers seeking modern amenities, great value, and convenient city access.",badge:"Value"},
+      {id:7,name:"Romantic Honeymoon Suite",type:"deluxe",price:799,capacity:2,view:"ocean",rating:4.9,image:"https://images.unsplash.com/photo-1591088398332-8a7791972843?w=800",features:[{icon:"fas fa-heart",text:"King Bed Premium"},{icon:"fas fa-champagne-glasses",text:"Welcome Champagne"},{icon:"fas fa-spa",text:"In-Room Spa"},{icon:"fas fa-fire",text:"Private Fireplace"}],description:"Celebrate love in our romantic honeymoon suite featuring rose petal turndown service, couples massage, and candlelit dinner on your private balcony.",badge:"Romance"},
+      {id:8,name:"Sky Villa Penthouse",type:"suite",price:2499,capacity:4,view:"ocean",rating:5.0,image:"https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=800",features:[{icon:"fas fa-crown",text:"Royal Suite"},{icon:"fas fa-helicopter",text:"Helipad Access"},{icon:"fas fa-user-tie",text:"Personal Butler"},{icon:"fas fa-gem",text:"VIP Amenities"}],description:"The pinnacle of luxury living with three bedrooms, private cinema, wine cellar, personal chef, and breathtaking panoramic ocean views from every room.",badge:"Ultra-Luxury"}
+    ];
+
+    let filteredRooms=[...rooms];
+
+    function renderStars(rating){
+      let s='';
+      for(let i=0;i<4;i++) s+='<i class="fas fa-star"></i>';
+      s+=rating>=4.8?'<i class="fas fa-star"></i>':'<i class="fas fa-star-half-alt"></i>';
+      return s;
+    }
+
+    function displayRooms(list){
+      const grid=document.getElementById('roomsGrid');
+      grid.innerHTML=list.map((room,idx)=>`
+        <div class="room-card" style="transition-delay:${idx*.08}s"
+             data-type="${room.type}" data-price="${room.price}"
+             data-capacity="${room.capacity}" data-view="${room.view}">
+          <div class="room-card-inner">
+            <div class="room-image-container">
+              <div class="room-image" style="background-image:url('${room.image}')"></div>
+              <div class="room-badge">${room.badge}</div>
+              <div class="room-capacity"><i class="fas fa-users"></i> <span>${room.capacity} Guests</span></div>
+              <div class="room-rating">${renderStars(room.rating)}<span>${room.rating}</span></div>
+            </div>
+            <div class="room-info">
+              <div class="room-header">
+                <h3 class="room-name">${room.name}</h3>
+                <div class="room-price">
+                  <span class="price-amount">$${room.price}</span>
+                  <span class="price-period">Per Night</span>
+                </div>
+              </div>
+              <p class="room-description">${room.description}</p>
+              <div class="room-features">
+                ${room.features.map(f=>`
+                  <div class="feature-item">
+                    <div class="feature-icon"><i class="${f.icon}"></i></div>
+                    <span class="feature-text">${f.text}</span>
+                  </div>`).join('')}
+              </div>
+              <div class="room-divider"></div>
+              <div class="room-actions">
+                <a href="room-details.html?id=${room.id}" class="btn-luxury">View Details</a>
+                <a href="booking.html?room=${room.id}" class="btn-luxury btn-primary">Book Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('roomCount').textContent=list.length;
+      setTimeout(()=>{setupScrollAnimations();hoverEls();},80);
+    }
+
+    function applyFilters(){
+      const price=document.getElementById('priceFilter').value;
+      const type=document.getElementById('typeFilter').value;
+      const capacity=document.getElementById('capacityFilter').value;
+      const view=document.getElementById('viewFilter').value;
+      filteredRooms=rooms.filter(r=>{
+        let m=true;
+        if(price!=='all'){
+          if(price==='budget'&&r.price>=200)m=false;
+          if(price==='mid'&&(r.price<200||r.price>500))m=false;
+          if(price==='luxury'&&(r.price<500||r.price>1000))m=false;
+          if(price==='ultra'&&r.price<=1000)m=false;
+        }
+        if(type!=='all'&&r.type!==type)m=false;
+        if(capacity!=='all'){const c=parseInt(capacity);if(c===4&&r.capacity<4)m=false;if(c<4&&r.capacity!==c)m=false;}
+        if(view!=='all'&&r.view!==view)m=false;
+        return m;
+      });
+      displayRooms(filteredRooms);
+    }
+
+    function resetFilters(){
+      ['priceFilter','typeFilter','capacityFilter','viewFilter'].forEach(id=>document.getElementById(id).value='all');
+      displayRooms(rooms);
+    }
+
+    function setupScrollAnimations(){
+      const ro=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+      },{threshold:0.1});
+      document.querySelectorAll('.room-card,.experience-card,.reveal').forEach(el=>ro.observe(el));
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      setTimeout(()=>document.getElementById('loadingOverlay').classList.add('hidden'),1000);
+      initializeParticles();
+      displayRooms(rooms);
+      setupScrollAnimations();
+      hoverEls();
+    });
+  </script>
+</body>
+</html>

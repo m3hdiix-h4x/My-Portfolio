@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Details - SmartHotel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        #navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(201, 184, 150, 0.1);
+        }
+
+        #navbar.scrolled {
+            padding: 0.8rem 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #c9b896 0%, #f4e4c1 50%, #c9b896 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+            font-weight: 500;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c9b896, transparent);
+            transition: all 0.4s;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #c9b896;
+        }
+
+        .nav-links a:hover::before,
+        .nav-links a.active::before {
+            width: 100%;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-top: 120px;
+            padding: 2rem 5%;
+            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+            border-bottom: 1px solid rgba(201, 184, 150, 0.1);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .breadcrumb-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            color: #c9b896;
+        }
+
+        .breadcrumb i {
+            color: rgba(201, 184, 150, 0.5);
+            font-size: 0.7rem;
+        }
+
+        .breadcrumb span {
+            color: #c9b896;
+        }
+
+        /* Main Section */
+        .room-details-section {
+            padding: 4rem 5% 6rem;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Room Details Grid */
+        .room-details-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        /* Gallery Section */
+        .room-gallery {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .main-image {
+            width: 100%;
+            height: 600px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+            cursor: zoom-in;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(201, 184, 150, 0.2);
+        }
+
+        .main-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.7));
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .main-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 30px 80px rgba(201, 184, 150, 0.2);
+        }
+
+        .main-image:hover::before {
+            opacity: 1;
+        }
+
+        .image-badge {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            color: #000;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(201, 184, 150, 0.4);
+            animation: fadeInDown 0.8s ease-out 0.3s backwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .thumbnail-images {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .thumbnail {
+            height: 140px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(201, 184, 150, 0.2);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .thumbnail:nth-child(1) { animation-delay: 0.4s; }
+        .thumbnail:nth-child(2) { animation-delay: 0.5s; }
+        .thumbnail:nth-child(3) { animation-delay: 0.6s; }
+        .thumbnail:nth-child(4) { animation-delay: 0.7s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .thumbnail::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(201, 184, 150, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .thumbnail:hover {
+            transform: translateY(-5px);
+            border-color: #c9b896;
+            box-shadow: 0 15px 40px rgba(201, 184, 150, 0.3);
+        }
+
+        .thumbnail:hover::before {
+            opacity: 1;
+        }
+
+        .thumbnail.active {
+            border-color: #c9b896;
+            box-shadow: 0 10px 30px rgba(201, 184, 150, 0.4);
+        }
+
+        .thumbnail.active::after {
+            content: '✓';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Room Info Section */
+        .room-details-info {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .room-details-info h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            background: linear-gradient(135deg, #fff 0%, #c9b896 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .room-price {
+            font-size: 2rem;
+            color: #c9b896;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease-out 0.3s backwards;
+        }
+
+        .room-price::before {
+            content: '';
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #c9b896, transparent);
+        }
+
+        .room-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .stars {
+            color: #FFD700;
+            font-size: 1.3rem;
+            letter-spacing: 0.2rem;
+        }
+
+        .rating-count {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+        }
+
+        .room-capacity-info {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.5s backwards;
+        }
+
+        .capacity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(201, 184, 150, 0.08);
+            border: 1px solid rgba(201, 184, 150, 0.2);
+            border-radius: 12px;
+        }
+
+        .capacity-item i {
+            color: #c9b896;
+            font-size: 1.3rem;
+        }
+
+        .room-description,
+        .room-amenities,
+        .booking-form-quick {
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(201, 184, 150, 0.05), rgba(201, 184, 150, 0.02));
+            border: 1px solid rgba(201, 184, 150, 0.15);
+            border-radius: 20px;
+            transition: all 0.4s;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .room-description { animation-delay: 0.5s; }
+        .room-amenities { animation-delay: 0.6s; }
+        .booking-form-quick { animation-delay: 0.7s; }
+
+        .room-description:hover,
+        .room-amenities:hover,
+        .booking-form-quick:hover {
+            border-color: rgba(201, 184, 150, 0.3);
+            box-shadow: 0 20px 60px rgba(201, 184, 150, 0.1);
+        }
+
+        .room-description h3,
+        .room-amenities h3,
+        .booking-form-quick h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: #c9b896;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .room-description h3::after,
+        .room-amenities h3::after,
+        .booking-form-quick h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #c9b896, transparent);
+        }
+
+        .room-description p {
+            color: rgba(255,255,255,0.8);
+            line-height: 2;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* Amenities Grid */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+
+        .amenity {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: rgba(201, 184, 150, 0.05);
+            border: 1px solid rgba(201, 184, 150, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .amenity:hover {
+            background: rgba(201, 184, 150, 0.1);
+            border-color: #c9b896;
+            transform: translateX(10px);
+        }
+
+        .amenity i {
+            color: #c9b896;
+            font-size: 1.3rem;
+        }
+
+        /* Quick Booking Form */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 0.8rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            background: rgba(201, 184, 150, 0.05);
+            border: 1px solid rgba(201, 184, 150, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #c9b896;
+            background: rgba(201, 184, 150, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(201, 184, 150, 0.15);
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9b896' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.5rem center;
+            padding-right: 3rem;
+        }
+
+        .form-group option {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem;
+        }
+
+        .price-summary {
+            background: rgba(201, 184, 150, 0.08);
+            border: 1px solid rgba(201, 184, 150, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .price-row.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #c9b896;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(201, 184, 150, 0.2);
+            margin-bottom: 0;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1.5rem 3rem;
+            font-size: 1rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            border: none;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            color: #000;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(201, 184, 150, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #f4e4c1, #c9b896);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(201, 184, 150, 0.5);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary i {
+            position: relative;
+            z-index: 1;
+            font-size: 1.2rem;
+            transition: transform 0.5s;
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(10px);
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin-top: 6rem;
+            animation: fadeInUp 0.8s ease-out 0.8s backwards;
+        }
+
+        .reviews-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .review-card {
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(201, 184, 150, 0.05), rgba(201, 184, 150, 0.02));
+            border: 1px solid rgba(201, 184, 150, 0.15);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            font-size: 8rem;
+            font-family: 'Playfair Display', serif;
+            color: rgba(201, 184, 150, 0.1);
+            line-height: 1;
+        }
+
+        .review-card:hover {
+            transform: translateY(-10px);
+            border-color: #c9b896;
+            box-shadow: 0 30px 80px rgba(201, 184, 150, 0.2);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reviewer-info h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #c9b896;
+            margin-bottom: 0.5rem;
+        }
+
+        .reviewer-info p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        .rating {
+            color: #FFD700;
+            font-size: 1.2rem;
+            letter-spacing: 0.2rem;
+        }
+
+        .review-card p {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.9;
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Floating Info Bar */
+        .floating-info-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.98), rgba(26, 26, 26, 0.98));
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(201, 184, 150, 0.2);
+            padding: 1.5rem 5%;
+            z-index: 999;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+
+        .floating-info-bar.active {
+            transform: translateY(0);
+        }
+
+        .floating-info-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .floating-info-left h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #c9b896;
+            margin-bottom: 0.3rem;
+        }
+
+        .floating-info-left p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+        }
+
+        .floating-info-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .floating-price {
+            font-size: 1.8rem;
+            color: #c9b896;
+            font-weight: 700;
+        }
+
+        .floating-info-right .btn-primary {
+            width: auto;
+            padding: 1.2rem 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 5rem 5% 3rem;
+            border-top: 1px solid rgba(201, 184, 150, 0.2);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+        }
+
+        .footer-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255,255,255,0.6);
+            line-height: 2.2;
+            display: block;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .footer-section a:hover {
+            color: #c9b896;
+            transform: translateX(10px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.95rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 15px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lightbox-close:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 3px solid rgba(201, 184, 150, 0.1);
+            border-top-color: #c9b896;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .room-details-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .main-image {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .thumbnail-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .amenities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .floating-info-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .floating-info-right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .floating-info-right .btn-primary {
+                width: 100%;
+            }
+
+            .room-capacity-info {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+
+            .breadcrumb {
+                margin-top: 100px;
+            }
+
+            .room-details-section {
+                padding: 3rem 5% 5rem;
+            }
+
+            .main-image {
+                height: 400px;
+            }
+
+            .thumbnail {
+                height: 100px;
+            }
+
+            .room-description,
+            .room-amenities,
+            .booking-form-quick {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+    </div>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">SmartHotel</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="rooms.html" class="active">Rooms</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="my-bookings.html">My Bookings</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <div class="breadcrumb-container">
+            <a href="index.html">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="rooms.html">Rooms</a>
+            <i class="fas fa-chevron-right"></i>
+            <span id="breadcrumbRoomName">Loading...</span>
+        </div>
+    </div>
+
+    <section class="room-details-section">
+        <div class="container">
+            <div class="room-details-grid">
+                <div class="room-gallery">
+                    <div class="main-image" id="mainImage">
+                        <div class="image-badge" id="roomBadge">Premium</div>
+                    </div>
+                    <div class="thumbnail-images" id="thumbnailContainer">
+                        <!-- Thumbnails will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="room-details-info">
+                    <h1 id="roomName">Loading...</h1>
+                    <p class="room-price" id="roomPrice">$0/night</p>
+                    
+                    <div class="room-rating" id="roomRating">
+                        <div class="stars"></div>
+                        <span class="rating-count"></span>
+                    </div>
+
+                    <div class="room-capacity-info" id="capacityInfo">
+                        <!-- Capacity info will be loaded here -->
+                    </div>
+
+                    <div class="room-description">
+                        <h3>Description</h3>
+                        <p id="roomDescription">Loading...</p>
+                    </div>
+
+                    <div class="room-amenities">
+                        <h3>Premium Amenities</h3>
+                        <div class="amenities-grid" id="amenitiesList">
+                            <!-- Amenities will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="booking-form-quick">
+                        <h3>Reserve Your Stay</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Check-in</label>
+                                <input type="date" id="checkinDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Check-out</label>
+                                <input type="date" id="checkoutDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Guests</label>
+                            <select id="guests">
+                                <option value="1">1 Guest</option>
+                                <option value="2">2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                            </select>
+                        </div>
+                        <div class="price-summary" id="priceSummary">
+                            <div class="price-row">
+                                <span>Price per night</span>
+                                <span id="pricePerNight">$0</span>
+                            </div>
+                            <div class="price-row">
+                                <span>Number of nights</span>
+                                <span id="numberOfNights">0</span>
+                            </div>
+                            <div class="price-row total">
+                                <span>Total</span>
+                                <span id="totalPrice">$0</span>
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="bookNow()">
+                            <span>Book Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reviews-section">
+                <h2>Guest Reviews</h2>
+                <div class="reviews-grid" id="reviewsList">
+                    <!-- Reviews will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="floating-info-bar" id="floatingBar">
+        <div class="floating-info-content">
+            <div class="floating-info-left">
+                <h3 id="floatingRoomName">Room Name</h3>
+                <p id="floatingRoomType">Premium accommodation</p>
+            </div>
+            <div class="floating-info-right">
+                <div class="floating-price" id="floatingPrice">$0/night</div>
+                <button class="btn-primary" onclick="bookNow()">
+                    <span>Book Now</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="closeLightbox">
+            <i class="fas fa-times"></i>
+        </button>
+        <img src="" alt="Room Image" id="lightboxImage">
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>SmartHotel</h4>
+                <p>Experience the future of hospitality.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="about.html">About Us</a>
+                <a href="services.html">Services</a>
+                <a href="rooms.html">Rooms</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>123 Luxury Avenue</p>
+                <p>info@smarthotel.com</p>
+                <p>+1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Room database (must match rooms.html)
+        const roomsDatabase = {
+            1: {
+                name: "Presidential Suite",
+                type: "Premium Suite",
+                price: 1299,
+                capacity: 4,
+                view: "ocean",
+                rating: 4.9,
+                reviewCount: 287,
+                image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200",
+                    "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200",
+                    "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200"
+                ],
+                description: "Experience the pinnacle of luxury in our Presidential Suite with expansive living spaces, panoramic ocean views, and dedicated butler service available 24/7. This 120 sqm masterpiece features a master bedroom, separate living room, dining area, and a private terrace with infinity pool access.",
+                badge: "Premium",
+                amenities: [
+                    { icon: "fas fa-bed", text: "2 King Beds" },
+                    { icon: "fas fa-couch", text: "Private Living Room" },
+                    { icon: "fas fa-hot-tub", text: "Jacuzzi & Spa" },
+                    { icon: "fas fa-door-open", text: "Ocean Balcony" },
+                    { icon: "fas fa-tv", text: "85\" Smart TV" },
+                    { icon: "fas fa-wifi", text: "Gigabit WiFi" },
+                    { icon: "fas fa-wine-glass", text: "Premium Bar" },
+                    { icon: "fas fa-utensils", text: "Private Chef" },
+                    { icon: "fas fa-spa", text: "In-Room Spa" },
+                    { icon: "fas fa-swimming-pool", text: "Pool Access" },
+                    { icon: "fas fa-concierge-bell", text: "24/7 Butler" },
+                    { icon: "fas fa-car", text: "Limo Service" }
+                ],
+                reviews: [
+                    { name: "Victoria Lancaster", date: "January 2026", rating: 5, text: "Absolutely extraordinary! The Presidential Suite exceeded every expectation. The butler service was impeccable, and waking up to ocean views was magical." },
+                    { name: "Robert Chen", date: "December 2025", rating: 5, text: "Worth every penny. The private terrace, infinity pool, and personalized service made our anniversary unforgettable. The attention to detail is remarkable." },
+                    { name: "Isabella Martinez", date: "November 2025", rating: 5, text: "Pure luxury from start to finish. The suite is enormous, beautifully decorated, and equipped with everything imaginable. The staff anticipated our every need." }
+                ]
+            },
+            2: {
+                name: "Deluxe Ocean Suite",
+                type: "Deluxe Suite",
+                price: 699,
+                capacity: 3,
+                view: "ocean",
+                rating: 4.8,
+                reviewCount: 423,
+                image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200",
+                    "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200",
+                    "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200"
+                ],
+                description: "Wake up to breathtaking ocean vistas in this elegantly appointed suite with private balcony, premium amenities, and complimentary breakfast. The 75 sqm space features floor-to-ceiling windows, a king-size bed, and a marble bathroom with rainfall shower.",
+                badge: "Popular",
+                amenities: [
+                    { icon: "fas fa-bed", text: "King Bed Premium" },
+                    { icon: "fas fa-water", text: "Ocean View" },
+                    { icon: "fas fa-tv", text: "Smart TV 75\"" },
+                    { icon: "fas fa-wine-glass", text: "Premium Mini Bar" },
+                    { icon: "fas fa-wifi", text: "High-Speed WiFi" },
+                    { icon: "fas fa-spa", text: "Luxury Bathroom" },
+                    { icon: "fas fa-coffee", text: "Espresso Machine" },
+                    { icon: "fas fa-tshirt", text: "Premium Robes" },
+                    { icon: "fas fa-door-open", text: "Private Balcony" },
+                    { icon: "fas fa-concierge-bell", text: "Room Service" }
+                ],
+                reviews: [
+                    { name: "Sarah Mitchell", date: "January 2026", rating: 5, text: "Absolutely breathtaking! The ocean view was even more stunning than the photos. The room was immaculate, and the staff went above and beyond." },
+                    { name: "James Rodriguez", date: "December 2025", rating: 5, text: "Perfect for a romantic getaway. The private balcony and ocean views made every moment special. Highly recommend!" }
+                ]
+            },
+            3: {
+                name: "Executive Business Suite",
+                type: "Executive Suite",
+                price: 449,
+                capacity: 2,
+                view: "city",
+                rating: 4.7,
+                reviewCount: 356,
+                image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200",
+                    "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200"
+                ],
+                description: "Perfect for business travelers with dedicated workspace, high-speed connectivity, access to executive lounge, and complimentary printing services. The 55 sqm suite features ergonomic office setup and premium work amenities.",
+                badge: "Business",
+                amenities: [
+                    { icon: "fas fa-bed", text: "Queen Bed" },
+                    { icon: "fas fa-desktop", text: "Executive Desk" },
+                    { icon: "fas fa-wifi", text: "Gigabit WiFi" },
+                    { icon: "fas fa-mug-hot", text: "Espresso Machine" },
+                    { icon: "fas fa-tv", text: "Smart TV 65\"" },
+                    { icon: "fas fa-print", text: "Printer Access" },
+                    { icon: "fas fa-briefcase", text: "Executive Lounge" },
+                    { icon: "fas fa-phone", text: "Conference Line" }
+                ],
+                reviews: [
+                    { name: "David Thompson", date: "January 2026", rating: 5, text: "Perfect for business! The workspace setup is excellent, WiFi is lightning fast, and the executive lounge access is a great perk." },
+                    { name: "Amanda Lee", date: "December 2025", rating: 4, text: "Great for work trips. The desk setup and connectivity made it easy to stay productive. Room service was prompt and professional." }
+                ]
+            },
+            4: {
+                name: "Grand Family Suite",
+                type: "Family Suite",
+                price: 599,
+                capacity: 4,
+                view: "garden",
+                rating: 4.8,
+                reviewCount: 298,
+                image: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200",
+                    "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200"
+                ],
+                description: "Spacious family suite designed for comfort with separate living area, entertainment options for all ages, and complimentary kids amenities package. The 95 sqm suite includes two bedrooms and a full kitchenette.",
+                badge: "Family",
+                amenities: [
+                    { icon: "fas fa-bed", text: "2 Queen Beds" },
+                    { icon: "fas fa-utensils", text: "Full Kitchenette" },
+                    { icon: "fas fa-gamepad", text: "Entertainment System" },
+                    { icon: "fas fa-child", text: "Kids Welcome" },
+                    { icon: "fas fa-tv", text: "2 Smart TVs" },
+                    { icon: "fas fa-couch", text: "Living Room" },
+                    { icon: "fas fa-baby", text: "Baby Amenities" },
+                    { icon: "fas fa-utensils", text: "Dining Area" }
+                ],
+                reviews: [
+                    { name: "Jennifer Smith", date: "January 2026", rating: 5, text: "Perfect for families! The kids loved the entertainment system, and the separate living area was great for family time." },
+                    { name: "Michael Brown", date: "December 2025", rating: 5, text: "Spacious and well-equipped. The kitchenette was convenient, and the staff provided excellent service for our children." }
+                ]
+            },
+            5: {
+                name: "Luxury Penthouse",
+                type: "Penthouse Suite",
+                price: 1899,
+                capacity: 4,
+                view: "city",
+                rating: 5.0,
+                reviewCount: 178,
+                image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200",
+                    "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200"
+                ],
+                description: "Ultimate luxury with private rooftop terrace, infinity pool, 360-degree city views, personal chef service, and helicopter pad access. This 150 sqm penthouse represents the absolute pinnacle of luxury living.",
+                badge: "Exclusive",
+                amenities: [
+                    { icon: "fas fa-bed", text: "Master Suite" },
+                    { icon: "fas fa-building", text: "Private Terrace" },
+                    { icon: "fas fa-champagne-glasses", text: "Bar Lounge" },
+                    { icon: "fas fa-swimming-pool", text: "Private Pool" },
+                    { icon: "fas fa-helicopter", text: "Helipad Access" },
+                    { icon: "fas fa-user-tie", text: "Personal Butler" },
+                    { icon: "fas fa-utensils", text: "Private Chef" },
+                    { icon: "fas fa-spa", text: "Private Spa" }
+                ],
+                reviews: [
+                    { name: "Alexandra White", date: "January 2026", rating: 5, text: "Absolutely phenomenal! The private pool and terrace with city views are breathtaking. Service is impeccable." },
+                    { name: "Christopher Davis", date: "December 2025", rating: 5, text: "The ultimate luxury experience. Every detail is perfect, from the private chef to the stunning rooftop terrace." }
+                ]
+            },
+            6: {
+                name: "Modern Studio Deluxe",
+                type: "Standard Room",
+                price: 249,
+                capacity: 2,
+                view: "city",
+                rating: 4.6,
+                reviewCount: 512,
+                image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200",
+                    "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200"
+                ],
+                description: "Stylish and comfortable studio perfect for couples or solo travelers seeking modern amenities, great value, and convenient city access. The 45 sqm room features contemporary design and smart technology.",
+                badge: "Value",
+                amenities: [
+                    { icon: "fas fa-bed", text: "Double Bed" },
+                    { icon: "fas fa-city", text: "City View" },
+                    { icon: "fas fa-wifi", text: "Free WiFi" },
+                    { icon: "fas fa-mug-hot", text: "Coffee Station" },
+                    { icon: "fas fa-tv", text: "Smart TV" },
+                    { icon: "fas fa-shower", text: "Rain Shower" }
+                ],
+                reviews: [
+                    { name: "Emily Johnson", date: "January 2026", rating: 5, text: "Great value! Clean, modern, and comfortable. Perfect for a city break." },
+                    { name: "Ryan Martinez", date: "December 2025", rating: 4, text: "Exactly what we needed. Good location, nice amenities, and affordable pricing." }
+                ]
+            },
+            7: {
+                name: "Romantic Honeymoon Suite",
+                type: "Honeymoon Suite",
+                price: 799,
+                capacity: 2,
+                view: "ocean",
+                rating: 4.9,
+                reviewCount: 234,
+                image: "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200",
+                    "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200"
+                ],
+                description: "Celebrate love in our romantic honeymoon suite featuring rose petal turndown service, couples massage, and candlelit dinner on your private balcony. The 80 sqm suite is designed for romance and relaxation.",
+                badge: "Romance",
+                amenities: [
+                    { icon: "fas fa-heart", text: "King Bed Premium" },
+                    { icon: "fas fa-champagne-glasses", text: "Welcome Champagne" },
+                    { icon: "fas fa-spa", text: "In-Room Spa" },
+                    { icon: "fas fa-fire", text: "Private Fireplace" },
+                    { icon: "fas fa-water", text: "Ocean View" },
+                    { icon: "fas fa-hot-tub", text: "Jacuzzi Tub" },
+                    { icon: "fas fa-door-open", text: "Private Balcony" },
+                    { icon: "fas fa-utensils", text: "Candlelit Dinner" }
+                ],
+                reviews: [
+                    { name: "Emily Chen", date: "January 2026", rating: 5, text: "Perfect for our honeymoon! The rose petals, champagne, and ocean views created magical memories we'll cherish forever." },
+                    { name: "Daniel Park", date: "December 2025", rating: 5, text: "Incredibly romantic setting. The private balcony dinner was the highlight of our trip. Highly recommend for couples!" }
+                ]
+            },
+            8: {
+                name: "Sky Villa Penthouse",
+                type: "Ultra-Luxury Villa",
+                price: 2499,
+                capacity: 4,
+                view: "ocean",
+                rating: 5.0,
+                reviewCount: 95,
+                image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200",
+                images: [
+                    "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200",
+                    "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200"
+                ],
+                description: "The pinnacle of luxury living with three bedrooms, private cinema, wine cellar, personal chef, and breathtaking panoramic ocean views from every room. This 200 sqm villa offers unparalleled luxury and privacy.",
+                badge: "Ultra-Luxury",
+                amenities: [
+                    { icon: "fas fa-crown", text: "Royal Suite" },
+                    { icon: "fas fa-helicopter", text: "Helipad Access" },
+                    { icon: "fas fa-user-tie", text: "Personal Butler" },
+                    { icon: "fas fa-gem", text: "VIP Amenities" },
+                    { icon: "fas fa-film", text: "Private Cinema" },
+                    { icon: "fas fa-wine-bottle", text: "Wine Cellar" },
+                    { icon: "fas fa-utensils", text: "Private Chef" },
+                    { icon: "fas fa-swimming-pool", text: "Infinity Pool" }
+                ],
+                reviews: [
+                    { name: "Victoria Hamilton", date: "January 2026", rating: 5, text: "Beyond exceptional! The Sky Villa is perfection. Three bedrooms, private cinema, and ocean views from everywhere. Worth every dollar." },
+                    { name: "Alexander Knight", date: "December 2025", rating: 5, text: "The ultimate luxury experience. Our family loved the private cinema and pool. The personal chef created amazing meals daily." }
+                ]
+            }
+        };
+
+        let currentRoom = null;
+        let currentPrice = 0;
+
+        // Get room ID from URL
+        function getRoomIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Load room details
+        function loadRoomDetails() {
+            const roomId = getRoomIdFromURL();
+            
+            if (!roomId || !roomsDatabase[roomId]) {
+                alert('Room not found!');
+                window.location.href = 'rooms.html';
+                return;
+            }
+
+            currentRoom = roomsDatabase[roomId];
+            currentPrice = currentRoom.price;
+
+            // Update breadcrumb
+            document.getElementById('breadcrumbRoomName').textContent = currentRoom.name;
+
+            // Update main image
+            const mainImage = document.getElementById('mainImage');
+            mainImage.style.backgroundImage = `url('${currentRoom.image}')`;
+
+            // Update badge
+            document.getElementById('roomBadge').textContent = currentRoom.badge;
+
+            // Update thumbnails
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            thumbnailContainer.innerHTML = currentRoom.images.map((img, index) => `
+                <div class="thumbnail ${index === 0 ? 'active' : ''}" 
+                     style="background-image: url('${img}')" 
+                     data-index="${index}"></div>
+            `).join('');
+
+            // Update room info
+            document.getElementById('roomName').textContent = currentRoom.name;
+            document.getElementById('roomPrice').textContent = `$${currentRoom.price}/night`;
+
+            // Update rating
+            const starsHTML = Array(5).fill(0).map((_, i) => 
+                i < Math.floor(currentRoom.rating) ? '★' : '☆'
+            ).join('');
+            document.querySelector('.stars').textContent = starsHTML;
+            document.querySelector('.rating-count').textContent = `(${currentRoom.reviewCount} reviews)`;
+
+            // Update capacity info
+            document.getElementById('capacityInfo').innerHTML = `
+                <div class="capacity-item">
+                    <i class="fas fa-users"></i>
+                    <span>${currentRoom.capacity} Guests</span>
+                </div>
+                <div class="capacity-item">
+                    <i class="fas fa-eye"></i>
+                    <span>${currentRoom.view.charAt(0).toUpperCase() + currentRoom.view.slice(1)} View</span>
+                </div>
+            `;
+
+            // Update description
+            document.getElementById('roomDescription').textContent = currentRoom.description;
+
+            // Update amenities
+            document.getElementById('amenitiesList').innerHTML = currentRoom.amenities.map(amenity => `
+                <div class="amenity">
+                    <i class="${amenity.icon}"></i>
+                    <span>${amenity.text}</span>
+                </div>
+            `).join('');
+
+            // Update reviews
+            document.getElementById('reviewsList').innerHTML = currentRoom.reviews.map(review => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <h4>${review.name}</h4>
+                            <p>${review.date}</p>
+                        </div>
+                        <div class="rating">${'★'.repeat(review.rating)}</div>
+                    </div>
+                    <p>${review.text}</p>
+                </div>
+            `).join('');
+
+            // Update floating bar
+            document.getElementById('floatingRoomName').textContent = currentRoom.name;
+            document.getElementById('floatingRoomType').textContent = currentRoom.type;
+            document.getElementById('floatingPrice').textContent = `$${currentRoom.price}/night`;
+
+            // Update price summary
+            updatePriceSummary();
+
+            // Setup event listeners
+            setupGalleryListeners();
+            setupDateListeners();
+        }
+
+        // Setup gallery listeners
+        function setupGalleryListeners() {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const mainImage = document.getElementById('mainImage');
+
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    mainImage.style.backgroundImage = `url('${currentRoom.images[index]}')`;
+                    mainImage.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        mainImage.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+
+            // Lightbox
+            mainImage.addEventListener('click', () => {
+                const currentBg = mainImage.style.backgroundImage;
+                const imageUrl = currentBg.match(/url\(['"]?([^'"]+)['"]?\)/)[1];
+                document.getElementById('lightboxImage').src = imageUrl;
+                document.getElementById('lightbox').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            document.getElementById('closeLightbox').addEventListener('click', () => {
+                document.getElementById('lightbox').classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            document.getElementById('lightbox').addEventListener('click', (e) => {
+                if (e.target.id === 'lightbox') {
+                    document.getElementById('lightbox').classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Setup date listeners
+        function setupDateListeners() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkinDate').min = today;
+            document.getElementById('checkoutDate').min = today;
+
+            document.getElementById('checkinDate').addEventListener('change', function() {
+                const checkinDate = new Date(this.value);
+                checkinDate.setDate(checkinDate.getDate() + 1);
+                document.getElementById('checkoutDate').min = checkinDate.toISOString().split('T')[0];
+                updatePriceSummary();
+            });
+
+            document.getElementById('checkoutDate').addEventListener('change', updatePriceSummary);
+        }
+
+        // Update price summary
+        function updatePriceSummary() {
+            const checkin = document.getElementById('checkinDate').value;
+            const checkout = document.getElementById('checkoutDate').value;
+
+            if (checkin && checkout) {
+                const checkinDate = new Date(checkin);
+                const checkoutDate = new Date(checkout);
+                const nights = Math.ceil((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
+
+                if (nights > 0) {
+                    document.getElementById('pricePerNight').textContent = `$${currentPrice}`;
+                    document.getElementById('numberOfNights').textContent = nights;
+                    document.getElementById('totalPrice').textContent = `$${currentPrice * nights}`;
+                    return;
+                }
+            }
+
+            document.getElementById('pricePerNight').textContent = `$${currentPrice}`;
+            document.getElementById('numberOfNights').textContent = '0';
+            document.getElementById('totalPrice').textContent = '$0';
+        }
+
+        // Book now function
+        function bookNow() {
+            const checkin = document.getElementById('checkinDate').value;
+            const checkout = document.getElementById('checkoutDate').value;
+            const guests = document.getElementById('guests').value;
+
+            if (!checkin || !checkout) {
+                alert('Please select check-in and check-out dates');
+                return;
+            }
+
+            // Store booking data
+            const bookingData = {
+                roomId: getRoomIdFromURL(),
+                roomName: currentRoom.name,
+                price: currentPrice,
+                checkin: checkin,
+                checkout: checkout,
+                guests: guests
+            };
+
+            localStorage.setItem('pendingBooking', JSON.stringify(bookingData));
+            window.location.href = 'booking.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 800);
+
+            loadRoomDetails();
+        });
+
+        // Navbar scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+
+            const floatingBar = document.getElementById('floatingBar');
+            if (window.scrollY > 800) {
+                floatingBar.classList.add('active');
+            } else {
+                floatingBar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

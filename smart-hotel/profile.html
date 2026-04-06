@@ -1,0 +1,2525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - SmartHotel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        #navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(201, 184, 150, 0.1);
+        }
+
+        #navbar.scrolled {
+            background: rgba(10, 10, 10, 0.98);
+            padding: 0.8rem 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #c9b896 0%, #f4e4c1 50%, #c9b896 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+            font-weight: 500;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c9b896, transparent);
+            transition: all 0.4s;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #c9b896;
+        }
+
+        .nav-links a:hover::before,
+        .nav-links a.active::before {
+            width: 100%;
+        }
+
+        .bg-particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: radial-gradient(circle, #c9b896, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 20s infinite;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+            }
+        }
+
+        .floating-orbs {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 184, 150, 0.15), transparent);
+            animation: orbFloat 15s ease-in-out infinite;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -80px) scale(1.2); }
+            66% { transform: translate(-60px, 60px) scale(0.8); }
+        }
+
+        .profile-hero {
+            position: relative;
+            padding: 10rem 5% 5rem;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            overflow: hidden;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(201, 184, 150, 0.08) 0%, transparent 70%);
+            transform: translateX(-50%);
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .profile-badge {
+            font-size: 0.85rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #c9b896;
+            margin-bottom: 2rem;
+            padding: 0.8rem 2rem;
+            border: 1px solid rgba(201, 184, 150, 0.3);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            background: rgba(201, 184, 150, 0.05);
+            display: inline-block;
+            animation: fadeInDown 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .profile-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1.2s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        .profile-title span {
+            background: linear-gradient(135deg, #c9b896 0%, #f4e4c1 50%, #c9b896 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            animation: fadeInUp 1.2s ease-out 0.8s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-section {
+            position: relative;
+            padding: 5rem 5% 8rem;
+            background: #000;
+            z-index: 1;
+        }
+
+        .profile-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 4rem;
+        }
+
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, rgba(201, 184, 150, 0.05), rgba(201, 184, 150, 0.02));
+            border: 1px solid rgba(201, 184, 150, 0.15);
+            border-radius: 25px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #c9b896, transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(201, 184, 150, 0.15);
+            border-color: #c9b896;
+        }
+
+        .profile-card:hover::before {
+            opacity: 1;
+        }
+
+        .avatar-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .avatar-circle {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #c9b896 0%, #a89674 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #000;
+            border: 4px solid rgba(201, 184, 150, 0.3);
+            box-shadow: 0 15px 50px rgba(201, 184, 150, 0.3);
+            transition: all 0.5s;
+            animation: avatarPulse 4s ease-in-out infinite;
+            overflow: hidden;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 15px 50px rgba(201, 184, 150, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 20px 60px rgba(201, 184, 150, 0.5); }
+        }
+
+        .avatar-circle:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .status-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: #10B981;
+            border-radius: 50%;
+            border: 4px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            animation: badgeBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes badgeBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .profile-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .profile-email {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-role.admin {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: #fff;
+        }
+
+        .profile-role.user {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: #fff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+
+        .btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .btn-secondary {
+            background: rgba(201, 184, 150, 0.1);
+            border: 2px solid rgba(201, 184, 150, 0.3);
+            color: #c9b896;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(201, 184, 150, 0.2);
+            border-color: #c9b896;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(201, 184, 150, 0.3);
+        }
+
+        .profile-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-radius: 15px;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 1.3rem;
+            width: 30px;
+            text-align: center;
+            color: #c9b896;
+            transition: all 0.3s;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 0;
+            height: 60%;
+            background: #c9b896;
+            border-radius: 0 5px 5px 0;
+            transform: translateY(-50%);
+            transition: width 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(201, 184, 150, 0.1);
+            color: #fff;
+            transform: translateX(10px);
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.2);
+        }
+
+        .nav-item.active {
+            background: rgba(201, 184, 150, 0.15);
+            color: #c9b896;
+            font-weight: 600;
+        }
+
+        .nav-item.active::before {
+            width: 4px;
+        }
+
+        .profile-content {
+            background: linear-gradient(135deg, rgba(201, 184, 150, 0.03), rgba(201, 184, 150, 0.01));
+            border: 1px solid rgba(201, 184, 150, 0.15);
+            border-radius: 30px;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideInUp 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #c9b896, transparent);
+        }
+
+        .content-glow {
+            position: absolute;
+            top: -150px;
+            right: -150px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(201, 184, 150, 0.1), transparent);
+            border-radius: 50%;
+            animation: glowMove 12s ease-in-out infinite;
+        }
+
+        @keyframes glowMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-100px, 100px); }
+        }
+
+        .tab-content {
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: tabFadeIn 0.5s ease-out;
+        }
+
+        @keyframes tabFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-header {
+            margin-bottom: 3rem;
+        }
+
+        .content-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .content-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+        }
+
+        .profile-form {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #c9b896;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group label i {
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            background: rgba(201, 184, 150, 0.03);
+            border: 1px solid rgba(201, 184, 150, 0.2);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            background: rgba(201, 184, 150, 0.08);
+            border-color: #c9b896;
+            box-shadow: 0 0 0 3px rgba(201, 184, 150, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23c9b896' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.5rem center;
+            padding-right: 3rem;
+        }
+
+        .form-select option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            color: #000;
+            border: 2px solid #c9b896;
+            padding: 1.4rem 3rem;
+            font-size: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 10px 30px rgba(201, 184, 150, 0.3);
+        }
+
+        .btn-primary::before {
+            background: linear-gradient(135deg, #000, #1a1a1a);
+        }
+
+        .btn-primary:hover {
+            color: #c9b896;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(201, 184, 150, 0.5);
+        }
+
+        .section-container {
+            background: rgba(201, 184, 150, 0.03);
+            border: 1px solid rgba(201, 184, 150, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-container h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #c9b896;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-container h3 i {
+            font-size: 1.5rem;
+        }
+
+        .section-container p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: rgba(201, 184, 150, 0.02);
+            border: 1px solid rgba(201, 184, 150, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .checkbox-label:hover {
+            background: rgba(201, 184, 150, 0.05);
+            border-color: rgba(201, 184, 150, 0.2);
+            transform: translateX(5px);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #c9b896;
+        }
+
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(201, 184, 150, 0.03);
+            border: 1px solid rgba(201, 184, 150, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .session-item:hover {
+            background: rgba(201, 184, 150, 0.05);
+            transform: translateX(5px);
+        }
+
+        .session-info strong {
+            color: #fff;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-info p {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .session-badge {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #fff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: #fff;
+            border: 2px solid #EF4444;
+            padding: 0.8rem 2rem;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+        }
+
+        .booking-card {
+            background: rgba(201, 184, 150, 0.03);
+            border: 1px solid rgba(201, 184, 150, 0.15);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(201, 184, 150, 0.15);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #c9b896;
+        }
+
+        .booking-status {
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+        }
+
+        .booking-status.confirmed {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #fff;
+        }
+
+        .booking-status.pending {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #fff;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-detail {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .booking-detail i {
+            font-size: 1.5rem;
+            color: #c9b896;
+        }
+
+        .booking-detail-text {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .booking-detail-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            display: block;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.8rem 1.5rem;
+            font-size: 0.85rem;
+            width: auto;
+        }
+
+        .review-card {
+            background: rgba(201, 184, 150, 0.03);
+            border: 1px solid rgba(201, 184, 150, 0.15);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(201, 184, 150, 0.15);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .review-rating {
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+
+        .review-date {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        .review-room {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: #c9b896;
+            margin-bottom: 1rem;
+        }
+
+        .review-text {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .star {
+            color: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #FFD700;
+            transform: scale(1.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(15, 15, 15, 0.98), rgba(26, 26, 26, 0.98));
+            border: 1px solid rgba(201, 184, 150, 0.3);
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            color: #c9b896;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            color: #fff;
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .photo-preview {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            border-radius: 50%;
+            border: 4px solid rgba(201, 184, 150, 0.3);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #c9b896 0%, #a89674 100%);
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 1.2rem 2rem;
+            background: rgba(201, 184, 150, 0.1);
+            border: 2px dashed rgba(201, 184, 150, 0.3);
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #c9b896;
+        }
+
+        .file-input-label:hover {
+            background: rgba(201, 184, 150, 0.2);
+            border-color: #c9b896;
+        }
+
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: linear-gradient(135deg, rgba(201, 184, 150, 0.95), rgba(168, 150, 116, 0.95));
+            backdrop-filter: blur(20px);
+            color: #000;
+            padding: 1.5rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 10000;
+            animation: slideInToast 0.5s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            min-width: 350px;
+        }
+
+        @keyframes slideInToast {
+            from { transform: translateX(500px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.hide {
+            animation: slideOutToast 0.5s ease-out forwards;
+        }
+
+        @keyframes slideOutToast {
+            to { transform: translateX(500px); opacity: 0; }
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
+            color: #fff;
+        }
+
+        .toast-icon {
+            font-size: 2rem;
+        }
+
+        .toast-content h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            font-size: 1.2rem;
+        }
+
+        .toast-content p {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 5rem 5% 3rem;
+            border-top: 1px solid rgba(201, 184, 150, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+        }
+
+        .footer-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #c9b896, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255,255,255,0.6);
+            line-height: 2.2;
+            display: block;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .footer-section a:hover {
+            color: #c9b896;
+            transform: translateX(10px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.95rem;
+            letter-spacing: 0.1em;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(201, 184, 150, 0.1);
+            border-top-color: #c9b896;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1200px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .profile-content {
+                padding: 3rem 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-actions {
+                flex-direction: column;
+            }
+
+            .btn-small {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-hero {
+                padding: 8rem 5% 4rem;
+            }
+
+            .profile-title {
+                font-size: 2.5rem;
+            }
+
+            .profile-card {
+                padding: 2rem;
+            }
+
+            .toast {
+                min-width: auto;
+                right: 20px;
+                left: 20px;
+            }
+
+            .modal-content {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .avatar-wrapper {
+                width: 120px;
+                height: 120px;
+            }
+
+            .section-container {
+                padding: 2rem;
+            }
+
+            .session-item {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: flex-start;
+            }
+
+            .booking-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+    </div>
+
+    <div class="bg-particles" id="bgParticles"></div>
+    <div class="floating-orbs">
+        <div class="orb" style="width: 400px; height: 400px; top: -100px; left: -100px; animation-delay: 0s;"></div>
+        <div class="orb" style="width: 300px; height: 300px; top: 50%; right: -100px; animation-delay: 3s;"></div>
+        <div class="orb" style="width: 350px; height: 350px; bottom: -100px; left: 30%; animation-delay: 6s;"></div>
+    </div>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">SmartHotel</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="rooms.html">Rooms</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="my-bookings.html">My Bookings</a></li>
+                <li><a href="profile.html" class="active">Profile</a></li>
+                <li><a href="#" onclick="logout(); return false;">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="profile-hero">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <div class="profile-badge">ACCOUNT SETTINGS</div>
+            <h1 class="profile-title">
+                Welcome Back, <span id="heroUserName">Guest</span>
+            </h1>
+            <p class="profile-subtitle">Manage your profile and personalize your luxury experience</p>
+        </div>
+    </section>
+
+    <section class="profile-section">
+        <div class="profile-container">
+            <div class="profile-sidebar">
+                <div class="profile-card">
+                    <div class="avatar-container">
+                        <div class="avatar-wrapper">
+                            <div class="avatar-circle" id="avatarDisplay">
+                                <span id="avatarInitials">GU</span>
+                            </div>
+                            <div class="status-badge">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <h3 class="profile-name" id="profileName">Guest User</h3>
+                        <p class="profile-email" id="profileEmail">guest@smarthotel.com</p>
+                        <span class="profile-role user" id="profileRole">GUEST</span>
+                        <button class="btn btn-secondary" onclick="openPhotoModal()">
+                            <i class="fas fa-camera"></i> Change Photo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <nav class="profile-nav">
+                        <a class="nav-item active" data-tab="personal">
+                            <i class="fas fa-user"></i>
+                            <span>Personal Info</span>
+                        </a>
+                        <a class="nav-item" data-tab="security">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Security</span>
+                        </a>
+                        <a class="nav-item" data-tab="preferences">
+                            <i class="fas fa-cog"></i>
+                            <span>Preferences</span>
+                        </a>
+                        <a class="nav-item" data-tab="bookings">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>My Bookings</span>
+                        </a>
+                        <a class="nav-item" data-tab="reviews">
+                            <i class="fas fa-star"></i>
+                            <span>My Reviews</span>
+                        </a>
+                        <a class="nav-item" onclick="logout(); return false;">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="content-glow"></div>
+
+                <!-- Personal Information Tab -->
+                <div class="tab-content active" id="personal">
+                    <div class="content-header">
+                        <h2>Personal Information</h2>
+                        <p>Update your personal details and contact information</p>
+                    </div>
+
+                    <form class="profile-form" id="personalForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-user"></i>
+                                    First Name
+                                </label>
+                                <input type="text" class="form-input" id="firstName" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-user"></i>
+                                    Last Name
+                                </label>
+                                <input type="text" class="form-input" id="lastName" value="" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-envelope"></i>
+                                    Email Address
+                                </label>
+                                <input type="email" class="form-input" id="emailAddress" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-phone"></i>
+                                    Phone Number
+                                </label>
+                                <input type="tel" class="form-input" id="phoneNumber" value="" placeholder="+1 (555) 123-4567">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-map-marker-alt"></i>
+                                Street Address
+                            </label>
+                            <input type="text" class="form-input" id="streetAddress" value="" placeholder="Street address">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-city"></i>
+                                    City
+                                </label>
+                                <input type="text" class="form-input" id="city" value="" placeholder="City">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-map"></i>
+                                    State/Province
+                                </label>
+                                <input type="text" class="form-input" id="state" value="" placeholder="State">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-mail-bulk"></i>
+                                    ZIP Code
+                                </label>
+                                <input type="text" class="form-input" id="zipCode" value="" placeholder="ZIP Code">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-globe"></i>
+                                    Country
+                                </label>
+                                <select class="form-select" id="country">
+                                    <option value="US" selected>United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="FR">France</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="JP">Japan</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-birthday-cake"></i>
+                                    Date of Birth
+                                </label>
+                                <input type="date" class="form-input" id="dateOfBirth">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Security Tab -->
+                <div class="tab-content" id="security">
+                    <div class="content-header">
+                        <h2>Security Settings</h2>
+                        <p>Manage your password and account security</p>
+                    </div>
+
+                    <form class="profile-form" id="securityForm">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-lock"></i>
+                                Current Password
+                            </label>
+                            <input type="password" class="form-input" id="currentPassword" placeholder="Enter current password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-key"></i>
+                                New Password
+                            </label>
+                            <input type="password" class="form-input" id="newPassword" placeholder="Enter new password (min 8 characters)" required minlength="8">
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-check-circle"></i>
+                                Confirm Password
+                            </label>
+                            <input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter new password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-shield-alt"></i> Update Password
+                        </button>
+                    </form>
+
+                    <div class="section-container">
+                        <h3>
+                            <i class="fas fa-mobile-alt"></i>
+                            Two-Factor Authentication
+                        </h3>
+                        <p>Add an extra layer of security to your account by enabling two-factor authentication via SMS or authenticator app.</p>
+                        <button class="btn btn-secondary" onclick="enable2FA()">
+                            <i class="fas fa-qrcode"></i> Enable 2FA
+                        </button>
+                    </div>
+
+                    <div class="section-container">
+                        <h3>
+                            <i class="fas fa-desktop"></i>
+                            Active Sessions
+                        </h3>
+                        <p>Manage your active login sessions across different devices</p>
+                        
+                        <div class="session-item">
+                            <div class="session-info">
+                                <strong>Current Session</strong>
+                                <p id="currentDevice">Chrome on Windows • Location Unknown</p>
+                                <p style="font-size: 0.85rem;">Last active: Just now</p>
+                            </div>
+                            <span class="session-badge">Active Now</span>
+                        </div>
+
+                        <div class="session-item" id="otherSession" style="display: none;">
+                            <div class="session-info">
+                                <strong>Mobile Device</strong>
+                                <p>Safari on iPhone 15 Pro • New York, USA</p>
+                                <p style="font-size: 0.85rem;">Last active: 2 hours ago</p>
+                            </div>
+                            <button class="btn btn-danger" onclick="endSession()">
+                                <i class="fas fa-times"></i> End Session
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div class="tab-content" id="preferences">
+                    <div class="content-header">
+                        <h2>Your Preferences</h2>
+                        <p>Customize your experience and notification settings</p>
+                    </div>
+
+                    <form class="profile-form" id="preferencesForm">
+                        <div class="section-container">
+                            <h3>
+                                <i class="fas fa-bell"></i>
+                                Notification Preferences
+                            </h3>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="emailNotif" checked>
+                                    <span><i class="fas fa-envelope"></i> Email notifications for bookings and confirmations</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="smsNotif" checked>
+                                    <span><i class="fas fa-sms"></i> SMS notifications for check-in reminders</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="marketingNotif">
+                                    <span><i class="fas fa-bullhorn"></i> Marketing emails and special offers</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="pushNotif" checked>
+                                    <span><i class="fas fa-mobile"></i> Push notifications on mobile app</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="section-container">
+                            <h3>
+                                <i class="fas fa-bed"></i>
+                                Room Preferences
+                            </h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-building"></i>
+                                        Preferred Floor
+                                    </label>
+                                    <select class="form-select" id="preferredFloor">
+                                        <option>No preference</option>
+                                        <option>Lower floors (1-5)</option>
+                                        <option selected>Middle floors (6-15)</option>
+                                        <option>Upper floors (16+)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-bed"></i>
+                                        Bed Type
+                                    </label>
+                                    <select class="form-select" id="bedType">
+                                        <option>No preference</option>
+                                        <option selected>King</option>
+                                        <option>Queen</option>
+                                        <option>Twin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-eye"></i>
+                                    Room View
+                                </label>
+                                <select class="form-select" id="roomView">
+                                    <option>No preference</option>
+                                    <option selected>Ocean/Water view</option>
+                                    <option>City view</option>
+                                    <option>Garden view</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="section-container">
+                            <h3>
+                                <i class="fas fa-universal-access"></i>
+                                Accessibility
+                            </h3>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="wheelchairAccess">
+                                    <span><i class="fas fa-wheelchair"></i> Wheelchair accessible room required</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="visualAccess">
+                                    <span><i class="fas fa-eye"></i> Visual accessibility features</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="hearingAccess">
+                                    <span><i class="fas fa-deaf"></i> Hearing accessibility features</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="section-container">
+                            <h3>
+                                <i class="fas fa-language"></i>
+                                Language & Region
+                            </h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-globe"></i>
+                                        Preferred Language
+                                    </label>
+                                    <select class="form-select" id="language">
+                                        <option selected>English</option>
+                                        <option>Español</option>
+                                        <option>Français</option>
+                                        <option>Deutsch</option>
+                                        <option>日本語</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-dollar-sign"></i>
+                                        Currency
+                                    </label>
+                                    <select class="form-select" id="currency">
+                                        <option selected>USD ($)</option>
+                                        <option>EUR (€)</option>
+                                        <option>GBP (£)</option>
+                                        <option>JPY (¥)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Save Preferences
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Bookings Tab -->
+                <div class="tab-content" id="bookings">
+                    <div class="content-header">
+                        <h2>My Bookings</h2>
+                        <p>View and manage your hotel reservations</p>
+                    </div>
+
+                    <div id="bookingsContainer">
+                        <div class="booking-card">
+                            <div class="booking-header">
+                                <h3 class="booking-title">Deluxe Ocean Suite</h3>
+                                <span class="booking-status confirmed">Confirmed</span>
+                            </div>
+                            <div class="booking-details">
+                                <div class="booking-detail">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Check-in</span>
+                                        <div class="booking-detail-text">March 15, 2026</div>
+                                    </div>
+                                </div>
+                                <div class="booking-detail">
+                                    <i class="fas fa-calendar-times"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Check-out</span>
+                                        <div class="booking-detail-text">March 18, 2026</div>
+                                    </div>
+                                </div>
+                                <div class="booking-detail">
+                                    <i class="fas fa-users"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Guests</span>
+                                        <div class="booking-detail-text">2 Adults</div>
+                                    </div>
+                                </div>
+                                <div class="booking-detail">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Total</span>
+                                        <div class="booking-detail-text">$1,200</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-actions">
+                                <button class="btn btn-secondary btn-small" onclick="viewBookingDetails(1)">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                                <button class="btn btn-secondary btn-small" onclick="openReviewModal(1, 'Deluxe Ocean Suite')">
+                                    <i class="fas fa-star"></i> Write Review
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="cancelBooking(1)">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="booking-card">
+                            <div class="booking-header">
+                                <h3 class="booking-title">Presidential Penthouse</h3>
+                                <span class="booking-status pending">Pending</span>
+                            </div>
+                            <div class="booking-details">
+                                <div class="booking-detail">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Check-in</span>
+                                        <div class="booking-detail-text">April 10, 2026</div>
+                                    </div>
+                                </div>
+                                <div class="booking-detail">
+                                    <i class="fas fa-calendar-times"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Check-out</span>
+                                        <div class="booking-detail-text">April 15, 2026</div>
+                                    </div>
+                                </div>
+                                <div class="booking-detail">
+                                    <i class="fas fa-users"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Guests</span>
+                                        <div class="booking-detail-text">4 Adults</div>
+                                    </div>
+                                </div>
+                                <div class="booking-detail">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <div>
+                                        <span class="booking-detail-label">Total</span>
+                                        <div class="booking-detail-text">$3,500</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-actions">
+                                <button class="btn btn-secondary btn-small" onclick="viewBookingDetails(2)">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="cancelBooking(2)">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Tab -->
+                <div class="tab-content" id="reviews">
+                    <div class="content-header">
+                        <h2>My Reviews</h2>
+                        <p>Share your experience and read your past reviews</p>
+                    </div>
+
+                    <button class="btn btn-primary" style="margin-bottom: 2rem;" onclick="openReviewModal(null, null)">
+                        <i class="fas fa-plus"></i> Write New Review
+                    </button>
+
+                    <div id="reviewsContainer">
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="review-date">January 15, 2026</span>
+                            </div>
+                            <h4 class="review-room">Luxury Ocean View Suite</h4>
+                            <p class="review-text">
+                                Absolutely stunning room with breathtaking ocean views! The amenities were top-notch, 
+                                and the staff went above and beyond to make our stay memorable. The spa services were 
+                                exceptional, and the restaurant served incredible cuisine. Highly recommend for a luxury getaway!
+                            </p>
+                            <div class="review-actions">
+                                <button class="btn btn-secondary btn-small" onclick="editReview(1)">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="deleteReview(1)">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="review-date">December 10, 2025</span>
+                            </div>
+                            <h4 class="review-room">Executive Business Suite</h4>
+                            <p class="review-text">
+                                Great location for business travel. The room was spacious and well-equipped with everything 
+                                needed for work. WiFi was fast and reliable. Only minor issue was some noise from the hallway 
+                                at night, but overall a solid 4-star experience.
+                            </p>
+                            <div class="review-actions">
+                                <button class="btn btn-secondary btn-small" onclick="editReview(2)">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="deleteReview(2)">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Upload Modal -->
+    <div class="modal" id="photoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePhotoModal()">&times;</button>
+            <div class="modal-header">
+                <h3>Change Profile Photo</h3>
+                <p>Upload a new photo to personalize your profile</p>
+            </div>
+            
+            <div class="photo-preview" id="photoPreview">
+                <span class="photo-preview-text" id="previewInitials">GU</span>
+            </div>
+
+            <div class="file-input-wrapper">
+                <label for="photoFileInput" class="file-input-label">
+                    <i class="fas fa-cloud-upload-alt"></i> Choose Photo
+                    <br><small>JPG, PNG or GIF (Max 5MB)</small>
+                </label>
+                <input type="file" id="photoFileInput" accept="image/*" onchange="previewPhoto(event)">
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="uploadPhoto()">
+                    <i class="fas fa-check"></i> Save Photo
+                </button>
+                <button class="btn btn-secondary" onclick="closePhotoModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeReviewModal()">&times;</button>
+            <div class="modal-header">
+                <h3 id="reviewModalTitle">Write a Review</h3>
+                <p>Share your experience with other guests</p>
+            </div>
+
+            <form class="profile-form" id="reviewForm">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-star"></i>
+                        Rating
+                    </label>
+                    <div class="star-rating" id="starRating">
+                        <i class="fas fa-star star" data-rating="1"></i>
+                        <i class="fas fa-star star" data-rating="2"></i>
+                        <i class="fas fa-star star" data-rating="3"></i>
+                        <i class="fas fa-star star" data-rating="4"></i>
+                        <i class="fas fa-star star" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="reviewRating" value="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-bed"></i>
+                        Room/Service
+                    </label>
+                    <input type="text" class="form-input" id="reviewRoom" placeholder="e.g., Deluxe Ocean Suite" required>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-comment"></i>
+                        Your Review
+                    </label>
+                    <textarea class="form-textarea" id="reviewText" placeholder="Share your experience..." required></textarea>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Review
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>SmartHotel</h4>
+                <p>Experience the future of hospitality.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="about.html">About Us</a>
+                <a href="services.html">Services</a>
+                <a href="rooms.html">Rooms</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>123 Luxury Avenue</p>
+                <p>info@smarthotel.com</p>
+                <p>+1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SmartHotel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const USER_DATA_KEY = 'smarthotel_user_data';
+        const BOOKINGS_KEY = 'smarthotel_bookings';
+        const REVIEWS_KEY = 'smarthotel_reviews';
+
+        let currentPhotoFile = null;
+        let currentReviewId = null;
+        let currentRating = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuthentication();
+        });
+
+        function checkAuthentication() {
+            const isAuth = localStorage.getItem('isAuthenticated');
+            
+            if (isAuth !== 'true') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadUserData();
+            loadBookings();
+            loadReviews();
+            
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                const userName = localStorage.getItem('userName') || 'Guest';
+                showToast('Welcome Back!', `We're glad to see you, ${userName}! ✨`);
+            }, 1000);
+        }
+
+        function loadUserData() {
+            const userName = localStorage.getItem('userName') || 'Guest User';
+            const userEmail = localStorage.getItem('userEmail') || 'guest@smarthotel.com';
+            const userRole = localStorage.getItem('userRole') || 'user';
+
+            const nameParts = userName.split(' ');
+            const firstName = nameParts[0] || 'Guest';
+            const lastName = nameParts.slice(1).join(' ') || 'User';
+
+            document.getElementById('heroUserName').textContent = firstName;
+            document.getElementById('profileName').textContent = userName;
+            document.getElementById('profileEmail').textContent = userEmail;
+            
+            const roleElement = document.getElementById('profileRole');
+            if (userRole === 'admin' || userRole === 'staff') {
+                roleElement.textContent = 'ADMINISTRATOR';
+                roleElement.className = 'profile-role admin';
+            } else {
+                roleElement.textContent = 'GUEST';
+                roleElement.className = 'profile-role user';
+            }
+
+            const initials = firstName.charAt(0).toUpperCase() + (lastName.charAt(0) || '').toUpperCase();
+            document.getElementById('avatarInitials').textContent = initials;
+            document.getElementById('previewInitials').textContent = initials;
+
+            const savedData = JSON.parse(localStorage.getItem(USER_DATA_KEY) || '{}');
+
+            if (savedData.profilePhoto) {
+                displayProfilePhoto(savedData.profilePhoto);
+            }
+
+            document.getElementById('firstName').value = savedData.firstName || firstName;
+            document.getElementById('lastName').value = savedData.lastName || lastName;
+            document.getElementById('emailAddress').value = savedData.email || userEmail;
+            document.getElementById('phoneNumber').value = savedData.phone || '';
+            document.getElementById('streetAddress').value = savedData.streetAddress || '';
+            document.getElementById('city').value = savedData.city || '';
+            document.getElementById('state').value = savedData.state || '';
+            document.getElementById('zipCode').value = savedData.zipCode || '';
+            document.getElementById('country').value = savedData.country || 'US';
+            document.getElementById('dateOfBirth').value = savedData.dateOfBirth || '';
+
+            if (savedData.preferences) {
+                document.getElementById('emailNotif').checked = savedData.preferences.emailNotif !== false;
+                document.getElementById('smsNotif').checked = savedData.preferences.smsNotif !== false;
+                document.getElementById('marketingNotif').checked = savedData.preferences.marketingNotif || false;
+                document.getElementById('pushNotif').checked = savedData.preferences.pushNotif !== false;
+                document.getElementById('preferredFloor').value = savedData.preferences.preferredFloor || 'Middle floors (6-15)';
+                document.getElementById('bedType').value = savedData.preferences.bedType || 'King';
+                document.getElementById('roomView').value = savedData.preferences.roomView || 'Ocean/Water view';
+                document.getElementById('wheelchairAccess').checked = savedData.preferences.wheelchairAccess || false;
+                document.getElementById('visualAccess').checked = savedData.preferences.visualAccess || false;
+                document.getElementById('hearingAccess').checked = savedData.preferences.hearingAccess || false;
+                document.getElementById('language').value = savedData.preferences.language || 'English';
+                document.getElementById('currency').value = savedData.preferences.currency || 'USD ($)';
+            }
+
+            detectCurrentDevice();
+            initParticles();
+            setupTabSwitching();
+            setupFormHandlers();
+            setupStarRating();
+        }
+
+        function displayProfilePhoto(photoUrl) {
+            const avatarDisplay = document.getElementById('avatarDisplay');
+            const initialsSpan = document.getElementById('avatarInitials');
+            
+            if (photoUrl) {
+                avatarDisplay.innerHTML = `<img src="${photoUrl}" alt="Profile Photo">`;
+            } else if (initialsSpan) {
+                avatarDisplay.innerHTML = `<span id="avatarInitials">${initialsSpan.textContent}</span>`;
+            }
+        }
+
+        function loadBookings() {
+            const bookings = JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]');
+        }
+
+        function loadReviews() {
+            const reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
+        }
+
+        function detectCurrentDevice() {
+            const ua = navigator.userAgent;
+            let browser = 'Unknown Browser';
+            let os = 'Unknown OS';
+
+            if (ua.indexOf('Chrome') > -1) browser = 'Chrome';
+            else if (ua.indexOf('Safari') > -1) browser = 'Safari';
+            else if (ua.indexOf('Firefox') > -1) browser = 'Firefox';
+            else if (ua.indexOf('Edge') > -1) browser = 'Edge';
+
+            if (ua.indexOf('Windows') > -1) os = 'Windows';
+            else if (ua.indexOf('Mac') > -1) os = 'macOS';
+            else if (ua.indexOf('Linux') > -1) os = 'Linux';
+            else if (ua.indexOf('Android') > -1) os = 'Android';
+            else if (ua.indexOf('iOS') > -1) os = 'iOS';
+
+            document.getElementById('currentDevice').textContent = `${browser} on ${os} • Location Unknown`;
+        }
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        function initParticles() {
+            const container = document.getElementById('bgParticles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function setupTabSwitching() {
+            document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tab = this.getAttribute('data-tab');
+                    
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(tab).classList.add('active');
+                });
+            });
+        }
+
+        function setupFormHandlers() {
+            document.getElementById('personalForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('emailAddress').value,
+                    phone: document.getElementById('phoneNumber').value,
+                    streetAddress: document.getElementById('streetAddress').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zipCode: document.getElementById('zipCode').value,
+                    country: document.getElementById('country').value,
+                    dateOfBirth: document.getElementById('dateOfBirth').value
+                };
+
+                const userData = JSON.parse(localStorage.getItem(USER_DATA_KEY) || '{}');
+                Object.assign(userData, formData);
+                localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
+
+                localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
+                localStorage.setItem('userEmail', formData.email);
+
+                document.getElementById('profileName').textContent = `${formData.firstName} ${formData.lastName}`;
+                document.getElementById('profileEmail').textContent = formData.email;
+                document.getElementById('heroUserName').textContent = formData.firstName;
+                
+                const initials = formData.firstName.charAt(0).toUpperCase() + formData.lastName.charAt(0).toUpperCase();
+                const avatarInitials = document.getElementById('avatarInitials');
+                if (avatarInitials) {
+                    avatarInitials.textContent = initials;
+                }
+
+                showToast('Success!', 'Your personal information has been updated successfully! 🎉');
+            });
+
+            document.getElementById('securityForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPass = document.getElementById('currentPassword').value;
+                const newPass = document.getElementById('newPassword').value;
+                const confirmPass = document.getElementById('confirmPassword').value;
+
+                if (newPass !== confirmPass) {
+                    showToast('Error', 'Passwords do not match! Please try again. ❌', 'error');
+                    return;
+                }
+
+                if (newPass.length < 8) {
+                    showToast('Error', 'Password must be at least 8 characters! ❌', 'error');
+                    return;
+                }
+
+                showToast('Success!', 'Your password has been updated securely! 🔒');
+                this.reset();
+            });
+
+            document.getElementById('preferencesForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const preferences = {
+                    emailNotif: document.getElementById('emailNotif').checked,
+                    smsNotif: document.getElementById('smsNotif').checked,
+                    marketingNotif: document.getElementById('marketingNotif').checked,
+                    pushNotif: document.getElementById('pushNotif').checked,
+                    preferredFloor: document.getElementById('preferredFloor').value,
+                    bedType: document.getElementById('bedType').value,
+                    roomView: document.getElementById('roomView').value,
+                    wheelchairAccess: document.getElementById('wheelchairAccess').checked,
+                    visualAccess: document.getElementById('visualAccess').checked,
+                    hearingAccess: document.getElementById('hearingAccess').checked,
+                    language: document.getElementById('language').value,
+                    currency: document.getElementById('currency').value
+                };
+
+                const userData = JSON.parse(localStorage.getItem(USER_DATA_KEY) || '{}');
+                userData.preferences = preferences;
+                localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
+
+                showToast('Success!', 'Your preferences have been saved! ⚙️');
+            });
+
+            document.getElementById('reviewForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitReview();
+            });
+        }
+
+        function setupStarRating() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    currentRating = rating;
+                    document.getElementById('reviewRating').value = rating;
+                    
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseenter', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.style.color = '#FFD700';
+                        } else {
+                            s.style.color = 'rgba(255,255,255,0.2)';
+                        }
+                    });
+                });
+            });
+
+            document.getElementById('starRating').addEventListener('mouseleave', function() {
+                const stars = document.querySelectorAll('.star');
+                stars.forEach((s, index) => {
+                    if (index < currentRating) {
+                        s.style.color = '#FFD700';
+                    } else {
+                        s.style.color = 'rgba(255,255,255,0.2)';
+                    }
+                });
+            });
+        }
+
+        function openPhotoModal() {
+            document.getElementById('photoModal').classList.add('active');
+        }
+
+        function closePhotoModal() {
+            document.getElementById('photoModal').classList.remove('active');
+            currentPhotoFile = null;
+        }
+
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Error', 'File size must be less than 5MB! ❌', 'error');
+                    return;
+                }
+
+                currentPhotoFile = file;
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('photoPreview').innerHTML = 
+                        `<img src="${e.target.result}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function uploadPhoto() {
+            if (!currentPhotoFile) {
+                showToast('Error', 'Please select a photo first! ❌', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const photoUrl = e.target.result;
+                
+                const userData = JSON.parse(localStorage.getItem(USER_DATA_KEY) || '{}');
+                userData.profilePhoto = photoUrl;
+                localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
+
+                displayProfilePhoto(photoUrl);
+                
+                showToast('Success!', 'Profile photo updated successfully! 📸');
+                closePhotoModal();
+            };
+            
+            reader.readAsDataURL(currentPhotoFile);
+        }
+
+        function openReviewModal(bookingId, roomName) {
+            currentReviewId = bookingId;
+            document.getElementById('reviewModal').classList.add('active');
+            
+            if (roomName) {
+                document.getElementById('reviewRoom').value = roomName;
+            }
+            
+            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            currentRating = 0;
+            document.getElementById('reviewRating').value = '0';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.remove('active');
+            document.getElementById('reviewForm').reset();
+            currentReviewId = null;
+            currentRating = 0;
+        }
+
+        function submitReview() {
+            const rating = parseInt(document.getElementById('reviewRating').value);
+            const room = document.getElementById('reviewRoom').value;
+            const text = document.getElementById('reviewText').value;
+
+            if (rating === 0) {
+                showToast('Error', 'Please select a rating! ❌', 'error');
+                return;
+            }
+
+            const review = {
+                id: Date.now(),
+                bookingId: currentReviewId,
+                rating: rating,
+                room: room,
+                text: text,
+                date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+            };
+
+            const reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
+            reviews.unshift(review);
+            localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+
+            addReviewToDisplay(review);
+
+            showToast('Success!', 'Thank you for your review! ⭐');
+            closeReviewModal();
+        }
+
+        function addReviewToDisplay(review) {
+            const starsHtml = Array(5).fill(0).map((_, i) => 
+                `<i class="fas fa-star" style="color: ${i < review.rating ? '#FFD700' : 'rgba(255,255,255,0.2)'}"></i>`
+            ).join('');
+
+            const reviewHtml = `
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-rating">${starsHtml}</div>
+                        <span class="review-date">${review.date}</span>
+                    </div>
+                    <h4 class="review-room">${review.room}</h4>
+                    <p class="review-text">${review.text}</p>
+                    <div class="review-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editReview(${review.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteReview(${review.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const container = document.getElementById('reviewsContainer');
+            container.insertAdjacentHTML('afterbegin', reviewHtml);
+        }
+
+        function editReview(reviewId) {
+            showToast('Coming Soon', 'Edit review feature will be available soon! ✏️');
+        }
+
+        function deleteReview(reviewId) {
+            if (confirm('Are you sure you want to delete this review?')) {
+                const reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
+                const updatedReviews = reviews.filter(r => r.id !== reviewId);
+                localStorage.setItem(REVIEWS_KEY, JSON.stringify(updatedReviews));
+                
+                showToast('Success!', 'Review deleted successfully! 🗑️');
+                location.reload();
+            }
+        }
+
+        function viewBookingDetails(bookingId) {
+            showToast('Booking Details', `Viewing details for booking #${bookingId}`, 'success');
+        }
+
+        function cancelBooking(bookingId) {
+            if (confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
+                showToast('Success!', 'Booking cancelled successfully. Refund will be processed within 5-7 business days. 💳');
+            }
+        }
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'error' ? '❌' : '✨';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icon}</div>
+                <div class="toast-content">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+
+        function enable2FA() {
+            showToast('Coming Soon', 'Two-factor authentication will be available soon! 🔐');
+        }
+
+        function endSession() {
+            if (confirm('Are you sure you want to end this session?')) {
+                document.getElementById('otherSession').style.display = 'none';
+                showToast('Success!', 'Session ended successfully! 🔒');
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout? 👋')) {
+                showToast('Goodbye!', 'Logging out... See you soon! 🌟');
+                
+                setTimeout(() => {
+                    localStorage.removeItem('isAuthenticated');
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userEmail');
+                    localStorage.removeItem('userId');
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminName');
+                    
+                    window.location.href = 'login.html';
+                }, 1500);
+            }
+        }
+
+        document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const orbs = document.querySelectorAll('.orb');
+            orbs.forEach((orb, index) => {
+                orb.style.transform = `translateY(${scrolled * (0.1 + index * 0.05)}px)`;
+            });
+        });
+
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
